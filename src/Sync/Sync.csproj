@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dotmim.Sync.Core" />
+    <PackageReference Include="Dotmim.Sync.Sqlite" />
+    <PackageReference Include="Dotmim.Sync.SqlServer" />
+    <PackageReference Include="Dotmim.Sync.SqlServer.ChangeTracking" />
+    <PackageReference Include="Dotmim.Sync.Web.Client" />
+    <PackageReference Include="Dotmim.Sync.Web.Server" />
+  </ItemGroup>
+
+</Project>
