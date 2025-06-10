@@ -1,8 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Commands.CreateBranch;
+namespace HotelManagement.Application.Branches.Commands;
 
 public record CreateBranchCommand(CreateBranchDto Dto) : IRequest<Guid>
 {

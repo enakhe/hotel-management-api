@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using Microsoft.AspNetCore.Http;
 
-namespace HotelManagement.Application.Common.Services;
+namespace HotelManagement.Application.Common.Services.Administrator;
 public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepository branchRepository, IUserRepository userRepository, IValidator<CreateBranchDto> _branchValidator, IMapper mapper) : IBranchService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;

@@ -1,10 +1,9 @@
-﻿using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
 namespace HotelManagement.Application.Users.Commands.CreateUser;
 
-public record CreateUserCommand(CreateUserDto Dto) : IRequest<Guid>{}
+public record CreateUserCommand(CreateUserDto Dto) : IRequest<Guid> { }
 
 public class CreateUserCommandHandler(IUserService userService) : IRequestHandler<CreateUserCommand, Guid>
 {

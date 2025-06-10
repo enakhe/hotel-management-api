@@ -1,7 +1,5 @@
 ﻿using System.Net;
-using FluentValidation;
 using HotelManagement.Application.Common.Exceptions;
-using Microsoft.AspNetCore.Http;
 
 namespace HotelManagement.Web.Middlewares;
 

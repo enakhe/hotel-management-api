@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation;
-using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
 
 namespace HotelManagement.Application.Common.Validators.Administrator;
 public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>

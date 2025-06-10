@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using HotelManagement.Application.Common.Interfaces.Administrator;
+﻿using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

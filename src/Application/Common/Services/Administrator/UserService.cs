@@ -4,7 +4,7 @@ using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Identity;
 
-namespace HotelManagement.Application.Common.Services;
+namespace HotelManagement.Application.Common.Services.Administrator;
 public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -141,7 +141,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
     {
         var user = await _userManager.FindByIdAsync(userId.ToString());
 
-        return user == null ? throw new Exception("User not found") : [.. (await _userManager.GetRolesAsync(user))];
+        return user == null ? throw new Exception("User not found") : [.. await _userManager.GetRolesAsync(user)];
     }
 
     public async Task ResetPasswordAsync(Guid userId, string newPassword)

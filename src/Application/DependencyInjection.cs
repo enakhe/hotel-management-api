@@ -2,7 +2,7 @@
 using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Mappings;
-using HotelManagement.Application.Common.Services;
+using HotelManagement.Application.Common.Services.Administrator;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 

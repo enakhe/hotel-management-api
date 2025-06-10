@@ -1,6 +1,4 @@
 ﻿using System.Reflection;
-using System.Reflection.Emit;
-using System.Xml;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
