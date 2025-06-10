@@ -3,7 +3,7 @@ using HotelManagement.Infrastructure;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.ServiceDefaults;
 using HotelManagement.Web;
-using Microsoft.AspNetCore.Builder;
+using HotelManagement.Web.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,13 +32,15 @@ app.UseExceptionHandler("/error");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
-app.UseSwagger();
-app.UseSwaggerUI(options =>
+app.UseOpenApi();
+app.UseSwaggerUi(settings =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Hotel API V1");
-    options.RoutePrefix = "api"; // Swagger UI at /api
+    settings.Path = "/api";
+    settings.DocumentPath = "/swagger/v1/swagger.json";
 });
 
+app.UseRouting();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

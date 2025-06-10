@@ -13,7 +13,7 @@ public class CustomExceptionHandler : IExceptionHandler
         _exceptionHandlers = new()
             {
                 { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(HotelManagement.Application.Common.Exceptions.NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
             };
@@ -47,7 +47,7 @@ public class CustomExceptionHandler : IExceptionHandler
 
     private async Task HandleNotFoundException(HttpContext httpContext, Exception ex)
     {
-        var exception = (NotFoundException)ex;
+        var exception = (HotelManagement.Application.Common.Exceptions.NotFoundException)ex;
 
         httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
 

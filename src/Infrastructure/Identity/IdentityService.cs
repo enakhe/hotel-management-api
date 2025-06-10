@@ -3,7 +3,6 @@ using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Identity;
 public class IdentityService : IIdentityService
@@ -39,7 +38,7 @@ public class IdentityService : IIdentityService
 
         var result = await _userManager.CreateAsync(user, password);
 
-        return (result.ToApplicationResult(), user.Id);
+        return (result.ToApplicationResult(), user.Id.ToString());
     }
 
     public async Task<bool> IsInRoleAsync(string userId, string role)

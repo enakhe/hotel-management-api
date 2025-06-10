@@ -1,15 +1,17 @@
 ﻿using System.Reflection;
+using System.Reflection.Emit;
+using System.Xml;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
 using HotelManagement.Infrastructure.Data.Configurations;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Data;
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>(options), IApplicationDbContext
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options), IApplicationDbContext
 {
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }

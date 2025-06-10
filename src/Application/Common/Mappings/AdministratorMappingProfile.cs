@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Domain.Entities;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
@@ -13,7 +11,7 @@ public class AdministratorMappingProfile : Profile
         // User mappings
         CreateMap<ApplicationUser, UserDto>()
             .ForMember(dest => dest.Roles, opt => opt.Ignore())
-            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch.Name));
+            .ForMember(dest => dest.BranchName, opt => opt.MapFrom(src => src.Branch!.Name));
 
         CreateMap<CreateUserDto, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))

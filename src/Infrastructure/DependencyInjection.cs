@@ -1,12 +1,16 @@
 ﻿using System.Text;
 using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Domain.Constants;
 using HotelManagement.Domain.Entities.Data;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceptors;
 using HotelManagement.Infrastructure.Identity;
+using HotelManagement.Infrastructure.Repository;
+using HotelManagement.Infrastructure.Repository.Administrator;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -27,10 +31,12 @@ public static class DependencyInjection
         builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        builder.Services.AddDbContextFactory<ApplicationDbContext>((sp, options) =>
+        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseSqlServer(connectionString);
+
+            options.UseApplicationServiceProvider(sp);
         });
 
         builder.EnrichSqlServerDbContext<ApplicationDbContext>();
@@ -68,12 +74,20 @@ public static class DependencyInjection
 
         builder.Services
             .AddIdentityCore<ApplicationUser>()
-            .AddRoles<IdentityRole>()
+            .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddSignInManager()
+            .AddDefaultTokenProviders()
             .AddApiEndpoints();
+
+        builder.Services.AddTransient<IUserEmailStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
+
+        builder.Services.AddTransient<IUserStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
 
         builder.Services.AddSingleton(TimeProvider.System);
         builder.Services.AddTransient<IIdentityService, IdentityService>();
+        builder.Services.AddTransient<IUserRepository, UserRepository>();
+        builder.Services.AddTransient<IBranchRepository, BranchRepository>();
 
         builder.Services.AddAuthorization(options =>
             options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));

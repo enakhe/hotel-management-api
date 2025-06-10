@@ -1,5 +1,4 @@
-﻿using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Administrator;
+﻿using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 
 namespace HotelManagement.Application.Common.Interfaces;

@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Dotmim.Sync;
+﻿using Dotmim.Sync;
 using Dotmim.Sync.SqlServer;
-using Dotmim.Sync.Web.Client;
 using Dotmim.Sync.Web.Server;
+using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers.Sync;
 

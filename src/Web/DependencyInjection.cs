@@ -1,7 +1,9 @@
-﻿using Azure.Identity;
+﻿using System.Reflection;
+using Azure.Identity;
+using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Infrastructure.Data;
 using HotelManagement.Web.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using NSwag;
 using NSwag.Generation.Processors.Security;
@@ -19,9 +21,16 @@ public static class DependencyInjection
 
         builder.Services.AddControllers();
 
-        builder.Services.AddSwaggerGen();
-
         builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+
+        builder.Services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+        });
 
 
         // Customise default API behaviour
