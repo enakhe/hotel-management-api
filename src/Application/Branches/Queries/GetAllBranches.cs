@@ -14,6 +14,8 @@ public class GetAllBranchesQueryHandler(IBranchService branchService) : IRequest
 
     public async Task<IEnumerable<BranchDto>> Handle(GetAllBranchesQuery request, CancellationToken cancellationToken)
     {
-        return await _branchService.GetAllBranchesAsync();
+        var branches = await _branchService.GetAllBranchesAsync();
+
+        return branches;
     }
 }

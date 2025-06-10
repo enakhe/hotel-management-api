@@ -16,6 +16,10 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         if (dto == null)
             throw new ArgumentNullException(nameof(dto), "CreateUserDto cannot be null");
 
+        // Fix for CS8629: Nullable value type may be null.
+        if (dto.BranchId == null)
+            throw new ArgumentNullException(nameof(dto.BranchId), "BranchId cannot be null");
+
         var user = _mapper.Map<ApplicationUser>(dto) ?? throw new Exception("Failed to map CreateUserDto to ApplicationUser");
 
         user.Id = Guid.NewGuid();
@@ -23,6 +27,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         user.MiddleName = dto.MiddleName;
         user.LastName = dto.LastName;
         user.FullName = $"{dto.FirstName} {dto.MiddleName} {dto.LastName}";
+        user.BranchId = (Guid)dto.BranchId;
 
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
