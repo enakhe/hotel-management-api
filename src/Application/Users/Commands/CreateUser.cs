@@ -1,7 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Users.Commands.CreateUser;
+namespace HotelManagement.Application.Users.Commands;
 
 public record CreateUserCommand(CreateUserDto Dto) : IRequest<Guid> { }
 

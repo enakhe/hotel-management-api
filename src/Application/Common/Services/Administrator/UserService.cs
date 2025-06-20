@@ -16,11 +16,11 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         if (dto == null)
             throw new ArgumentNullException(nameof(dto), "CreateUserDto cannot be null");
 
-        // Fix for CS8629: Nullable value type may be null.
         if (dto.BranchId == null)
-            throw new ArgumentNullException(nameof(dto.BranchId), "BranchId cannot be null");
+            throw new ArgumentNullException(nameof(dto), "BranchId cannot be null");
 
-        var user = _mapper.Map<ApplicationUser>(dto) ?? throw new Exception("Failed to map CreateUserDto to ApplicationUser");
+        var user = _mapper.Map<ApplicationUser>(dto)
+            ?? throw new Exception("Failed to map CreateUserDto to ApplicationUser");
 
         user.Id = Guid.NewGuid();
         user.FirstName = dto.FirstName;
@@ -49,13 +49,14 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task UpdateUserAsync(UpdateUserDto dto)
     {
-        var user = await _userManager.FindByIdAsync(dto.Id.ToString()) ?? throw new Exception("User not found");
+        var user = await _userManager.FindByIdAsync(dto.Id.ToString()) 
+            ?? throw new Exception("User not found");
 
         user.FirstName = dto.FirstName;
         user.MiddleName = dto.MiddleName;
         user.LastName = dto.LastName;
+        user.FullName = $"{dto.FirstName} {dto.MiddleName} {dto.LastName}";
         user.PhoneNumber = dto.PhoneNumber;
-        user.ProfilePicture = dto.ProfilePicture;
         user.Gender = dto.Gender;
         user.BranchId = dto.BranchId;
         user.LastUpdatedAt = DateTime.UtcNow;
@@ -81,7 +82,8 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task DeactivateUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception("User not found");
+        var user = await _userManager.FindByIdAsync(userId.ToString()) 
+            ?? throw new Exception("User not found");
 
         user.IsActive = false;
         user.LastUpdatedAt = DateTime.UtcNow;
@@ -91,14 +93,16 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task DeleteUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception("User not found");
+        var user = await _userManager.FindByIdAsync(userId.ToString()) 
+            ?? throw new Exception("User not found");
 
         await _userManager.DeleteAsync(user);
     }
 
     public async Task<UserDto> GetUserByIdAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString()) ?? throw new Exception("User not found");
+        var user = await _userManager.FindByIdAsync(userId.ToString()) 
+            ?? throw new Exception("User not found");
 
         var dto = _mapper.Map<UserDto>(user);
         var roles = await _userManager.GetRolesAsync(user);

@@ -1,8 +1,8 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Security;
-using HotelManagement.Application.Users.Commands.CreateUser;
-using HotelManagement.Application.Users.Queries.GetUserById;
+using HotelManagement.Application.Users.Commands;
+using HotelManagement.Application.Users.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +21,13 @@ public class UserController(ISender mediator, IUserService userService) : Contro
     {
         var id = await _mediator.Send(new CreateUserCommand(dto));
         return CreatedAtAction(nameof(GetUserById), new { id }, new { id });
+    }
+
+    [HttpPut]
+    public async Task<IActionResult> UpdateUser([FromBody] UpdateUserDto dto)
+    {
+        await _mediator.Send(new UpdateUserCommand(dto));
+        return CreatedAtAction(nameof(GetUserById), new { dto.Id }, new { dto.Id });
     }
 
     [HttpGet("{id}")]

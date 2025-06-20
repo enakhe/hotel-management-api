@@ -16,11 +16,6 @@ public class UpdateUserDto
     [Required]
     public string? MiddleName { get; set; }
 
-    [Required, MaxLength(100)]
-    public string? FullName { get; set; }
-
-    public byte[]? ProfilePicture { get; set; }
-
     public GenderData Gender { get; set; }
 
     [Phone]
