@@ -4,6 +4,7 @@ using HotelManagement.Application.Common.Security;
 using HotelManagement.Application.Users.Commands;
 using HotelManagement.Application.Users.Queries;
 using MediatR;
+//using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers.Administrator;
@@ -35,5 +36,13 @@ public class UserController(ISender mediator, IUserService userService) : Contro
     {
         var user = await _mediator.Send(new GetUserByIdQuery { Id = id });
         return Ok(user);
+    }
+
+    // Get all users
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+    {
+        var users = await _mediator.Send(new GetUsersQuery());
+        return Ok(users);
     }
 }

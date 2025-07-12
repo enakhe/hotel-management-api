@@ -272,6 +272,27 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetAllUsers",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/api/admin/users/{id}": {
