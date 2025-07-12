@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Application.Common.Behaviours;
@@ -8,12 +9,12 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
     private readonly Stopwatch _timer;
     private readonly ILogger<TRequest> _logger;
     private readonly IUser _user;
-    private readonly IIdentityService _identityService;
+    private readonly IAuthService _identityService;
 
     public PerformanceBehaviour(
         ILogger<TRequest> logger,
         IUser user,
-        IIdentityService identityService)
+        IAuthService identityService)
     {
         _timer = new Stopwatch();
 

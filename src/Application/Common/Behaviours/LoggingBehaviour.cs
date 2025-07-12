@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
@@ -7,9 +8,9 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
 {
     private readonly ILogger _logger;
     private readonly IUser _user;
-    private readonly IIdentityService _identityService;
+    private readonly IAuthService _identityService;
 
-    public LoggingBehaviour(ILogger<TRequest> logger, IUser user, IIdentityService identityService)
+    public LoggingBehaviour(ILogger<TRequest> logger, IUser user, IAuthService identityService)
     {
         _logger = logger;
         _user = user;

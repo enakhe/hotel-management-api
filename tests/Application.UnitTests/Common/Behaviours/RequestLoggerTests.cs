@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using Moq;
 using NUnit.Framework;
 

@@ -19,6 +19,39 @@
         }
       }
     },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_Login",
+        "requestBody": {
+          "x-name": "loginRequest",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/branches": {
       "post": {
         "tags": [
@@ -391,6 +424,39 @@
         }
       }
     },
+    "/api/admin/users/{id}/activate": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_ActivateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/users/{id}/roles": {
       "put": {
         "tags": [
@@ -438,11 +504,63 @@
             }
           }
         }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetUserRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
   "components": {
     "schemas": {
+      "LoginRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
       "CreateBranchDto": {
         "type": "object",
         "additionalProperties": false,

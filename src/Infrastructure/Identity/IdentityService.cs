@@ -1,11 +1,11 @@
-using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelManagement.Infrastructure.Identity;
-public class IdentityService : IIdentityService
+public class IdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory;

@@ -14,18 +14,24 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, IWebHostEnvironme
         {
             await _next(context);
         }
-        catch (FluentValidation.ValidationException ex)
+        catch (ValidationException ex)
         {
             context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            var errorDetails = ex.Errors
-                .GroupBy(e => e.PropertyName)
-                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
 
             await context.Response.WriteAsJsonAsync(new
             {
                 statusCode = context.Response.StatusCode,
                 message = "Validation failed",
-                errors = errorDetails
+                errors = ex.Errors
+            });
+        }
+        catch (UnauthorizedAccessException ex)
+        {
+            context.Response.StatusCode = 404;
+            await context.Response.WriteAsJsonAsync(new
+            {
+                statusCode = 404,
+                message = ex.Message
             });
         }
         catch (HotelManagement.Application.Common.Exceptions.NotFoundException ex)

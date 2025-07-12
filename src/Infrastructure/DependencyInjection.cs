@@ -1,13 +1,18 @@
 ﻿using System.Text;
+using FluentValidation;
+using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.Services.Auth;
+using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Domain.Constants;
 using HotelManagement.Domain.Entities.Data;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceptors;
-using HotelManagement.Infrastructure.Identity;
 using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -85,11 +90,14 @@ public static class DependencyInjection
         builder.Services.AddTransient<IUserStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
 
         builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddTransient<IIdentityService, IdentityService>();
+        builder.Services.AddTransient<IAuthService, AuthService>();
         builder.Services.AddTransient<IUserRepository, UserRepository>();
         builder.Services.AddTransient<IBranchRepository, BranchRepository>();
 
-        builder.Services.AddAuthorization(options =>
-            options.AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator)));
+        builder.Services.AddAuthorizationBuilder()
+            .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));
+
+        builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     }
 }
