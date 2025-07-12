@@ -16,5 +16,15 @@ public class CreateUserDtoValidator : AbstractValidator<CreateUserDto>
         RuleFor(x => x.PhoneNumber)
             .Matches("^[0-9+]*$").When(x => !string.IsNullOrWhiteSpace(x.PhoneNumber))
             .WithMessage("Invalid phone number format.");
+
+        RuleFor(x => x.Email)
+            .NotEmpty().WithMessage("Email is required.")
+            .EmailAddress().WithMessage("Invalid email format.")
+            .MaximumLength(100);
+
+        RuleFor(x => x.Password)
+            .NotEmpty().WithMessage("Password is required.")
+            .MinimumLength(8).WithMessage("Password must be at least 8 characters long.")
+            .MaximumLength(100);
     }
 }

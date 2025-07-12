@@ -4,18 +4,19 @@ using HotelManagement.Application.Common.Interfaces.Administrator;
 
 namespace HotelManagement.Application.Users.Commands;
 
-public record DeleteUserCommand : IRequest
+public record DeactivateUserCommand : IRequest
 {
     [Required]
     public required Guid Id { get; set; }
 }
 
-public class DeleteUserCommandHandler(IUserService userService) : IRequestHandler<DeleteUserCommand>
+
+public class DeactivateUserCommandHandler(IUserService userService) : IRequestHandler<DeactivateUserCommand>
 {
     private readonly IUserService _userService = userService;
 
-    public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeactivateUserCommand request, CancellationToken cancellationToken)
     {
-        await _userService.DeleteUserAsync(request.Id);
+        await _userService.DeactivateUserAsync(request.Id);
     }
 }

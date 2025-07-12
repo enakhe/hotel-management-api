@@ -91,14 +91,23 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         await _userManager.UpdateAsync(user);
     }
 
-    public async Task<Guid> DeleteUserAsync(Guid userId)
+    public async Task ActivateUserAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString())
+            ?? throw new Exception("User not found");
+
+        user.IsActive = true;
+        user.LastUpdatedAt = DateTime.UtcNow;
+
+        await _userManager.UpdateAsync(user);
+    }
+
+    public async Task DeleteUserAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString()) 
             ?? throw new Exception("User not found");
 
         await _userManager.DeleteAsync(user);
-
-        return userId;
     }
 
     public async Task<UserDto> GetUserByIdAsync(Guid userId)

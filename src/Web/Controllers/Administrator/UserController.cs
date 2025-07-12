@@ -38,11 +38,57 @@ public class UserController(ISender mediator, IUserService userService) : Contro
         return Ok(user);
     }
 
-    // Get all users
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
     {
         var users = await _mediator.Send(new GetUsersQuery());
         return Ok(users);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteUser(Guid id)
+    {
+        await _mediator.Send(new DeleteUserCommand { Id = id });
+        return Ok(new 
+        { 
+            Message = "User deleted successfully." 
+        });
+    }
+
+    [HttpPatch("{id}/deactivate")]
+    public async Task<IActionResult> DeactivateUser(Guid id)
+    {
+        await _mediator.Send(new DeactivateUserCommand { Id = id});
+        return Ok(new
+        {
+            Message = "User deactivated successfully."
+        });
+    }
+
+    [HttpPatch("{id}/activate")]
+    public async Task<IActionResult> ActivateUser(Guid id)
+    {
+        await _mediator.Send(new ActivateUserCommand { Id = id });
+        return Ok(new
+        {
+            Message = "User activated successfully."
+        });
+    }
+
+    [HttpPut("{id}/roles")]
+    public async Task<IActionResult> AssignRoles(Guid id, List<Guid> roleIds)
+    {
+        await _mediator.Send(new AssignRolesCommand { Id = id, RoleIds = roleIds});
+        return Ok(new
+        {
+            Message = "Roles assigned successfully."
+        });
+    }
+
+    [HttpGet("{id}/roles")]
+    public async Task<ActionResult<List<string>>> GetUserRoles(Guid id)
+    {
+        var roles = await _mediator.Send(new GetUserRolesQuery { Id = id });
+        return Ok(roles);
     }
 }
