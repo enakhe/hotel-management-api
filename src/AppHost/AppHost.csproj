@@ -10,6 +10,7 @@
     <IsAspireHost>true</IsAspireHost>
     <RootNamespace>HotelManagement.AppHost</RootNamespace>
     <AssemblyName>HotelManagement.AppHost</AssemblyName>
+    <UserSecretsId>66605bb3-b104-44ef-8200-ed42c99493c4</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

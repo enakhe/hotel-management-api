@@ -11,19 +11,19 @@ using NSwag.Generation.Processors.Security;
 namespace HotelManagement.Web;
 public static class DependencyInjection
 {
-    public static void AddWebServices(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddWebServices(this IServiceCollection services)
     {
-        builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+        services.AddDatabaseDeveloperPageExceptionFilter();
 
-        builder.Services.AddScoped<IUser, CurrentUser>();
+        services.AddScoped<IUser, CurrentUser>();
 
-        builder.Services.AddHttpContextAccessor();
+        services.AddHttpContextAccessor();
 
-        builder.Services.AddControllers();
+        services.AddControllers();
 
-        builder.Services.AddExceptionHandler<CustomExceptionHandler>();
+        services.AddExceptionHandler<CustomExceptionHandler>();
 
-        builder.Services.AddMediatR(cfg =>
+        services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
@@ -34,12 +34,12 @@ public static class DependencyInjection
 
 
         // Customise default API behaviour
-        builder.Services.Configure<ApiBehaviorOptions>(options =>
+        services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 
-        builder.Services.AddEndpointsApiExplorer();
+        services.AddEndpointsApiExplorer();
 
-        builder.Services.AddOpenApiDocument((configure, sp) =>
+        services.AddOpenApiDocument((configure, sp) =>
         {
             configure.Title = "HotelManagement API";
 
@@ -54,16 +54,20 @@ public static class DependencyInjection
 
             configure.OperationProcessors.Add(new AspNetCoreOperationSecurityScopeProcessor("JWT"));
         });
+
+        return services;
     }
 
-    public static void AddKeyVaultIfConfigured(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddKeyVaultIfConfigured(this IServiceCollection services, ConfigurationManager configuration)
     {
-        var keyVaultUri = builder.Configuration["AZURE_KEY_VAULT_ENDPOINT"];
+        var keyVaultUri = configuration["KeyVaultUri"];
         if (!string.IsNullOrWhiteSpace(keyVaultUri))
         {
-            builder.Configuration.AddAzureKeyVault(
+            configuration.AddAzureKeyVault(
                 new Uri(keyVaultUri),
                 new DefaultAzureCredential());
         }
+
+        return services;
     }
 }

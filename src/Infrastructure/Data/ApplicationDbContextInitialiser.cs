@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Domain.Constants;
+using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,7 @@ public static class InitialiserExtensions
 
         await initialiser.InitialiseAsync();
 
-        //await initialiser.SeedAsync();
+        await initialiser.SeedAsync();
     }
 }
 
@@ -75,11 +76,40 @@ public class ApplicationDbContextInitialiser
             await _roleManager.CreateAsync(administratorRole);
         }
 
+        // Default branch
+        var defaultBranch = new Branch
+        {
+            Name = "Main Branch",
+            Address = "123 Main St, City, Country",
+            ContactNumber = "+2349069477106",
+            Email = "contact@eitiltech.com",
+            IsActive = true,
+        };
+
+        if (!_context.Branches.Any(b => b.Name == defaultBranch.Name))
+        {
+            _context.Branches.Add(defaultBranch);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            defaultBranch = _context.Branches.First(b => b.Name == defaultBranch.Name);
+        }
+
         // Default users
         var administrator = new ApplicationUser
         {
-            UserName = "administrator@localhost",
-            Email = "administrator@localhost"
+            UserName = "admin@eitiltech.com",
+            Email = "admin@eitiltech.com",
+            FirstName = "Admin",
+            LastName = "User",
+            MiddleName = "A",
+            FullName = "Admin User A",
+            EmailConfirmed = true,
+            IsActive = true,
+            PhoneNumberConfirmed = true,
+            PhoneNumber = "+2349069477106",
+            BranchId = defaultBranch.Id,
         };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))

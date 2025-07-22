@@ -25,6 +25,20 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, IWebHostEnvironme
                 errors = ex.Errors
             });
         }
+        catch (FluentValidation.ValidationException ex)
+        {
+            context.Response.StatusCode = (int)HttpStatusCode.BadRequest;
+            var errorDetails = ex.Errors
+                .GroupBy(e => e.PropertyName)
+                .ToDictionary(g => g.Key, g => g.Select(e => e.ErrorMessage).ToArray());
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                statusCode = context.Response.StatusCode,
+                message = "Validation failed",
+                errors = errorDetails
+            });
+        }
         catch (UnauthorizedAccessException ex)
         {
             context.Response.StatusCode = 404;

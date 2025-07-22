@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Common.DTOs.Auth;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
+using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Common.Interfaces.Auth;

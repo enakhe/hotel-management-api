@@ -1,10 +1,12 @@
-﻿using System.Text;
+﻿using System.Reflection;
+using System.Text;
 using FluentValidation;
 using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Services.Auth;
+using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Domain.Constants;
 using HotelManagement.Domain.Entities.Data;
@@ -22,36 +24,36 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using StackExchange.Redis;
 
 namespace HotelManagement.Infrastructure;
 public static class DependencyInjection
 {
-    public static void AddInfrastructureServices(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        var configuration = builder.Configuration;
 
-        var connectionString = builder.Configuration.GetConnectionString("HotelManagementDb");
-        Guard.Against.Null(connectionString, message: "Connection string 'HotelManagementDb' not found.");
+        var connectionString = configuration.GetConnectionString("sql");
+        Guard.Against.Null(connectionString, message: "Connection string 'DefaultConnection' not found.");
 
-        builder.Services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
-        builder.Services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
 
-        builder.Services.AddDbContext<ApplicationDbContext>((sp, options) =>
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+        services.AddAntiforgery();
+
+        services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
             options.UseSqlServer(connectionString);
-
-            options.UseApplicationServiceProvider(sp);
         });
 
-        builder.EnrichSqlServerDbContext<ApplicationDbContext>();
-
-        builder.Services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
-        builder.Services.AddScoped<ApplicationDbContextInitialiser>();
-
-        builder.Services.AddAuthentication()
-            .AddBearerToken(IdentityConstants.BearerScheme)
+        services.AddScoped<ApplicationDbContextInitialiser>();
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
             .AddJwtBearer(options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
@@ -75,9 +77,16 @@ public static class DependencyInjection
                 };
             });
 
-        builder.Services.AddAuthorizationBuilder();
+        // Redis Cache
+        services.AddSingleton<IConnectionMultiplexer>(sp =>
+        {
+            var redisConfiguration = configuration.GetConnectionString("cache");
+            return ConnectionMultiplexer.Connect(redisConfiguration!);
+        });
 
-        builder.Services
+        services.AddAuthorizationBuilder();
+
+        services
             .AddIdentityCore<ApplicationUser>()
             .AddRoles<ApplicationRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -85,19 +94,27 @@ public static class DependencyInjection
             .AddDefaultTokenProviders()
             .AddApiEndpoints();
 
-        builder.Services.AddTransient<IUserEmailStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
+        services.AddTransient<IUserEmailStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
 
-        builder.Services.AddTransient<IUserStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
+        services.AddTransient<IUserStore<ApplicationUser>, UserStore<ApplicationUser, ApplicationRole, ApplicationDbContext, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityUserToken<Guid>, IdentityRoleClaim<Guid>>>();
 
-        builder.Services.AddSingleton(TimeProvider.System);
-        builder.Services.AddTransient<IAuthService, AuthService>();
-        builder.Services.AddTransient<IUserRepository, UserRepository>();
-        builder.Services.AddTransient<IBranchRepository, BranchRepository>();
+        services.AddSingleton(TimeProvider.System);
 
-        builder.Services.AddAuthorizationBuilder()
+        services.AddTransient<IAuthService, AuthService>();
+        services.AddTransient<IUserRepository, UserRepository>();
+        services.AddTransient<IBranchRepository, BranchRepository>();
+
+        services.AddAuthorizationBuilder()
             .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));
 
-        builder.Services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
-        builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+        services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateBranchValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
+
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+        return services;
     }
 }

@@ -4,7 +4,11 @@ var cache = builder.AddRedis("cache")
     .WithRedisInsight()
     .WithRedisCommander();
 
-var sql = builder.AddSqlServer("sql");
+var sqlPassword = builder.AddParameter("sql-password", secret: true);
+
+var sql = builder.AddSqlServer("sql", password: sqlPassword)
+    .WithLifetime(ContainerLifetime.Persistent)
+    .WithDataVolume();
 
 var database = sql.AddDatabase("HotelManagementDb");
 

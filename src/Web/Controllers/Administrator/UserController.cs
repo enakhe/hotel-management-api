@@ -12,10 +12,9 @@ namespace HotelManagement.Web.Controllers.Administrator;
 [ApiController]
 [Route("api/admin/users")]
 [Authorize(Roles = "Administrator")]
-public class UserController(ISender mediator, IUserService userService) : ControllerBase
+public class UserController(ISender mediator) : ControllerBase
 {
     private readonly ISender _mediator = mediator;
-    private readonly IUserService _userService = userService;
 
     [HttpPost]
     public async Task<IActionResult> CreateUser([FromBody] CreateUserDto dto)

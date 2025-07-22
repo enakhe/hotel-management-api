@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
+using HotelManagement.Application.Common.DTOs.Administrator;
 
 namespace HotelManagement.Application.Common.Services.Auth;
 public class AuthService(
@@ -64,10 +65,10 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto loginRequest)
     {
-        var user = _userManager.Users.SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email);
+        var user = _userManager.Users.SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email) ?? throw new UnauthorizedAccessException("Invalid credentials");
 
-        if (user == null || !user.IsActive)
-            throw new UnauthorizedAccessException("Invalid credentials");
+        if (!user.IsActive)
+            throw new UnauthorizedAccessException("You are not authorized to access this account.");
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
 
@@ -79,35 +80,34 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
         return token;
     }
 
-    public async Task<Guid> RegisterAsync(RegisterUserDto registerUserDto)
+    public async Task<Guid> RegisterAsync(RegisterUserDto dto)
     {
-        var user = _mapper.Map<ApplicationUser>(registerUserDto);
+        if (dto == null)
+            throw new ArgumentNullException(nameof(dto), "CreateUserDto cannot be null");
 
-        user.UserName = registerUserDto.Email;
-        user.EmailConfirmed = false;
-        user.CreatedAt = DateTime.UtcNow;
-        user.IsActive = true;
+        if (dto.BranchId == null)
+            throw new ArgumentNullException(nameof(dto), "BranchId cannot be null");
 
-        var result = await _userManager.CreateAsync(user, registerUserDto.Password);
+        var user = _mapper.Map<ApplicationUser>(dto)
+            ?? throw new Exception("Failed to map CreateUserDto to ApplicationUser");
 
-        if (!result.Succeeded)
-            throw new ConflictException(string.Join(", ", result.Errors.Select(e => e.Description)));
+        user.Id = Guid.NewGuid();
+        user.FirstName = dto.FirstName;
+        user.MiddleName = dto.MiddleName;
+        user.LastName = dto.LastName;
+        user.FullName = $"{dto.FirstName} {dto.MiddleName} {dto.LastName}";
+        user.BranchId = (Guid)dto.BranchId;
 
-        if (registerUserDto.RoleIds != null && registerUserDto.RoleIds.Count > 0)
-        {
-            var roles = await _userManager.GetRolesAsync(user);
-            await _userManager.AddToRolesAsync(user, roles);
-        }
+        var result = await _userManager.CreateAsync(user, dto.Password);
 
-        return user.Id;
+        return !result.Succeeded ? throw new ConflictException(string.Join(", ", result.Errors.Select(e => e.Description))) : user.Id;
     }
 
     public Task LogoutAsync() => Task.CompletedTask;
 
     public async Task<TokenResponseDto> RefreshTokenAsync(string refreshToken)
     {
-        bool isExpired;
-        var userId = ValidateJWTToken(refreshToken, out isExpired);
+        var userId = ValidateJWTToken(refreshToken, out bool isExpired);
 
         if (isExpired)
             throw new UnauthorizedAccessException("Refresh token is expired");
@@ -123,7 +123,10 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
             AccessToken = token.AccessToken,
             AccessTokenExpiration = token.AccessTokenExpiration,
             RefreshToken = token.RefreshToken,
-            RefreshTokenExpiration = token.RefreshTokenExpiration
+            RefreshTokenExpiration = token.RefreshTokenExpiration,
+            UserId = token.UserId,
+            UserName = token.UserName,
+            Email = token.Email,
         };
     }
 

@@ -1,27 +1,31 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Services.Administrator;
+using HotelManagement.Application.Common.Services.Auth;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace HotelManagement.Application;
 public static class DependencyInjection
 {
-    public static void AddApplicationServices(this IHostApplicationBuilder builder)
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        builder.Services.AddAutoMapper(typeof(AdministratorMappingProfile).Assembly);
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+        services.AddAutoMapper(typeof(AdministratorMappingProfile).Assembly);
+        services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
 
-        builder.Services.AddTransient<IUserService, UserService>();
-        builder.Services.AddScoped<IBranchService, BranchService>();
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IBranchService, BranchService>();
+        services.AddScoped<IAuthService, AuthService>();
 
-        builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
-        builder.Services.AddHttpContextAccessor();
+        services.AddHttpContextAccessor();
 
-        builder.Services.AddMediatR(cfg =>
+        services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
@@ -29,5 +33,7 @@ public static class DependencyInjection
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
         });
+
+        return services;
     }
 }
