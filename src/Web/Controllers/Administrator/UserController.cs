@@ -1,8 +1,8 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Security;
-using HotelManagement.Application.Users.Commands;
-using HotelManagement.Application.Users.Queries;
+using HotelManagement.Application.Core.Users.Commands;
+using HotelManagement.Application.Core.Users.Queries;
+
 using MediatR;
 //using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,16 +48,16 @@ public class UserController(ISender mediator) : ControllerBase
     public async Task<IActionResult> DeleteUser(Guid id)
     {
         await _mediator.Send(new DeleteUserCommand { Id = id });
-        return Ok(new 
-        { 
-            Message = "User deleted successfully." 
+        return Ok(new
+        {
+            Message = "User deleted successfully."
         });
     }
 
     [HttpPatch("{id}/deactivate")]
     public async Task<IActionResult> DeactivateUser(Guid id)
     {
-        await _mediator.Send(new DeactivateUserCommand { Id = id});
+        await _mediator.Send(new DeactivateUserCommand { Id = id });
         return Ok(new
         {
             Message = "User deactivated successfully."
@@ -77,7 +77,7 @@ public class UserController(ISender mediator) : ControllerBase
     [HttpPut("{id}/roles")]
     public async Task<IActionResult> AssignRoles(Guid id, List<Guid> roleIds)
     {
-        await _mediator.Send(new AssignRolesCommand { Id = id, RoleIds = roleIds});
+        await _mediator.Send(new AssignRolesCommand { Id = id, RoleIds = roleIds });
         return Ok(new
         {
             Message = "Roles assigned successfully."

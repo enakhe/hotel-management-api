@@ -22,7 +22,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 
@@ -109,8 +108,10 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateBranchValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<ResetPasswordRequestDtoValidator>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));

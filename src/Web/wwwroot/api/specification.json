@@ -118,6 +118,105 @@
         }
       }
     },
+    "/api/auth/change-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ChangePassword",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ForgotPassword",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/confirm-password-reset": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ConfirmPasswordReset",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPasswordResetCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/admin/branches": {
       "post": {
         "tags": [
@@ -691,6 +790,66 @@
           "refreshToken": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      },
+      "ChangePasswordCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userId",
+          "currentPassword",
+          "newPassword"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currentPassword": {
+            "type": "string",
+            "minLength": 8
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 8
+          }
+        }
+      },
+      "RequestPasswordResetCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        }
+      },
+      "ConfirmPasswordResetCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "token",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
           }
         }
       },

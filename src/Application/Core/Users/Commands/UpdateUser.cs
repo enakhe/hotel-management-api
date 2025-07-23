@@ -1,8 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Users.Commands;
+namespace HotelManagement.Application.Core.Users.Commands;
 
 public record UpdateUserCommand(UpdateUserDto Dto) : IRequest
 {

@@ -1,6 +1,6 @@
-﻿using HotelManagement.Application.Branches.Commands;
-using HotelManagement.Application.Branches.Queries;
-using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
+using HotelManagement.Application.Core.Branches.Commands;
+using HotelManagement.Application.Core.Branches.Queries;
 using HotelManagement.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

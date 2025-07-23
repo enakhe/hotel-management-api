@@ -22,7 +22,7 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
 
             var claim = user.FindFirst(BranchClaimType)
                 ?? throw new UnauthorizedAccessException("BranchId claim is missing.");
-            
+
             return !Guid.TryParse(claim.Value, out var branchId)
                 ? throw new UnauthorizedAccessException("Invalid BranchId claim value.")
                 : branchId;

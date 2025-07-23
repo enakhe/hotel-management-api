@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Users.Commands;
+namespace HotelManagement.Application.Core.Users.Commands;
 
 public record DeleteUserCommand : IRequest
 {

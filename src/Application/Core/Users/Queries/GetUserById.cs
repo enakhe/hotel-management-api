@@ -2,7 +2,7 @@
 using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Users.Queries;
+namespace HotelManagement.Application.Core.Users.Queries;
 
 public record GetUserByIdQuery : IRequest<UserDto>
 {

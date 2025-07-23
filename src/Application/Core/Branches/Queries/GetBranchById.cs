@@ -2,7 +2,7 @@
 using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Queries;
+namespace HotelManagement.Application.Core.Branches.Queries;
 
 public record GetBranchByIdQuery : IRequest<BranchDto>
 {

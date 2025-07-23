@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using HotelManagement.Application.Auth.Commands;
-using HotelManagement.Application.Common.DTOs.Auth;
+﻿using HotelManagement.Application.Core.Auth.Commands;
 
 namespace HotelManagement.Application.Common.Validators.Auth;
 

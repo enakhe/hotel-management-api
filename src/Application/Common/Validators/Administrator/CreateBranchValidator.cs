@@ -1,5 +1,4 @@
-﻿using HotelManagement.Application.Branches.Commands;
-using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs.Administrator;
 
 namespace HotelManagement.Application.Common.Validators.Administrator;
 public class CreateBranchValidator : AbstractValidator<CreateBranchDto>

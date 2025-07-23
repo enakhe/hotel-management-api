@@ -1,9 +1,9 @@
-﻿using HotelManagement.Application.Core.Auth.Commands;
+﻿using HotelManagement.Application.Common.DTOs.Auth;
 
 namespace HotelManagement.Application.Common.Validators.Auth;
-public class LoginDtoValidator : AbstractValidator<LoginCommand>
+public class ResetPasswordRequestDtoValidator : AbstractValidator<ResetPasswordRequestDto>
 {
-    public LoginDtoValidator()
+    public ResetPasswordRequestDtoValidator()
     {
         RuleFor(x => x.Email)
             .EmailAddress()
@@ -11,10 +11,5 @@ public class LoginDtoValidator : AbstractValidator<LoginCommand>
             .NotNull()
             .NotEmpty()
             .WithMessage("The email field is required");
-
-        RuleFor(x => x.Password)
-            .NotEmpty()
-            .NotNull()
-            .WithMessage("The password field is required");
     }
 }

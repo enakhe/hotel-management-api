@@ -1,4 +1,3 @@
-using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authorization;

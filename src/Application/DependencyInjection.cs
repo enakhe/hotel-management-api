@@ -6,7 +6,6 @@ using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Services.Administrator;
 using HotelManagement.Application.Common.Services.Auth;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace HotelManagement.Application;
 public static class DependencyInjection

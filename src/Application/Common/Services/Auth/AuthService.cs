@@ -1,19 +1,15 @@
 using System.IdentityModel.Tokens.Jwt;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authorization;
-using HotelManagement.Application.Common.DTOs.Administrator;
 
 namespace HotelManagement.Application.Common.Services.Auth;
 public class AuthService(
@@ -74,7 +70,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
         if (!result.Succeeded)
             throw new UnauthorizedAccessException("Invalid credentials");
-        
+
         var token = await GeneratJwtToken(user);
 
         return token;
@@ -132,9 +128,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
-        var userId = _userManager.GetUserId(_httpContextAccessor.HttpContext?.User!) ?? throw new UnauthorizedAccessException("User not authenticated");
-
-        var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException("User not found");
+        var user = await _userManager.FindByIdAsync(changePasswordDto.UserId) ?? throw new NotFoundException("User not found");
 
         var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
 

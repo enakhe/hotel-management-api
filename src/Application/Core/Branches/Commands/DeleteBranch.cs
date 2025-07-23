@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Commands;
+namespace HotelManagement.Application.Core.Branches.Commands;
 
 public record DeleteBranchCommand : IRequest
 {

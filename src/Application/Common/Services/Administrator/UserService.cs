@@ -49,7 +49,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task UpdateUserAsync(UpdateUserDto dto)
     {
-        var user = await _userManager.FindByIdAsync(dto.Id.ToString()) 
+        var user = await _userManager.FindByIdAsync(dto.Id.ToString())
             ?? throw new Exception("User not found");
 
         user.FirstName = dto.FirstName;
@@ -82,7 +82,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task DeactivateUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString()) 
+        var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new Exception("User not found");
 
         user.IsActive = false;
@@ -104,7 +104,7 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
     public async Task DeleteUserAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString()) 
+        var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new Exception("User not found");
 
         await _userManager.DeleteAsync(user);

@@ -1,8 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Queries;
+namespace HotelManagement.Application.Core.Branches.Queries;
 
 public record GetAllBranchesQuery : IRequest<IEnumerable<BranchDto>>
 {

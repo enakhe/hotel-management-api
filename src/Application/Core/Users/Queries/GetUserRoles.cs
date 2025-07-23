@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Users.Queries;
+namespace HotelManagement.Application.Core.Users.Queries;
 
 public record GetUserRolesQuery : IRequest<IEnumerable<string>>
 {

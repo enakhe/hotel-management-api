@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Interfaces.Auth;
 
-namespace HotelManagement.Application.Auth.Commands;
+namespace HotelManagement.Application.Core.Auth.Commands;
 
 public record RegisterCommand : IRequest<Guid>
 {

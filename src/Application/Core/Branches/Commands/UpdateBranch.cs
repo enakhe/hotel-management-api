@@ -2,7 +2,7 @@
 using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Commands;
+namespace HotelManagement.Application.Core.Branches.Commands;
 
 public record UpdateBranchCommand(CreateBranchDto Dto) : IRequest
 {

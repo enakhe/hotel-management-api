@@ -1,6 +1,4 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Application.Common.Models;
+﻿using HotelManagement.Application.Common.DTOs.Auth;
 
 namespace HotelManagement.Application.Common.Interfaces.Auth;
 public interface IAuthService

@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 
-namespace HotelManagement.Application.Branches.Queries;
+namespace HotelManagement.Application.Core.Branches.Queries;
 
 public record GetUsersByBranchQuery : IRequest<IEnumerable<UserDto>>
 {
