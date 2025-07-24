@@ -61,7 +61,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task<AuthResponseDto> LoginAsync(LoginRequestDto loginRequest)
     {
-        var user = _userManager.Users.SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email) ?? throw new UnauthorizedAccessException("Invalid credentials");
+        var user = _userManager.Users.SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email) ?? throw new UnauthorizedAccessException("Invalid credentials.");
 
         if (!user.IsActive)
             throw new UnauthorizedAccessException("You are not authorized to access this account.");
@@ -69,7 +69,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
         var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
 
         if (!result.Succeeded)
-            throw new UnauthorizedAccessException("Invalid credentials");
+            throw new UnauthorizedAccessException("Invalid credentials.");
 
         var token = await GeneratJwtToken(user);
 

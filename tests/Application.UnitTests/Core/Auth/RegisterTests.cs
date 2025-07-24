@@ -7,13 +7,13 @@ using Moq;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Auth;
-public class RegisterCommandHandlerTests
+public class RegisterTests
 {
     private readonly Mock<IAuthService> _authServiceMock;
     private readonly Mock<IMapper> _mapperMock;
     private readonly RegisterCommandHandler _handler;
 
-    public RegisterCommandHandlerTests()
+    public RegisterTests()
     {
         _authServiceMock = new Mock<IAuthService>();
         _mapperMock = new Mock<IMapper>();
