@@ -134,4 +134,40 @@ public class LoginTests
 
         exception.Message.ShouldBe("Invalid credentials.");
     }
+
+    [Fact]
+    public async Task Login_ShouldThrow_WhenPasswordIsInvalidButEmailExists()
+    {
+        // Arrange
+        var loginDto = new LoginRequestDto
+        {
+            Email = "validuser@example.com",
+            Password = "WrongPassword123!"
+        };
+
+        var user = new ApplicationUser
+        {
+            Id = Guid.NewGuid(),
+            Email = loginDto.Email,
+            UserName = loginDto.Email,
+            IsActive = true,
+            BranchId = Guid.NewGuid()
+        };
+
+        var users = new List<ApplicationUser> { user }.AsQueryable();
+
+        _userManagerMock.Setup(u => u.Users)
+        .Returns(users);
+
+        _signInManagerMock.Setup(s => s.CheckPasswordSignInAsync(user, loginDto.Password, false))
+            .ReturnsAsync(SignInResult.Failed);
+
+        // Act & Assert
+        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(async () =>
+        {
+            await _authService.LoginAsync(loginDto);
+        });
+
+        exception.Message.ShouldBe("Invalid credentials.");
+    }
 }
