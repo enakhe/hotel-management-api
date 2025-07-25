@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Services.Auth;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -14,12 +15,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Moq;
 using Shouldly;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Auth;
-public class LoginTests
+public class RefreshTokenTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;
     private readonly Mock<SignInManager<ApplicationUser>> _signInManagerMock;
@@ -31,7 +33,7 @@ public class LoginTests
 
     private readonly AuthService _authService;
 
-    public LoginTests()
+    public RefreshTokenTests()
     {
         var userStoreMock = new Mock<IUserStore<ApplicationUser>>();
 
@@ -77,126 +79,110 @@ public class LoginTests
     }
 
     [Fact]
-    public async Task Login_ShouldReturnToken_WhenCredentialsAreValid()
+    public async Task RefreshToken_ShouldReturnNewAccessToken_WhenTokenIsValid()
     {
         // Arrange
+        var userId = Guid.NewGuid().ToString();
+        var email = "user@example.com";
+
         var user = new ApplicationUser
         {
-            Id = Guid.NewGuid(),
-            Email = "test@example.com",
+            Id = Guid.Parse(userId),
+            Email = email,
             UserName = "testuser",
             IsActive = true,
             BranchId = Guid.NewGuid()
         };
 
-        var loginDto = new LoginRequestDto
-        {
-            Email = user.Email,
-            Password = "TestPassword123"
-        };
+        var refreshToken = GenerateValidRefreshToken(userId, email);
 
-        _userManagerMock.Setup(u => u.Users).Returns(new[] { user }.AsQueryable());
-        _signInManagerMock.Setup(s => s.CheckPasswordSignInAsync(user, loginDto.Password, false))
-                         .ReturnsAsync(SignInResult.Success);
-        _userManagerMock.Setup(u => u.GetRolesAsync(user))
-                        .ReturnsAsync(["User"]);
+        _userManagerMock.Setup(x => x.FindByIdAsync(userId)).ReturnsAsync(user);
+        _userManagerMock.Setup(x => x.GetRolesAsync(user)).ReturnsAsync(["User"]);
 
         // Act
-        var result = await _authService.LoginAsync(loginDto);
+        var result = await _authService.RefreshTokenAsync(refreshToken);
 
         // Assert
         result.ShouldNotBeNull();
         result.AccessToken.ShouldNotBeNullOrEmpty();
-        result.RefreshToken.ShouldNotBeNullOrEmpty();
-        result.UserId.ShouldBe(user.Id.ToString());
-        result.UserName.ShouldBe(user.UserName);
-        result.Email.ShouldBe(user.Email);
+        result.UserId.ShouldBe(userId);
+        result.Email.ShouldBe(email);
     }
 
     [Fact]
-    public async Task Login_ShouldThrow_WhenEmailOrPasswordIsWrong()
+    public async Task RefreshToken_ShouldThrow_WhenTokenIsExpired()
     {
         // Arrange
-        var loginDto = new LoginRequestDto
-        {
-            Email = "wronguser@example.com",
-            Password = "WrongPassword123!"
-        };
-
-        // No user with matching email exists in the mocked Users collection
-        _userManagerMock.Setup(u => u.Users)
-            .Returns(Enumerable.Empty<ApplicationUser>()
-            .AsQueryable());
+        var userId = Guid.NewGuid().ToString();
+        var email = "user@example.com";
+        var expiredToken = GenerateExpiredRefreshToken(userId, email);
 
         // Act & Assert
-        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
-            async () => await _authService.LoginAsync(loginDto));
+        var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+            _authService.RefreshTokenAsync(expiredToken));
 
-        exception.Message.ShouldBe("Invalid credentials.");
+        Assert.Equal("Refresh token is expired", exception.Message);
     }
 
     [Fact]
-    public async Task Login_ShouldThrow_WhenPasswordIsInvalidButEmailExists()
+    public async Task RefreshToken_ShouldThrow_WhenTokenIsInvalid()
     {
         // Arrange
-        var loginDto = new LoginRequestDto
-        {
-            Email = "validuser@example.com",
-            Password = "WrongPassword123!"
-        };
-
-        var user = new ApplicationUser
-        {
-            Id = Guid.NewGuid(),
-            Email = loginDto.Email,
-            UserName = loginDto.Email,
-            IsActive = true,
-            BranchId = Guid.NewGuid()
-        };
-
-        var users = new List<ApplicationUser> { user }.AsQueryable();
-
-        _userManagerMock.Setup(u => u.Users)
-        .Returns(users);
-
-        _signInManagerMock.Setup(s => s.CheckPasswordSignInAsync(user, loginDto.Password, false))
-            .ReturnsAsync(SignInResult.Failed);
+        var invaiToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NTI1MzcyNDIsInN1YiI6IjY3Njg1YjhlODNlOTJiMDc4MzdjNGQ3MyIsInRvdHAiOmZhbHNlfQ.5aEskLEg4uSCyrS9YrhCti6qeMhrZ2kwT4oyLE5qxARdGcZVn17VMQ0PdnGIKiPz9FxBL3X6j4hu7n2Qu07NgQ";
 
         // Act & Assert
-        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
-            async () => await _authService.LoginAsync(loginDto));
+        var exception = await Assert.ThrowsAsync<UnauthorizedAccessException>(() =>
+            _authService.RefreshTokenAsync(invaiToken));
 
-        exception.Message.ShouldBe("Invalid credentials.");
+        Assert.Equal("Refresh token is expired", exception.Message);
     }
 
-    [Fact]
-    public async Task Login_ShouldThrow_WhenUserIsInactive()
+    private string GenerateValidRefreshToken(string userId, string email)
     {
-        // Arrange
-        var loginDto = new LoginRequestDto 
+        var claims = new List<Claim>
         {
-            Email = "inactiveuser@example.com",
-            Password = "ValidPassword123!"
+            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Email, email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, userId)
         };
 
-        var user = new ApplicationUser
-        {
-            Id = Guid.NewGuid(),
-            Email = loginDto.Email,
-            UserName = loginDto.Email,
-            IsActive = false, // User is inactive
-            BranchId = Guid.NewGuid()
-        };
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationMock.Object["Jwt:Key"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var users = new List<ApplicationUser> { user }.AsQueryable();
+        var token = new JwtSecurityToken(
+            issuer: _configurationMock.Object["Jwt:Issuer"],
+            audience: _configurationMock.Object["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(15),
+            signingCredentials: creds
+        );
 
-        _userManagerMock.Setup(u => u.Users)
-            .Returns(users);
-
-        // Act & Assert
-        var exception = await Should.ThrowAsync<UnauthorizedAccessException>(
-            async () => await _authService.LoginAsync(loginDto));
-
-        exception.Message.ShouldBe("You are not authorized to access this account.");
+        return new JwtSecurityTokenHandler().WriteToken(token);
     }
+
+    private string GenerateExpiredRefreshToken(string userId, string email)
+    {
+        var claims = new List<Claim>
+        {
+            new(JwtRegisteredClaimNames.Sub, userId),
+            new(JwtRegisteredClaimNames.Email, email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new(ClaimTypes.NameIdentifier, userId)
+        };
+
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configurationMock.Object["Jwt:Key"]!));
+        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+        var token = new JwtSecurityToken(
+            issuer: _configurationMock.Object["Jwt:Issuer"],
+            audience: _configurationMock.Object["Jwt:Audience"],
+            claims: claims,
+            expires: DateTime.UtcNow.AddMinutes(-10), // expired
+            signingCredentials: creds
+        );
+
+        return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
 }
