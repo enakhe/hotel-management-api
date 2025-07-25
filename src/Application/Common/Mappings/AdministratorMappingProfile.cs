@@ -1,4 +1,5 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
+using HotelManagement.Application.Common.DTOs.Role;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
