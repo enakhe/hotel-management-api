@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Services.Auth;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authentication;
@@ -135,6 +136,18 @@ public class RefreshTokenTests
             _authService.RefreshTokenAsync(invaiToken));
 
         Assert.Equal("Refresh token is expired", exception.Message);
+    }
+
+    [Fact]
+    public async Task RefreshToken_ShouldThrow_WhenUserIsNotFound()
+    {
+        // Arrange
+        var validToken = GenerateValidRefreshToken(userId: Guid.NewGuid().ToString(), "user@example.com");
+
+        var exception = await Assert.ThrowsAsync<NotFoundException>(() =>
+            _authService.RefreshTokenAsync(validToken));
+
+        Assert.Equal("User not found", exception.Message);
     }
 
     private string GenerateValidRefreshToken(string userId, string email)
