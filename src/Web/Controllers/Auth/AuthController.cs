@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagement.Web.Controllers.Auth;
 
 [ApiController]
-[Route("api/auth")]
+[Route("api/v1/auth")]
 public class AuthController(ISender mediator) : ControllerBase
 {
     private readonly ISender _mediator = mediator;

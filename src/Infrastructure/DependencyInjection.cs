@@ -5,7 +5,6 @@ using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Common.Services.Auth;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Domain.Constants;
@@ -14,6 +13,8 @@ using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceptors;
 using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
+using HotelManagement.Infrastructure.Services.Administrator;
+using HotelManagement.Infrastructure.Services.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -99,9 +100,13 @@ public static class DependencyInjection
 
         services.AddSingleton(TimeProvider.System);
 
-        services.AddTransient<IAuthService, AuthService>();
-        services.AddTransient<IUserRepository, UserRepository>();
-        services.AddTransient<IBranchRepository, BranchRepository>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IBranchRepository, BranchRepository>();
+
+        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IBranchService, BranchService>();
+        services.AddScoped<IRoleService, RoleService>();
 
         services.AddAuthorizationBuilder()
             .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));

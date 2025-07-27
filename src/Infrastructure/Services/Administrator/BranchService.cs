@@ -1,9 +1,11 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using AutoMapper;
+using FluentValidation;
+using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using Microsoft.AspNetCore.Http;
 
-namespace HotelManagement.Application.Common.Services.Administrator;
+namespace HotelManagement.Infrastructure.Services.Administrator;
 public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepository branchRepository, IUserRepository userRepository, IValidator<CreateBranchDto> _branchValidator, IMapper mapper) : IBranchService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
@@ -51,7 +53,7 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
 
         await _branchValidator.ValidateAndThrowAsync(dto);
 
-        var branch = await _branchRepository.GetByIdAsync(id) ?? throw new Exceptions.NotFoundException("Branch not found");
+        var branch = await _branchRepository.GetByIdAsync(id) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("Branch not found");
 
         _mapper.Map(dto, branch);
 
@@ -60,7 +62,7 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
 
     public async Task DeleteBranchAsync(Guid id)
     {
-        var branch = await _branchRepository.GetByIdAsync(id) ?? throw new Exceptions.NotFoundException("Branch not found");
+        var branch = await _branchRepository.GetByIdAsync(id) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("Branch not found");
 
         await _branchRepository.DeleteAsync(branch);
     }
@@ -69,7 +71,7 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
     {
         var branch = await _branchRepository.GetByIdAsync(id);
 
-        return branch == null ? throw new Exceptions.NotFoundException("Branch not found") : _mapper.Map<BranchDto>(branch);
+        return branch == null ? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("Branch not found") : _mapper.Map<BranchDto>(branch);
     }
 
     public async Task<IEnumerable<BranchDto>> GetAllBranchesAsync()

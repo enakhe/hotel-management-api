@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System.Threading.Tasks;
 using AutoMapper;
 using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Application.Common.Services.Auth;
 using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;

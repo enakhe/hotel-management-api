@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
 using HotelManagement.Application.Common.DTOs.Role;
+using HotelManagement.Application.Core.Role.Commands;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
@@ -28,8 +29,6 @@ public class AdministratorMappingProfile : Profile
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber))
                 .ForMember(dest => dest.BranchId, opt => opt.MapFrom(src => src.BranchId))
-                //.ForMember(dest => dest.ProfilePicture, opt => opt.MapFrom(src => null)) // Assuming no profile picture is set initially
-                //.ForMember(dest => dest.PasswordHash, opt => opt.MapFrom(src => src.Password)) // Password will be hashed in the service layer
                 .ForMember(dest => dest.SecurityStamp, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
                 .ForMember(dest => dest.ConcurrencyStamp, opt => opt.MapFrom(_ => Guid.NewGuid().ToString()))
                 .ForMember(dest => dest.NormalizedEmail, opt => opt.MapFrom(src => src.Email.ToUpperInvariant()))
@@ -48,6 +47,10 @@ public class AdministratorMappingProfile : Profile
 
         // Role mappings
         CreateMap<ApplicationRole, RoleDto>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.NormalizedName, opt => opt.MapFrom(src => src.NormalizedName))
             .ForMember(dest => dest.Permissions, opt => opt.Ignore());
 
         CreateMap<CreateRoleDto, ApplicationRole>();
@@ -65,5 +68,17 @@ public class AdministratorMappingProfile : Profile
             .ForMember(dest => dest.Changes, opt => opt.MapFrom(src => src.PropertyChanges));
 
         CreateMap<AuditLogDetail, AuditLogDetailDto>();
+
+        CreateMap<CreateRoleCommand, CreateRoleDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
+
+        CreateMap<AssignRoleToUserCommand, AssignRoleDto>()
+            .ForMember(dest => dest.UserId, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.RoleName));
+
+        CreateMap<UpdateRoleCommand, CreateRoleDto>()
+            .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description, opt => opt.MapFrom(src => src.Description));
     }
 }

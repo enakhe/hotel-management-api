@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Application.Common.Services.Auth;
 using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Infrastructure.Services.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -173,7 +168,7 @@ public class LoginTests
     public async Task Login_ShouldThrow_WhenUserIsInactive()
     {
         // Arrange
-        var loginDto = new LoginRequestDto 
+        var loginDto = new LoginRequestDto
         {
             Email = "inactiveuser@example.com",
             Password = "ValidPassword123!"

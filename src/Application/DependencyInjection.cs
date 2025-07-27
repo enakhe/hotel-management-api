@@ -1,10 +1,6 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Behaviours;
-using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Mappings;
-using HotelManagement.Application.Common.Services.Administrator;
-using HotelManagement.Application.Common.Services.Auth;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace HotelManagement.Application;
@@ -15,10 +11,6 @@ public static class DependencyInjection
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(typeof(AdministratorMappingProfile).Assembly);
         services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
-
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IBranchService, BranchService>();
-        services.AddScoped<IAuthService, AuthService>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

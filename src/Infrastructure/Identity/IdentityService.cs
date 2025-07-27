@@ -27,7 +27,7 @@ public class IdentityService
         return user?.UserName;
     }
 
-    public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
+    public async Task<(Result<object?> Result, string UserId)> CreateUserAsync(string userName, string password)
     {
         var user = new ApplicationUser
         {
@@ -63,14 +63,14 @@ public class IdentityService
         return result.Succeeded;
     }
 
-    public async Task<Result> DeleteUserAsync(string userId)
+    public async Task<Result<object?>> DeleteUserAsync(string userId)
     {
         var user = await _userManager.FindByIdAsync(userId);
 
-        return user != null ? await DeleteUserAsync(user) : Result.Success();
+        return user != null ? await DeleteUserAsync(user) : Result<object?>.Success("User Deleted");
     }
 
-    public async Task<Result> DeleteUserAsync(ApplicationUser user)
+    public async Task<Result<object?>> DeleteUserAsync(ApplicationUser user)
     {
         var result = await _userManager.DeleteAsync(user);
 

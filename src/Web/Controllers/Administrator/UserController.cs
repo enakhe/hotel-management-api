@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HotelManagement.Web.Controllers.Administrator;
 
 [ApiController]
-[Route("api/admin/users")]
+[Route("api/v1/users")]
 [Authorize(Roles = "Administrator")]
 public class UserController(ISender mediator) : ControllerBase
 {

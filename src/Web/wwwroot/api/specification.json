@@ -19,7 +19,7 @@
         }
       }
     },
-    "/api/auth/login": {
+    "/api/v1/auth/login": {
       "post": {
         "tags": [
           "Auth"
@@ -52,7 +52,7 @@
         }
       }
     },
-    "/api/auth/register": {
+    "/api/v1/auth/register": {
       "post": {
         "tags": [
           "Auth"
@@ -85,7 +85,7 @@
         }
       }
     },
-    "/api/auth/refresh-token": {
+    "/api/v1/auth/refresh-token": {
       "post": {
         "tags": [
           "Auth"
@@ -118,7 +118,7 @@
         }
       }
     },
-    "/api/auth/change-password": {
+    "/api/v1/auth/change-password": {
       "post": {
         "tags": [
           "Auth"
@@ -151,7 +151,7 @@
         }
       }
     },
-    "/api/auth/forgot-password": {
+    "/api/v1/auth/forgot-password": {
       "post": {
         "tags": [
           "Auth"
@@ -184,7 +184,7 @@
         }
       }
     },
-    "/api/auth/confirm-password-reset": {
+    "/api/v1/auth/confirm-password-reset": {
       "post": {
         "tags": [
           "Auth"
@@ -217,7 +217,7 @@
         }
       }
     },
-    "/api/admin/branches": {
+    "/api/v1/branches": {
       "post": {
         "tags": [
           "Branch"
@@ -269,7 +269,7 @@
         }
       }
     },
-    "/api/admin/branches/{id}": {
+    "/api/v1/branches/{id}": {
       "put": {
         "tags": [
           "Branch"
@@ -375,7 +375,7 @@
         }
       }
     },
-    "/api/admin/branches/{id}/users": {
+    "/api/v1/branches/{id}/users": {
       "get": {
         "tags": [
           "Branch"
@@ -408,7 +408,224 @@
         }
       }
     },
-    "/api/admin/users": {
+    "/api/v1/role/create": {
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_CreateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/assign": {
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_AssignRoleToUser",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignRoleToUserCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/all": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetAllRoles",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/user/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetUserRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetRoleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_DeleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role": {
+      "patch": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_UpdateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
       "post": {
         "tags": [
           "User"
@@ -493,7 +710,7 @@
         }
       }
     },
-    "/api/admin/users/{id}": {
+    "/api/v1/users/{id}": {
       "get": {
         "tags": [
           "User"
@@ -556,7 +773,7 @@
         }
       }
     },
-    "/api/admin/users/{id}/deactivate": {
+    "/api/v1/users/{id}/deactivate": {
       "patch": {
         "tags": [
           "User"
@@ -589,7 +806,7 @@
         }
       }
     },
-    "/api/admin/users/{id}/activate": {
+    "/api/v1/users/{id}/activate": {
       "patch": {
         "tags": [
           "User"
@@ -622,7 +839,7 @@
         }
       }
     },
-    "/api/admin/users/{id}/roles": {
+    "/api/v1/users/{id}/roles": {
       "put": {
         "tags": [
           "User"
@@ -926,6 +1143,63 @@
           },
           "isActive": {
             "type": "boolean"
+          }
+        }
+      },
+      "CreateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          }
+        }
+      },
+      "AssignRoleToUserCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "roleName": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
           }
         }
       },

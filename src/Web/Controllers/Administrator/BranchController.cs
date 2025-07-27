@@ -1,14 +1,14 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
+using HotelManagement.Application.Common.Security;
 using HotelManagement.Application.Core.Branches.Commands;
 using HotelManagement.Application.Core.Branches.Queries;
-using HotelManagement.Application.Common.Security;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers.Administrator;
 
 [ApiController]
-[Route("api/admin/branches")]
+[Route("api/v1/branches")]
 [Authorize(Roles = "Administrator")]
 public class BranchController(ISender mediator) : ControllerBase
 {

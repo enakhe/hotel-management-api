@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces.Auth;
@@ -11,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-namespace HotelManagement.Application.Common.Services.Auth;
+namespace HotelManagement.Infrastructure.Services.Auth;
 public class AuthService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
@@ -110,7 +111,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
         if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
 
-        var user = await _userManager.FindByIdAsync(userId) ?? throw new NotFoundException("User not found");
+        var user = await _userManager.FindByIdAsync(userId) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
 
         var token = await GeneratJwtToken(user);
 
@@ -128,7 +129,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
-        var user = await _userManager.FindByIdAsync(changePasswordDto.UserId) ?? throw new NotFoundException("User not found");
+        var user = await _userManager.FindByIdAsync(changePasswordDto.UserId) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
 
         var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
 
@@ -138,7 +139,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task RequestPasswordResetAsync(ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var user = await _userManager.FindByEmailAsync(resetPasswordRequestDto.Email) ?? throw new NotFoundException("User not found");
+        var user = await _userManager.FindByEmailAsync(resetPasswordRequestDto.Email) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
 
         if (!user.IsActive)
             throw new UnauthorizedAccessException("User is not active");
@@ -149,7 +150,7 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
 
     public async Task ConfirmPasswordResetAsync(ResetPasswordConfirmDto resetPasswordConfirmDto)
     {
-        var user = await _userManager.FindByEmailAsync(resetPasswordConfirmDto.Email) ?? throw new NotFoundException("User not found");
+        var user = await _userManager.FindByEmailAsync(resetPasswordConfirmDto.Email) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
 
         if (!user.IsActive)
             throw new UnauthorizedAccessException("User is not active");

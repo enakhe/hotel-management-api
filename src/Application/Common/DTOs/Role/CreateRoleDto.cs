@@ -7,5 +7,5 @@ public class CreateRoleDto
     public required string Name { get; set; }
 
     [MaxLength(200)]
-    public required string Description { get; set; }
+    public string? Description { get; set; }
 }
