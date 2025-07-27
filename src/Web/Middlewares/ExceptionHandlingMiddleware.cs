@@ -53,7 +53,7 @@ public class ExceptionHandlingMiddleware(RequestDelegate next, IWebHostEnvironme
             context.Response.StatusCode = 404;
             await context.Response.WriteAsJsonAsync(new
             {
-                statusCode = 404,
+                statusCode = context.Response.StatusCode,
                 message = ex.Message
             });
         }

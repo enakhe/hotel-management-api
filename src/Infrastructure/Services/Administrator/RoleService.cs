@@ -28,12 +28,14 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
         if (!result.Succeeded)
             return Result<RoleDto>.Failure(result.Errors.Select(e => e.Description), 400);
 
-        var createdRole = await GetRoleByIdAsync(role.Id);
+        var createdRoleResult = await GetRoleByIdAsync(role.Id);
 
-        return Result<RoleDto>.Success(createdRole!, 201);
+        return !createdRoleResult.Succeeded || createdRoleResult.Data == null
+            ? Result<RoleDto>.Failure("Failed to retrieve created role.", 500)
+            : Result<RoleDto>.Success(createdRoleResult.Data, 201);
     }
 
-    public async Task AssignRoleToUserAsync(AssignRoleDto dto)
+    public async Task<Result> AssignRoleToUserAsync(AssignRoleDto dto)
     {
         var user = await _userManager.FindByIdAsync(dto.UserId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"User not found.");
@@ -45,11 +47,12 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
         var result = await _userManager.AddToRoleAsync(user, dto.RoleName);
 
-        if (!result.Succeeded)
-            throw new Exception($"Failed to assign role: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        return !result.Succeeded ? 
+            Result.Failure(result.Errors.Select(e => e.Description), 400) : 
+            Result.Success(statusCode:204);
     }
 
-    public async Task<List<RoleDto>> GetAllRolesAsync()
+    public async Task<Result<List<RoleDto>>> GetAllRolesAsync()
     {
         var roles = _roleManager.Roles.Select(role => new RoleDto
         {
@@ -59,34 +62,37 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
             Description = role.Description!
         }).ToList();
 
-        return await Task.FromResult(roles);
+        var roleResult = await Task.FromResult(roles);
+        return Result<List<RoleDto>>.Success(roleResult);
     }
 
-    public async Task<List<string>> GetUserRolesAsync(Guid userId)
+    public async Task<Result<List<string>>> GetUserRolesAsync(Guid userId)
     {
         var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"User not found.");
 
         var roles = await _userManager.GetRolesAsync(user);
 
-        return [.. roles];
+        return Result<List<string>>.Success([.. roles]);
     }
 
-    public async Task<RoleDto?> GetRoleByIdAsync(Guid roleId)
+    public async Task<Result<RoleDto?>> GetRoleByIdAsync(Guid roleId)
     {
         var role = await _roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"Role not found.");
 
-        return new RoleDto
+        var roleDto =  new RoleDto
         {
             Id = role.Id,
             Name = role.Name!,
             NormalizedName = role.NormalizedName!,
             Description = role.Description!
         };
+
+        return Result<RoleDto?>.Success(roleDto);
     }
 
-    public async Task UpdateRoleAsync(Guid roleId, CreateRoleDto updateRoleDto)
+    public async Task<Result> UpdateRoleAsync(Guid roleId, CreateRoleDto updateRoleDto)
     {
         var role = await _roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"Role not found.");
@@ -100,11 +106,12 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
         var result = await _roleManager.UpdateAsync(role);
 
-        if (!result.Succeeded)
-            throw new Exception($"Failed to update role: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        return !result.Succeeded 
+            ? Result.Failure(result.Errors.Select(e => e.Description), 400) 
+            : Result.Success(statusCode: 204);
     }
 
-    public async Task DeleteRoleAsync(Guid roleId)
+    public async Task<Result> DeleteRoleAsync(Guid roleId)
     {
         var role = await _roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"Role not found.");
@@ -114,7 +121,8 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
         var result = await _roleManager.DeleteAsync(role);
 
-        if (!result.Succeeded)
-            throw new Exception($"Failed to delete role: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+        return !result.Succeeded
+            ? Result.Failure(result.Errors.Select(e => e.Description), 400)
+            : Result.Success(statusCode: 204);
     }
 }

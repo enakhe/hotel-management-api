@@ -5,10 +5,10 @@ namespace HotelManagement.Application.Common.Interfaces.Administrator;
 public interface IRoleService
 {
     Task<Result<RoleDto>> CreateRoleAsync(CreateRoleDto dto);
-    Task AssignRoleToUserAsync(AssignRoleDto assignRoleDto);
-    Task<List<RoleDto>> GetAllRolesAsync();
-    Task<List<string>> GetUserRolesAsync(Guid userId);
-    Task<RoleDto?> GetRoleByIdAsync(Guid roleId);
-    Task UpdateRoleAsync(Guid roleId, CreateRoleDto updateRoleDto);
-    Task DeleteRoleAsync(Guid roleId);
+    Task<Result> AssignRoleToUserAsync(AssignRoleDto dto);
+    Task<Result<List<RoleDto>>> GetAllRolesAsync();
+    Task<Result<List<string>>> GetUserRolesAsync(Guid userId);
+    Task<Result<RoleDto?>> GetRoleByIdAsync(Guid roleId);
+    Task<Result> UpdateRoleAsync(Guid roleId, CreateRoleDto updateRoleDto);
+    Task<Result> DeleteRoleAsync(Guid roleId);
 }

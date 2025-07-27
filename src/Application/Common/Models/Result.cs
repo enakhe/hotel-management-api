@@ -30,3 +30,35 @@ public class Result<T>
         return new Result<T>(false, statusCode, default, [error]);
     }
 }
+
+public class Result
+{
+    public bool Succeeded { get; init; }
+    public int StatusCode { get; init; }
+    public string? Message { get; init; }
+    public string[] Errors { get; init; } = [];
+
+    private Result(bool succeeded, int statusCode, string? message = null, IEnumerable<string>? errors = null)
+    {
+        Succeeded = succeeded;
+        StatusCode = statusCode;
+        Message = message;
+        Errors = errors?.ToArray() ?? [];
+    }
+
+    public static Result Success(string message = "Operation completed successfully.", int statusCode = 200)
+    {
+        return new Result(true, statusCode, message);
+    }
+
+    public static Result Failure(string error, int statusCode = 400)
+    {
+        return new Result(false, statusCode, null, [error]);
+    }
+
+    public static Result Failure(IEnumerable<string> errors, int statusCode = 400)
+    {
+        return new Result(false, statusCode, null, errors);
+    }
+}
+

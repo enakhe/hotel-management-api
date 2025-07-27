@@ -20,8 +20,8 @@ public class RoleController(ISender mediator) : ControllerBase
         if (command == null)
             return BadRequest("Invalid role data.");
 
-        var roleId = await _mediator.Send(command);
-        return Ok(roleId);
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpPost]
@@ -31,16 +31,16 @@ public class RoleController(ISender mediator) : ControllerBase
         if (command == null)
             return BadRequest("Invalid role assignment data.");
 
-        await _mediator.Send(command);
-        return Ok();
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpGet]
     [Route("all")]
     public async Task<IActionResult> GetAllRolesAsync()
     {
-        var roles = await _mediator.Send(new GetAllRolesQuery());
-        return Ok(roles);
+        var result = await _mediator.Send(new GetAllRolesQuery());
+        return Ok(result);
     }
 
     [HttpGet]
@@ -50,8 +50,8 @@ public class RoleController(ISender mediator) : ControllerBase
         if (id == Guid.Empty)
             return BadRequest("Invalid user ID.");
 
-        var roles = await _mediator.Send(new GetUserRolesQuery { UserId = id });
-        return Ok(roles);
+        var result = await _mediator.Send(new GetUserRolesQuery { UserId = id });
+        return Ok(result);
     }
 
     [HttpGet]
@@ -61,8 +61,8 @@ public class RoleController(ISender mediator) : ControllerBase
         if (id == Guid.Empty)
             return BadRequest("Invalid role ID.");
 
-        var role = await _mediator.Send(new GetRoleByIdQuery { Id = id });
-        return Ok(role);
+        var result = await _mediator.Send(new GetRoleByIdQuery { Id = id });
+        return Ok(result);
     }
 
     [HttpPatch]
@@ -71,8 +71,8 @@ public class RoleController(ISender mediator) : ControllerBase
         if (command == null)
             return BadRequest("Invalid role data.");
 
-        await _mediator.Send(command);
-        return NoContent();
+        var result = await _mediator.Send(command);
+        return Ok(result);
     }
 
     [HttpDelete]
@@ -82,7 +82,7 @@ public class RoleController(ISender mediator) : ControllerBase
         if (id == Guid.Empty)
             return BadRequest("Invalid role ID.");
 
-        await _mediator.Send(new DeleteRoleCommand { Id = id });
-        return NoContent();
+        var result = await _mediator.Send(new DeleteRoleCommand { Id = id });
+        return Ok(result);
     }
 }

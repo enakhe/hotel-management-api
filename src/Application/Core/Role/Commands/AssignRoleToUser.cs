@@ -1,9 +1,11 @@
 ﻿using HotelManagement.Application.Common.DTOs.Role;
+using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Role.Commands;
 
-public record AssignRoleToUserCommand : IRequest
+public record AssignRoleToUserCommand : IRequest<Result>
 {
     public required Guid UserId { get; set; }
     public required string RoleName { get; set; }
@@ -23,15 +25,19 @@ public class AssignRoleToUserCommandValidator : AbstractValidator<AssignRoleToUs
     }
 }
 
-public class AssignRoleToUserCommandHandler(IRoleService roleService, IMapper mapper) : IRequestHandler<AssignRoleToUserCommand>
+public class AssignRoleToUserCommandHandler(IRoleService roleService, IMapper mapper) : IRequestHandler<AssignRoleToUserCommand, Result>
 {
     private readonly IRoleService _roleService = roleService;
     private readonly IMapper _mapper = mapper;
 
-    public async Task Handle(AssignRoleToUserCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AssignRoleToUserCommand request, CancellationToken cancellationToken)
     {
         var assignRoleDto = _mapper.Map<AssignRoleDto>(request);
 
-        await _roleService.AssignRoleToUserAsync(assignRoleDto);
+        var result = await _roleService.AssignRoleToUserAsync(assignRoleDto);
+
+        return !result.Succeeded ?
+            throw new ConflictException(string.Join("; ", result.Errors)) :
+            result;
     }
 }
