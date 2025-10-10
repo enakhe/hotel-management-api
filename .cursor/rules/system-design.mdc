@@ -1,0 +1,75 @@
+---
+alwaysApply: true
+---
+System Architecture Principles Used in This Project
+This project implements several key architectural principles and patterns:
+1. Clean Architecture (Onion Architecture)
+The project follows Clean Architecture principles with clear separation of concerns across layers:
+Domain Layer (src/Domain/): Contains business entities, value objects, and domain logic
+Application Layer (src/Application/): Contains use cases, DTOs, interfaces, and application services
+Infrastructure Layer (src/Infrastructure/): Contains data access, external services, and framework-specific implementations
+Web Layer (src/Web/): Contains controllers, middleware, and presentation concerns
+Dependency Direction: Dependencies flow inward - Web → Application → Domain, with Infrastructure implementing Application interfaces.
+2. CQRS (Command Query Responsibility Segregation)
+The project implements CQRS using MediatR:
+Commands: Handle write operations (e.g., LoginCommand, CreateUserCommand)
+Queries: Handle read operations (e.g., GetUserById, GetUsers)
+Handlers: Separate handlers for each command/query
+Pipeline Behaviors: Cross-cutting concerns like validation, authorization, logging, and performance monitoring
+3. Multi-Tenant Architecture
+The project implements a sophisticated multi-tenant system:
+Tenant Resolution: Multiple strategies (subdomain, headers, query parameters)
+Tenant Context: ITenantContext service for current tenant information
+Tenant Interceptors: Automatic tenant ID stamping on entities
+Tenant-Aware Entities: BaseTenantEntity and BaseBusinessEntity with tenant isolation
+Tenant Middleware: TenantResolutionMiddleware for request-level tenant resolution
+4. Domain-Driven Design (DDD)
+Entities: Rich domain models with business logic
+Value Objects: Immutable objects like Colour
+Domain Events: Event-driven architecture with BaseEvent and domain event handling
+Aggregates: Business entities that maintain consistency boundaries
+Repositories: Data access abstraction
+5. Dependency Injection & Inversion of Control
+Service Registration: Centralized in DependencyInjection.cs files
+Interface Segregation: Small, focused interfaces
+Constructor Injection: Used throughout the application
+Service Lifetimes: Appropriate scoping (Scoped, Transient, Singleton)
+6. Repository Pattern
+Generic Repository: IApplicationDbContext for data access
+Specific Repositories: IUserRepository, IBranchRepository
+Unit of Work: Entity Framework's DbContext as UoW implementation
+7. Cross-Cutting Concerns
+Validation: FluentValidation with pipeline behaviors
+Authorization: Policy-based authorization with AuthorizationBehaviour
+Logging: Structured logging with LoggingBehaviour
+Performance: Performance monitoring with PerformanceBehaviour
+Exception Handling: Centralized exception handling with UnhandledExceptionBehaviour
+8. Cloud-Native Architecture
+Azure Integration: Bicep templates for infrastructure as code
+App Service: Hosted on Azure App Service
+SQL Server: Azure SQL Database
+Key Vault: Secrets management
+Application Insights: Monitoring and telemetry
+Redis: Caching and distributed caching
+9. API-First Design
+OpenAPI/Swagger: Auto-generated API documentation
+NSwag: Client code generation
+RESTful APIs: Standard HTTP methods and status codes
+Problem Details: RFC 7807 compliant error responses
+10. Security Architecture
+JWT Authentication: Token-based authentication
+Role-Based Authorization: ASP.NET Core Identity with custom roles
+Super Admin System: Separate admin context and services
+Rate Limiting: Tenant-specific rate limiting
+Idempotency: Idempotency middleware for safe retries
+11. Testing Strategy
+Unit Tests: Domain and Application layer tests
+Integration Tests: Infrastructure layer tests
+Functional Tests: End-to-end API tests
+Test Containers: Database testing with SQL containers
+12. Microservices-Ready Design
+Service Defaults: Common service configuration
+Health Checks: Built-in health monitoring
+Distributed Caching: Redis integration
+Service Discovery: Ready for container orchestration
+This architecture provides a robust, scalable, and maintainable foundation for a multi-tenant hotel management system with clear separation of concerns, strong typing, and comprehensive cross-cutting concerns handling.

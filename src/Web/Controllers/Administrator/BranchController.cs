@@ -1,8 +1,8 @@
 ﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Security;
 using HotelManagement.Application.Core.Branches.Commands;
 using HotelManagement.Application.Core.Branches.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers.Administrator;

@@ -2,14 +2,17 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
+using Azure.Core;
 using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 
 namespace HotelManagement.Infrastructure.Services.Auth;
@@ -17,14 +20,16 @@ public class AuthService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,
     IHttpContextAccessor httpContextAccessor,
+    ILogger<SuperAdminService> logger,
     IMapper mapper,
     IConfiguration configuration,
     IAuthorizationService authorizationService,
-IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuthService
+    IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
+    private readonly ILogger<SuperAdminService> _logger = logger;
     private readonly IMapper _mapper = mapper;
     private readonly IConfiguration _configuration = configuration;
     private readonly IAuthorizationService _authorizationService = authorizationService;
@@ -60,21 +65,28 @@ IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuth
         return result.Succeeded;
     }
 
-    public async Task<AuthResponseDto> LoginAsync(LoginRequestDto loginRequest)
+    public async Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto loginRequest)
     {
-        var user = _userManager.Users.SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email) ?? throw new UnauthorizedAccessException("Invalid credentials.");
+        try
+        {
+            var user = _userManager.Users
+                .SingleOrDefault(u => u.UserName == loginRequest.Email || u.Email == loginRequest.Email);
 
-        if (!user.IsActive)
-            throw new UnauthorizedAccessException("You are not authorized to access this account.");
+            if (user == null || !user.IsActive)
+                return Result<AuthResponseDto>.Failure("Email or password is incorrect", 401);
 
-        var result = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
+            var signInResult = await _signInManager.CheckPasswordSignInAsync(user, loginRequest.Password, false);
+            if (!signInResult.Succeeded)
+                return Result<AuthResponseDto>.Failure("Email or password is incorrect", 401);
 
-        if (!result.Succeeded)
-            throw new UnauthorizedAccessException("Invalid credentials.");
-
-        var token = await GeneratJwtToken(user);
-
-        return token;
+            var token = await GeneratJwtToken(user);
+            return Result<AuthResponseDto>.Success(token, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error authenticating user: {Email}", loginRequest.Email);
+            return Result<AuthResponseDto>.Failure("An error occurred during authentication", 500);
+        }
     }
 
     public async Task<Guid> RegisterAsync(RegisterUserDto dto)

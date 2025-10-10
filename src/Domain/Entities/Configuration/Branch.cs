@@ -1,10 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Common;
 
 namespace HotelManagement.Domain.Entities.Configuration;
-public class Branch
+public class Branch : ITenantEntity
 {
     public Guid Id { get; set; }
+
+    public Guid TenantId { get; set; }
 
     [Required]
     [MaxLength(100)]
@@ -29,5 +32,7 @@ public class Branch
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+    // Navigation properties
+    public Tenant? Tenant { get; set; }
     public ICollection<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
 }

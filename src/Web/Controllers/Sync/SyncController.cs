@@ -7,7 +7,7 @@ namespace HotelManagement.Web.Controllers.Sync;
 
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/sync")]
 public class SyncController : ControllerBase
 {
     private readonly WebServerAgent _agent;

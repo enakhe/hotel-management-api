@@ -5,6 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HotelManagement.Web.Controllers.Auth;
 
+/// <summary>
+///    Authentication and Authorization Controller
+/// </summary>
+/// <param name="mediator"></param>
+
 [ApiController]
 [Route("api/v1/auth")]
 public class AuthController(ISender mediator) : ControllerBase
@@ -13,10 +18,11 @@ public class AuthController(ISender mediator) : ControllerBase
 
     [HttpPost("login")]
     [AllowAnonymous]
-    public async Task<IActionResult> Login([FromBody] LoginCommand command)
+    public async Task<ActionResult> Login([FromBody] LoginCommand command)
     {
         var response = await _mediator.Send(command);
-        return Ok(response);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     [HttpPost("register")]

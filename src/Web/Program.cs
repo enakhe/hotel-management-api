@@ -6,15 +6,28 @@ using HotelManagement.Infrastructure.Data;
 using HotelManagement.ServiceDefaults;
 using HotelManagement.Web;
 using HotelManagement.Web.Middlewares;
+using HotelManagement.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
 builder.AddRedisClient("cache");
+
+var cacheConnectionString = builder.Configuration.GetConnectionString("cache");
+if (!string.IsNullOrEmpty(cacheConnectionString))
+{
+    builder.Services.AddStackExchangeRedisCache(options =>
+    {
+        options.Configuration = cacheConnectionString;
+        options.InstanceName = "HotelManagement";
+    });
+}
+else
+{
+    builder.Services.AddDistributedMemoryCache();
+}
 
 builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
 builder.Services.AddApplicationServices();
@@ -22,7 +35,9 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 builder.Services.AddHttpContextAccessor();
 
-// Configure the ProblemDetails middleware.
+builder.Services.AddSuperAdminAuthentication(builder.Configuration);
+builder.Services.AddSuperAdminAuthorization();
+
 builder.Services.AddProblemDetails(options =>
 {
     options.IncludeExceptionDetails = (ctx, ex) => builder.Environment.IsDevelopment();
@@ -61,14 +76,12 @@ builder.Services.AddProblemDetails(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     await app.InitialiseDatabaseAsync();
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -85,9 +98,14 @@ app.UseSwaggerUi(settings =>
 });
 
 app.UseRouting();
+app.UseMiddleware<TenantResolutionMiddleware>();
+app.UseMiddleware<TenantRateLimitingMiddleware>();
+app.UseMiddleware<SuperAdminMiddleware>();
+app.UseMiddleware<IdempotencyMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<AuthorizationFailureMiddleware>();
 
 app.UseAntiforgery();
 
@@ -95,9 +113,6 @@ app.UseOutputCache();
 
 app.MapControllers();
 app.Map("/", () => Results.Redirect("/api"));
-
-//app.MapDefaultEndpoints();
-//app.MapEndpoints();
 
 app.Run();
 

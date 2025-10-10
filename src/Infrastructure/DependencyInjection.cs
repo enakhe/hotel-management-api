@@ -15,6 +15,8 @@ using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
 using HotelManagement.Infrastructure.Services.Administrator;
 using HotelManagement.Infrastructure.Services.Auth;
+using HotelManagement.Infrastructure.Services;
+using HotelManagement.Infrastructure.Data.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -25,6 +27,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
+using HotelManagement.Application.Common.Interfaces.License;
+using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Infrastructure;
 public static class DependencyInjection
@@ -37,6 +42,7 @@ public static class DependencyInjection
 
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, TenantInterceptor>();
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
@@ -107,6 +113,17 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<IRoleService, RoleService>();
+
+        // Register tenant services
+        services.AddScoped<ITenantService, TenantService>();
+        services.AddScoped<ILicensingService, LicensingService>();
+        services.AddScoped<ITenantRegistryService, TenantRegistryService>();
+        services.AddScoped<TenantQueryFilterService>();
+        services.AddScoped<TenantAwareDbContextFactory>();
+
+        // Register SuperAdmin services
+        services.AddScoped<ISuperAdminService, SuperAdminService>();
+        services.AddScoped<ISuperAdminAuditService, SuperAdminAuditService>();
 
         services.AddAuthorizationBuilder()
             .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));

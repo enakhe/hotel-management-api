@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: esmart-sqlserver
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password.1
+      - MSSQL_PID=Express
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+    networks:
+      - esmart-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: esmart-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - esmart-network
+
+volumes:
+  sqlserver_data:
+  redis_data:
+
+networks:
+  esmart-network:
+    driver: bridge

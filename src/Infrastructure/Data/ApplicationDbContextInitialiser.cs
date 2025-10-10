@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Domain.Constants;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,39 @@ public class ApplicationDbContextInitialiser
 
     public async Task TrySeedAsync()
     {
+        // Default tenant
+        var defaultTenant = new Tenant
+        {
+            Name = "Esmart Systems",
+            Identifier = "esmart",
+            Description = "Main Tenant for superadmin operations",
+            Address = "Ikeja, Lagos, Nigeria",
+            ContactNumber = "+2349069477106",
+            Email = "contact@eitiltech.com",
+            IsActive = true,
+            TimeZone = "WAT",
+            CurrencyCode = "NGN",
+            LanguageCode = "en",
+            SubscriptionPlan = "Premium",
+            LicenseStatus = LicenseStatus.Active,
+            MaxUsers = 100000,
+            MaxBranches = 10,
+            MaxRooms = 100000,
+            MaxReservations = 100000,
+            UseSharedDatabase = true,
+            DatabaseProvider = "SqlServer"
+        };
+
+        if (!_context.Tenants.Any(t => t.Identifier == defaultTenant.Identifier))
+        {
+            _context.Tenants.Add(defaultTenant);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            defaultTenant = _context.Tenants.First(t => t.Identifier == defaultTenant.Identifier);
+        }
+
         // Default roles
         var administratorRole = new ApplicationRole
         {
@@ -76,11 +110,22 @@ public class ApplicationDbContextInitialiser
             await _roleManager.CreateAsync(administratorRole);
         }
 
+        var superAdminRole = new ApplicationRole
+        {
+            Name = Roles.SuperAdmin.ToString()
+        };
+
+        if (_roleManager.Roles.All(r => r.Name != superAdminRole.Name))
+        {
+            await _roleManager.CreateAsync(superAdminRole);
+        }
+
         // Default branch
         var defaultBranch = new Branch
         {
+            TenantId = defaultTenant.Id,
             Name = "Main Branch",
-            Address = "123 Main St, City, Country",
+            Address = "Ikeja, Lagos, Nigeria",
             ContactNumber = "+2349069477106",
             Email = "contact@eitiltech.com",
             IsActive = true,
@@ -99,6 +144,7 @@ public class ApplicationDbContextInitialiser
         // Default users
         var administrator = new ApplicationUser
         {
+            TenantId = defaultTenant.Id,
             UserName = "admin@eitiltech.com",
             Email = "admin@eitiltech.com",
             FirstName = "Admin",
@@ -118,6 +164,32 @@ public class ApplicationDbContextInitialiser
             if (!string.IsNullOrWhiteSpace(administratorRole.Name))
             {
                 await _userManager.AddToRolesAsync(administrator, new[] { administratorRole.Name });
+            }
+        }
+
+        // SuperAdmin user (not tied to any tenant or branch)
+        var superAdmin = new ApplicationUser
+        {
+            UserName = "superadmin@eitiltech.com",
+            Email = "superadmin@eitiltech.com",
+            FirstName = "Super",
+            LastName = "Admin",
+            MiddleName = "A",
+            FullName = "Super Admin A",
+            EmailConfirmed = true,
+            IsActive = true,
+            PhoneNumberConfirmed = true,
+            PhoneNumber = "+2349069477106",
+            TenantId = defaultTenant.Id,
+            BranchId = defaultBranch.Id
+        };
+
+        if (_userManager.Users.All(u => u.UserName != superAdmin.UserName))
+        {
+            await _userManager.CreateAsync(superAdmin, "SuperAdmin1!");
+            if (!string.IsNullOrWhiteSpace(superAdminRole.Name))
+            {
+                await _userManager.AddToRolesAsync(superAdmin, [superAdminRole.Name]);
             }
         }
     }
