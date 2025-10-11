@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HotelManagement.Application.Common.DTOs.Auth;
 using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Auth.Commands;
 
-public record ConfirmPasswordResetCommand : IRequest
+public record ConfirmPasswordResetCommand : IRequest<Result>
 {
     [Required]
     public required string Email { get; set; }
@@ -40,15 +41,17 @@ public class ConfirmPasswordResetCommandValidator : AbstractValidator<ConfirmPas
     }
 }
 
-public class ConfirmPasswordResetCommandHandler(IAuthService authService, IMapper mapper) : IRequestHandler<ConfirmPasswordResetCommand>
+public class ConfirmPasswordResetCommandHandler(IAuthService authService, IMapper mapper) : IRequestHandler<ConfirmPasswordResetCommand, Result>
 {
     private readonly IAuthService _authService = authService;
     private readonly IMapper _mapper = mapper;
 
-    public async Task Handle(ConfirmPasswordResetCommand request, CancellationToken cancellationToken)
+    public async Task<Result> Handle(ConfirmPasswordResetCommand request, CancellationToken cancellationToken)
     {
         var confirmPasswordResetDto = _mapper.Map<ResetPasswordConfirmDto>(request);
 
-        await _authService.ConfirmPasswordResetAsync(confirmPasswordResetDto);
+        var response = await _authService.ConfirmPasswordResetAsync(confirmPasswordResetDto);
+
+        return response;
     }
 }

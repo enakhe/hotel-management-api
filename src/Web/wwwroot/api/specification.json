@@ -2696,18 +2696,11 @@
         "additionalProperties": false,
         "required": [
           "firstName",
-          "middleName",
           "lastName",
-          "email",
-          "password"
+          "email"
         ],
         "properties": {
           "firstName": {
-            "type": "string",
-            "maxLength": 50,
-            "minLength": 1
-          },
-          "middleName": {
             "type": "string",
             "maxLength": 50,
             "minLength": 1
@@ -2722,21 +2715,15 @@
             "format": "email",
             "minLength": 1
           },
-          "password": {
-            "type": "string",
-            "minLength": 8
-          },
-          "phoneNumber": {
-            "type": "string",
-            "format": "phone",
-            "nullable": true
-          },
           "branchId": {
             "type": "string",
             "format": "guid",
             "nullable": true
           },
-          "roleIds": {
+          "tenant": {
+            "type": "string"
+          },
+          "roles": {
             "type": "array",
             "items": {
               "type": "string",

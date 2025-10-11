@@ -4,24 +4,17 @@ namespace HotelManagement.Application.Common.DTOs.Auth;
 public class RegisterUserDto
 {
     [Required, MaxLength(50)]
-    public required string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [Required, MaxLength(50)]
-    public required string MiddleName { get; set; }
-
-    [Required, MaxLength(50)]
-    public required string LastName { get; set; }
+    public string? LastName { get; set; }
 
     [Required, EmailAddress]
     public required string Email { get; set; }
 
-    [Required, MinLength(8)]
-    public required string Password { get; set; }
+    public Guid BranchId { get; set; }
 
-    [Phone]
-    public string? PhoneNumber { get; set; }
+    public required string Tenant { get; set; }
 
-    public Guid? BranchId { get; set; }
-
-    public List<Guid> RoleIds { get; set; } = [];
+    public List<Guid> Roles { get; set; } = [];
 }

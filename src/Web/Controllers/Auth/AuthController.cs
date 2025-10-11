@@ -27,57 +27,44 @@ public class AuthController(ISender mediator) : ControllerBase
 
     [HttpPost("register")]
     [AllowAnonymous]
-    public async Task<IActionResult> Register([FromBody] RegisterCommand command)
+    public async Task<ActionResult> Register([FromBody] RegisterCommand command)
     {
-        if (command == null)
-            return BadRequest("Request payload is missing or malformed.");
+        var response = await _mediator.Send(command);
 
-        var userId = await _mediator.Send(command);
-
-        return CreatedAtAction(nameof(Register), new { id = userId }, new { id = userId });
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
-    {
-        if (command == null || string.IsNullOrWhiteSpace(command.RefreshToken))
-            return BadRequest("Refresh token is required.");
+    { 
+        var response = await _mediator.Send(command);
 
-        var tokenResponse = await _mediator.Send(command);
-
-        return tokenResponse == null ? Unauthorized("Invalid refresh token.") : Ok(tokenResponse);
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     [HttpPost("change-password")]
     public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
     {
-        if (command == null || string.IsNullOrWhiteSpace(command.NewPassword) || string.IsNullOrWhiteSpace(command.CurrentPassword))
-            return BadRequest("Old and new passwords are required.");
+        var response = await _mediator.Send(command);
 
-        await _mediator.Send(command);
-
-        return Ok(new { Message = "Password changed successfully." });
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     [HttpPost("forgot-password")]
     [AllowAnonymous]
-    public async Task<IActionResult> ForgotPassword([FromBody] RequestPasswordResetCommand command)
+    public async Task<ActionResult> ForgotPassword([FromBody] RequestPasswordResetCommand command)
     {
-        if (command == null || string.IsNullOrWhiteSpace(command.Email))
-            return BadRequest("Email is required.");
+        var response = await _mediator.Send(command);
 
-        await _mediator.Send(command);
-        return Ok(new { Message = "If the email exists, a password reset link has been sent." });
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     [HttpPost("confirm-password-reset")]
     [AllowAnonymous]
-    public async Task<IActionResult> ConfirmPasswordReset([FromBody] ConfirmPasswordResetCommand command)
+    public async Task<ActionResult> ConfirmPasswordReset([FromBody] ConfirmPasswordResetCommand command)
     {
-        if (command == null || string.IsNullOrWhiteSpace(command.Email) || string.IsNullOrWhiteSpace(command.Token) || string.IsNullOrWhiteSpace(command.Password))
-            return BadRequest("Email, token, and new password are required.");
+        var response = await _mediator.Send(command);
 
-        await _mediator.Send(command);
-        return Ok(new { Message = "Password reset successfully." });
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 }

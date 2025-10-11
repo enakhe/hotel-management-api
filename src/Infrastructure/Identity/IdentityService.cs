@@ -1,4 +1,5 @@
 using HotelManagement.Application.Common.Models;
+using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -27,12 +28,14 @@ public class IdentityService
         return user?.UserName;
     }
 
-    public async Task<(Result<object?> Result, string UserId)> CreateUserAsync(string userName, string password)
+    public async Task<(Result<object?> Result, string UserId)> CreateUserAsync(string userName, string password, Branch branch)
     {
         var user = new ApplicationUser
         {
             UserName = userName,
             Email = userName,
+            Branch = branch,
+            BranchId = branch.Id
         };
 
         var result = await _userManager.CreateAsync(user, password);

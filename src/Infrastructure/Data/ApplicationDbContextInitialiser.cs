@@ -156,6 +156,7 @@ public class ApplicationDbContextInitialiser
             PhoneNumberConfirmed = true,
             PhoneNumber = "+2349069477106",
             BranchId = defaultBranch.Id,
+            Branch = defaultBranch
         };
 
         if (_userManager.Users.All(u => u.UserName != administrator.UserName))
@@ -181,7 +182,8 @@ public class ApplicationDbContextInitialiser
             PhoneNumberConfirmed = true,
             PhoneNumber = "+2349069477106",
             TenantId = defaultTenant.Id,
-            BranchId = defaultBranch.Id
+            BranchId = defaultBranch.Id,
+            Branch = defaultBranch
         };
 
         if (_userManager.Users.All(u => u.UserName != superAdmin.UserName))

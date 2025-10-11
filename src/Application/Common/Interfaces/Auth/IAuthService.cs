@@ -12,17 +12,17 @@ public interface IAuthService
 
     Task<Result<AuthResponseDto>> LoginAsync(LoginRequestDto loginRequest);
 
-    Task<Guid> RegisterAsync(RegisterUserDto registerUserDto);
+    Task<Result> RegisterAsync(RegisterUserDto dto);
 
     Task LogoutAsync();
 
-    Task<TokenResponseDto> RefreshTokenAsync(string refreshToken);
+    Task<Result<TokenResponseDto>> RefreshTokenAsync(string refreshToken);
 
-    Task ChangePasswordAsync(ChangePasswordDto changePasswordDto);
+    Task<Result> ChangePasswordAsync(ChangePasswordDto changePasswordDto);
 
-    Task RequestPasswordResetAsync(ResetPasswordRequestDto resetPasswordRequestDto);
+    Task<Result<string>> RequestPasswordResetAsync(ResetPasswordRequestDto resetPasswordRequestDto);
 
-    Task ConfirmPasswordResetAsync(ResetPasswordConfirmDto resetPasswordDto);
+    Task<Result> ConfirmPasswordResetAsync(ResetPasswordConfirmDto resetPasswordConfirmDto);
 
     Task<bool> IsEmailTakenAsync(string email);
 

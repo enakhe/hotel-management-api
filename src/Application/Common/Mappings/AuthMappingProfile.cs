@@ -12,7 +12,11 @@ public class AuthMappingProfile : Profile
         CreateMap<RegisterUserDto, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.EmailConfirmed, opt => opt.MapFrom(src => false))
-                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow));
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))
+                .ForMember(dest => dest.Tenant, opt => opt.Ignore())
+                .ForMember(dest => dest.TenantId, opt => opt.Ignore())
+                .ForMember(dest => dest.Branch, opt => opt.Ignore())
+                .ForMember(dest => dest.AuditLogs, opt => opt.Ignore());
 
         CreateMap<LoginCommand, LoginRequestDto>();
 

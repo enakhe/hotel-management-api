@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Infrastructure.Services.Auth;
 public class AuthService(
@@ -24,6 +25,7 @@ public class AuthService(
     IMapper mapper,
     IConfiguration configuration,
     IAuthorizationService authorizationService,
+    ITenantService tenantService,
     IUserClaimsPrincipalFactory<ApplicationUser> userClaimsPrincipalFactory) : IAuthService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -33,6 +35,7 @@ public class AuthService(
     private readonly IMapper _mapper = mapper;
     private readonly IConfiguration _configuration = configuration;
     private readonly IAuthorizationService _authorizationService = authorizationService;
+    private readonly ITenantService _tenantService = tenantService;
     private readonly IUserClaimsPrincipalFactory<ApplicationUser> _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
 
     public async Task<string?> GetUserNameAsync(string userId)
@@ -89,88 +92,123 @@ public class AuthService(
         }
     }
 
-    public async Task<Guid> RegisterAsync(RegisterUserDto dto)
+    public async Task<Result> RegisterAsync(RegisterUserDto dto)
     {
-        if (dto == null)
-            throw new ArgumentNullException(nameof(dto), "CreateUserDto cannot be null");
+        try
+        {
+            if (await IsEmailTakenAsync(dto.Email))
+                return Result.Failure("Email is already registered", 400);
 
-        if (dto.BranchId == null)
-            throw new ArgumentNullException(nameof(dto), "BranchId cannot be null");
+            var user = await CreateUserFromDtoAsync(dto);
+            var createResult = await _userManager.CreateAsync(user, GenerateInitialPassword());
 
-        var user = _mapper.Map<ApplicationUser>(dto)
-            ?? throw new Exception("Failed to map CreateUserDto to ApplicationUser");
+            if (!createResult.Succeeded)
+            {
+                var errors = string.Join(", ", createResult.Errors.Select(e => e.Description));
+                return Result.Failure($"Failed to create user: {errors}", 400);
+            }
 
-        user.Id = Guid.NewGuid();
-        user.FirstName = dto.FirstName;
-        user.MiddleName = dto.MiddleName;
-        user.LastName = dto.LastName;
-        user.FullName = $"{dto.FirstName} {dto.MiddleName} {dto.LastName}";
-        user.BranchId = (Guid)dto.BranchId;
+            if (dto.Roles.Count > 0)
+            {
+                var roleResult = await AssignRolesToUserAsync(user, dto.Roles);
+                if (!roleResult.Succeeded)
+                    return roleResult;
+            }
 
-        var result = await _userManager.CreateAsync(user, dto.Password);
-
-        return !result.Succeeded ? throw new ConflictException(string.Join(", ", result.Errors.Select(e => e.Description))) : user.Id;
+            return Result.Success("User registered successfully", 201);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error registering user: {Email}", dto?.Email);
+            return Result.Failure("An error occurred during registration", 500);
+        }
     }
 
     public Task LogoutAsync() => Task.CompletedTask;
 
-    public async Task<TokenResponseDto> RefreshTokenAsync(string refreshToken)
+    public async Task<Result<TokenResponseDto>> RefreshTokenAsync(string refreshToken)
     {
-        var userId = ValidateJWTToken(refreshToken, out bool isExpired);
-
-        if (isExpired)
-            throw new UnauthorizedAccessException("Refresh token is expired");
-
-        if (userId == null) throw new UnauthorizedAccessException("User not authenticated");
-
-        var user = await _userManager.FindByIdAsync(userId) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
-
-        var token = await GeneratJwtToken(user);
-
-        return new TokenResponseDto
+        try
         {
-            AccessToken = token.AccessToken,
-            AccessTokenExpiration = token.AccessTokenExpiration,
-            RefreshToken = token.RefreshToken,
-            RefreshTokenExpiration = token.RefreshTokenExpiration,
-            UserId = token.UserId,
-            UserName = token.UserName,
-            Email = token.Email,
-        };
+            var userId = ValidateJWTToken(refreshToken, out bool isExpired);
+            if (isExpired || userId == null)
+                return Result<TokenResponseDto>.Failure("Invalid or expired refresh token", 401);
+
+            var user = await GetUserByIdAsync(userId);
+            if (user == null)
+                return Result<TokenResponseDto>.Failure("User not found", 404);
+
+            var authResponse = await GeneratJwtToken(user);
+
+            return Result<TokenResponseDto>.Success(MapToTokenResponseDto(authResponse), 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error refreshing token");
+            return Result<TokenResponseDto>.Failure("Failed to refresh token", 500);
+        }
     }
 
-    public async Task ChangePasswordAsync(ChangePasswordDto changePasswordDto)
+    public async Task<Result> ChangePasswordAsync(ChangePasswordDto changePasswordDto)
     {
-        var user = await _userManager.FindByIdAsync(changePasswordDto.UserId) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
+        try
+        {
+            var user = await _userManager.FindByIdAsync(changePasswordDto.UserId);
+            if (user == null)
+                return Result.Failure("User not found", 404);
 
-        var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
+            var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.CurrentPassword, changePasswordDto.NewPassword);
 
-        if (!result.Succeeded)
-            throw new FluentValidation.ValidationException(string.Join(", ", result.Errors.Select(e => e.Description)));
+            return !result.Succeeded
+                ? Result.Failure(string.Join(", ", result.Errors.Select(e => e.Description)))
+                : Result.Success("Password changed successfully", 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error changing password for user: {UserId}", changePasswordDto.UserId);
+            throw new Exception("An error occurred while changing the password");
+        }
     }
 
-    public async Task RequestPasswordResetAsync(ResetPasswordRequestDto resetPasswordRequestDto)
+    public async Task<Result<string>> RequestPasswordResetAsync(ResetPasswordRequestDto resetPasswordRequestDto)
     {
-        var user = await _userManager.FindByEmailAsync(resetPasswordRequestDto.Email) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordRequestDto.Email);
+            if(user == null || !user.IsActive)
+                return Result<string>.Failure("User not found or inactve", 404);
 
-        if (!user.IsActive)
-            throw new UnauthorizedAccessException("User is not active");
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
 
-        var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        // Send email with token (not implemented here)
+            return Result<string>.Success(token, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error requesting password reset for email: {Email}", resetPasswordRequestDto.Email);
+            throw new Exception("An error occurred while requesting password reset");
+        }
     }
 
-    public async Task ConfirmPasswordResetAsync(ResetPasswordConfirmDto resetPasswordConfirmDto)
+    public async Task<Result> ConfirmPasswordResetAsync(ResetPasswordConfirmDto resetPasswordConfirmDto)
     {
-        var user = await _userManager.FindByEmailAsync(resetPasswordConfirmDto.Email) ?? throw new HotelManagement.Application.Common.Exceptions.NotFoundException("User not found");
+        try
+        {
+            var user = await _userManager.FindByEmailAsync(resetPasswordConfirmDto.Email);
+            if (user == null || !user.IsActive)
+                return Result.Failure("User not found or inactve", 404);
 
-        if (!user.IsActive)
-            throw new UnauthorizedAccessException("User is not active");
+            var result = await _userManager.ResetPasswordAsync(user, resetPasswordConfirmDto.Token, resetPasswordConfirmDto.Password);
 
-        var result = await _userManager.ResetPasswordAsync(user, resetPasswordConfirmDto.Token, resetPasswordConfirmDto.Password);
+            if (!result.Succeeded)
+                return Result.Failure(string.Join(", ", result.Errors.Select(e => e.Description)));
 
-        if (!result.Succeeded)
-            throw new FluentValidation.ValidationException(string.Join(", ", result.Errors.Select(e => e.Description)));
+            return Result.Success("Password has been reset successfully", 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error confirming password reset for email: {Email}", resetPasswordConfirmDto.Email);
+            throw new Exception("An error occurred while confirming password reset");
+        }
     }
 
     public async Task<bool> IsEmailTakenAsync(string email)
@@ -273,5 +311,80 @@ public class AuthService(
         {
             throw new Exception(ex.Message);
         }
+    }
+
+    private async Task<ApplicationUser> CreateUserFromDtoAsync(RegisterUserDto dto)
+    {
+        var user = _mapper.Map<ApplicationUser>(dto);
+        var tenantId = await _tenantService.GetTenantIdByIdentifierAsync(dto.Tenant);
+
+        user.Id = Guid.NewGuid();
+        user.UserName = dto.Email;
+        user.FullName = $"{dto.FirstName} {dto.LastName}";
+        user.TenantId = tenantId;
+
+        return user;
+    }
+
+    private async Task<Result> AssignRolesToUserAsync(ApplicationUser user, List<Guid> roleIds)
+    {
+        var roleNames = roleIds.Select(roleId => roleId.ToString()).ToList();
+        var roleResult = await _userManager.AddToRolesAsync(user, roleNames);
+
+        if (!roleResult.Succeeded)
+        {
+            var errors = string.Join(", ", roleResult.Errors.Select(e => e.Description));
+            return Result.Failure($"Failed to assign roles: {errors}", 400);
+        }
+
+        return Result.Success();
+    }
+
+    private async Task<ApplicationUser?> GetUserByIdAsync(string userId)
+    {
+        return await _userManager.FindByIdAsync(userId);
+    }
+
+    private static TokenResponseDto MapToTokenResponseDto(AuthResponseDto authResponse)
+    {
+        return new TokenResponseDto
+        {
+            AccessToken = authResponse.AccessToken,
+            AccessTokenExpiration = authResponse.AccessTokenExpiration,
+            RefreshToken = authResponse.RefreshToken,
+            RefreshTokenExpiration = authResponse.RefreshTokenExpiration,
+            UserId = authResponse.UserId,
+            UserName = authResponse.UserName,
+            Email = authResponse.Email,
+        };
+    }
+
+    private static string GenerateInitialPassword()
+    {
+        const int length = 12;
+        const string upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        const string lower = "abcdefghijklmnopqrstuvwxyz";
+        const string digits = "0123456789";
+        const string special = "!@#$%^&*";
+        var allChars = upper + lower + digits + special;
+
+        var passwordChars = new List<char>(length);
+
+        passwordChars.Add(upper[System.Security.Cryptography.RandomNumberGenerator.GetInt32(upper.Length)]);
+        passwordChars.Add(digits[System.Security.Cryptography.RandomNumberGenerator.GetInt32(digits.Length)]);
+        passwordChars.Add(special[System.Security.Cryptography.RandomNumberGenerator.GetInt32(special.Length)]);
+
+        while (passwordChars.Count < length)
+        {
+            passwordChars.Add(allChars[System.Security.Cryptography.RandomNumberGenerator.GetInt32(allChars.Length)]);
+        }
+
+        for (int i = passwordChars.Count - 1; i > 0; i--)
+        {
+            int j = System.Security.Cryptography.RandomNumberGenerator.GetInt32(i + 1);
+            (passwordChars[i], passwordChars[j]) = (passwordChars[j], passwordChars[i]);
+        }
+
+        return new string(passwordChars.ToArray());
     }
 }
