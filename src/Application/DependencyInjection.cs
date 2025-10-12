@@ -13,6 +13,7 @@ public static class DependencyInjection
     {
         services.AddAutoMapper(Assembly.GetExecutingAssembly());
         services.AddAutoMapper(typeof(AdministratorMappingProfile).Assembly);
+        services.AddAutoMapper(typeof(SuperAdministratorMappingProfile).Assembly);
         services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());

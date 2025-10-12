@@ -30,6 +30,8 @@ using StackExchange.Redis;
 using HotelManagement.Application.Common.Interfaces.License;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.Mappings;
+using HotelManagement.Application.Core.Tenant.Commands;
 
 namespace HotelManagement.Infrastructure;
 public static class DependencyInjection
@@ -43,6 +45,16 @@ public static class DependencyInjection
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, TenantInterceptor>();
+
+        var allowedOrigins = new[] { "http://localhost:3000", "https://localhost:3000" };
+        services.AddCors(options => options.AddPolicy("AllowSpecificOrigins", policy => policy
+                      .WithOrigins(allowedOrigins)
+                      .WithHeaders("Access-Control-Allow-Private-Network", "true", "Content-Type", "Authorization", "X-Requested-With", "Accept", "Origin", "X-Request-Id", "X-Tenant-Id", "X-Tenant-Identifier", "Cache-Control", "Pragma", "X-Admin-Portal", "X-App-Version", "X-Debug-Timestamp", "If-Modified-Since", "If-None-Match")
+                      .AllowAnyHeader()
+                      .AllowAnyMethod()
+                      .SetPreflightMaxAge(TimeSpan.FromSeconds(86400))
+                      .AllowCredentials()
+                      .SetIsOriginAllowedToAllowWildcardSubdomains()));
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
@@ -130,6 +142,7 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<CreateTenantCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateBranchValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();

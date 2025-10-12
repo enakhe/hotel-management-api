@@ -1,4 +1,5 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Configuration;
@@ -7,78 +8,65 @@ using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using AutoMapper;
 
 namespace HotelManagement.Infrastructure.Services;
 
 /// <summary>
 /// Service for SuperAdmin tenant management operations
 /// </summary>
-public class SuperAdminService : ISuperAdminService
+public class SuperAdminService(
+    ApplicationDbContext context,
+    ILogger<SuperAdminService> logger,
+    ISuperAdminAuditService auditService,
+    IAuthService authService,
+    IMapper mapper) : ISuperAdminService
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ILogger<SuperAdminService> _logger;
-    private readonly ISuperAdminAuditService _auditService;
-
-    public SuperAdminService(
-        ApplicationDbContext context,
-        ILogger<SuperAdminService> logger,
-        ISuperAdminAuditService auditService)
-    {
-        _context = context;
-        _logger = logger;
-        _auditService = auditService;
-    }
-
-    public async Task<CreateTenantResult> CreateTenantAsync(CreateTenantRequest request)
+    private readonly ApplicationDbContext _context = context;
+    private readonly ILogger<SuperAdminService> _logger = logger;
+    private readonly ISuperAdminAuditService _auditService = auditService;
+    private readonly IAuthService _authService = authService;
+    private readonly IMapper _mapper = mapper;
+    public async Task<Result<Tenant>> CreateTenantAsync(CreateTenantRequest request)
     {
         try
         {
-            // Check if identifier already exists
             var existingTenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.Identifier == request.Identifier);
 
             if (existingTenant != null)
-            {
-                return new CreateTenantResult
-                {
-                    Success = false,
-                    ErrorMessage = $"Tenant with identifier '{request.Identifier}' already exists"
-                };
-            }
+                return Result<Tenant>.Failure($"Tenant with identifier '{request.Identifier}' already exists", 400);
 
-            // Create tenant
-            var tenant = new Tenant
-            {
-                Id = Guid.NewGuid(),
-                TenantId = Guid.NewGuid(),
-                Name = request.Name,
-                Identifier = request.Identifier,
-                Description = request.Description,
-                Address = request.Address,
-                ContactNumber = request.ContactNumber,
-                Email = request.Email,
-                TimeZone = request.TimeZone ?? "UTC",
-                CurrencyCode = request.CurrencyCode ?? "USD",
-                LanguageCode = request.LanguageCode ?? "en",
-                Country = request.Country,
-                Region = request.Region,
-                Industry = request.Industry,
-                SubscriptionPlan = request.SubscriptionPlan,
-                MaxUsers = request.MaxUsers,
-                MaxBranches = request.MaxBranches,
-                MaxRooms = request.MaxRooms,
-                MaxReservations = request.MaxReservations,
-                LicenseStatus = LicenseStatus.Trial,
-                IsActive = true,
-                Created = DateTimeOffset.UtcNow,
-                CreatedBy = "SuperAdmin",
-                LastModified = DateTimeOffset.UtcNow,
-                LastModifiedBy = "SuperAdmin"
-            };
+            var tenant = _mapper.Map<Tenant>(request);
+
+            //tenant.Id = Guid.NewGuid();
+            //tenant.TenantId = Guid.NewGuid();
+            //tenant.Name = request.Name;
+            //tenant.Identifier = request.Identifier;
+            //tenant.Description = request.Description;
+            //tenant.Address = request.Address;
+            //tenant.ContactNumber = request.ContactNumber;
+            //tenant.Email = request.Email;
+            //tenant.TimeZone = request.TimeZone ?? "UTC";
+            //tenant.CurrencyCode = request.CurrencyCode ?? "USD";
+            //tenant.LanguageCode = request.LanguageCode ?? "en";
+            //tenant.Country = request.Country;
+            //tenant.Region = request.Region;
+            //tenant.Industry = request.Industry;
+            //tenant.SubscriptionPlan = request.SubscriptionPlan.ToString();
+            //tenant.MaxUsers = request.MaxUsers;
+            //tenant.MaxBranches = request.MaxBranches;
+            //tenant.MaxRooms = request.MaxRooms;
+            //tenant.MaxReservations = request.MaxReservations;
+            //tenant.LicenseStatus = LicenseStatus.Trial;
+            //tenant.IsActive = true;
+            //tenant.Created = DateTimeOffset.UtcNow;
+            //tenant.CreatedBy = "SuperAdmin";
+            //tenant.LastModified = DateTimeOffset.UtcNow;
+            //tenant.LastModifiedBy = "SuperAdmin";
 
             _context.Tenants.Add(tenant);
 
-            // Create tenant features
             foreach (var module in request.EnabledModules)
             {
                 var feature = new TenantFeature
@@ -95,7 +83,6 @@ public class SuperAdminService : ISuperAdminService
 
             await _context.SaveChangesAsync();
 
-            // Log the action
             await _auditService.LogActionAsync(
                 "CreateTenant",
                 "Tenant",
@@ -104,26 +91,16 @@ public class SuperAdminService : ISuperAdminService
                 $"Created tenant '{request.Name}' with identifier '{request.Identifier}'",
                 JsonSerializer.Serialize(request));
 
-            return new CreateTenantResult
-            {
-                Success = true,
-                TenantId = tenant.Id,
-                InitialPassword = GenerateInitialPassword(),
-                AdminEmail = request.Email
-            };
+            return Result<Tenant>.Success(tenant, 201);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating tenant: {Identifier}", request.Identifier);
-            return new CreateTenantResult
-            {
-                Success = false,
-                ErrorMessage = "An error occurred while creating the tenant"
-            };
+            return Result<Tenant>.Failure("An error occurred while creating the tenant", 500);
         }
     }
 
-    public async Task<PaginatedResult<TenantSummary>> GetTenantsAsync(TenantListRequest request)
+    public async Task<Result<PaginatedResult<TenantSummary>>> GetTenantsAsync(TenantListRequest request)
     {
         try
         {
@@ -147,7 +124,7 @@ public class SuperAdminService : ISuperAdminService
 
             if (!string.IsNullOrEmpty(request.Plan))
             {
-                query = query.Where(t => t.SubscriptionPlan == request.Plan);
+                query = query.Where(t => t.SubscriptionPlan == request.Plan.ToString());
             }
 
             if (!string.IsNullOrEmpty(request.Region))
@@ -197,18 +174,20 @@ public class SuperAdminService : ISuperAdminService
                 })
                 .ToListAsync();
 
-            return new PaginatedResult<TenantSummary>
+            var paginatedResult = new PaginatedResult<TenantSummary>
             {
                 Items = items,
                 TotalCount = totalCount,
                 Page = request.Page,
                 Size = request.Size
             };
+
+            return Result<PaginatedResult<TenantSummary>>.Success(paginatedResult, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting tenants list");
-            return new PaginatedResult<TenantSummary>();
+            return Result<PaginatedResult<TenantSummary>>.Failure("An error occurred while getting the tenants list", 500);
         }
     }
 
@@ -246,7 +225,7 @@ public class SuperAdminService : ISuperAdminService
                 IsActive = tenant.IsActive,
                 LicenseStatus = tenant.LicenseStatus.ToString(),
                 LicenseExpiryDate = tenant.LicenseExpiryDate,
-                SubscriptionPlan = tenant.SubscriptionPlan ?? "Basic",
+                SubscriptionPlan = tenant.SubscriptionPlan ?? SubscriptionPlan.Basic.ToString(),
                 SubscriptionStartDate = tenant.SubscriptionStartDate,
                 SubscriptionEndDate = tenant.SubscriptionEndDate,
                 MaxUsers = tenant.MaxUsers,

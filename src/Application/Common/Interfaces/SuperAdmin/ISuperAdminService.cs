@@ -1,5 +1,6 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Models;
+using HotelManagement.Domain.Entities.Configuration;
 
 namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
 
@@ -9,8 +10,8 @@ namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
 public interface ISuperAdminService
 {
     // Tenant Lifecycle Management
-    Task<CreateTenantResult> CreateTenantAsync(CreateTenantRequest request);
-    Task<PaginatedResult<TenantSummary>> GetTenantsAsync(TenantListRequest request);
+    Task<Result<HotelManagement.Domain.Entities.Configuration.Tenant>> CreateTenantAsync(CreateTenantRequest request);
+    Task<Result<PaginatedResult<TenantSummary>>> GetTenantsAsync(TenantListRequest request);
     Task<TenantDetail?> GetTenantDetailAsync(Guid tenantId);
     Task<bool> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);
 

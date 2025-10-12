@@ -385,18 +385,18 @@
         }
       }
     },
-    "/cp/tenant-management": {
+    "/cp/refresh-token": {
       "post": {
         "tags": [
-          "TenantManagement"
+          "SuperAdmin"
         ],
-        "operationId": "TenantManagement_CreateTenant",
+        "operationId": "SuperAdmin_RefreshToken",
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/CreateTenantRequest"
+                "$ref": "#/components/schemas/RefreshTokenCommand"
               }
             }
           },
@@ -407,9 +407,50 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": {
+              "application/octet-stream": {
                 "schema": {
-                  "$ref": "#/components/schemas/CreateTenantResult"
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant-management": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_CreateTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -2117,33 +2158,20 @@
           }
         }
       },
-      "CreateTenantResult": {
+      "RefreshTokenCommand": {
         "type": "object",
         "additionalProperties": false,
+        "required": [
+          "refreshToken"
+        ],
         "properties": {
-          "success": {
-            "type": "boolean"
-          },
-          "tenantId": {
+          "refreshToken": {
             "type": "string",
-            "format": "guid",
-            "nullable": true
-          },
-          "errorMessage": {
-            "type": "string",
-            "nullable": true
-          },
-          "initialPassword": {
-            "type": "string",
-            "nullable": true
-          },
-          "adminEmail": {
-            "type": "string",
-            "nullable": true
+            "minLength": 1
           }
         }
       },
-      "CreateTenantRequest": {
+      "CreateTenantCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -2181,26 +2209,26 @@
             "type": "string",
             "nullable": true
           },
-          "country": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "subscriptionStartDate": {
             "type": "string",
+            "format": "date-time",
             "nullable": true
           },
-          "region": {
+          "subscriptionEndDate": {
             "type": "string",
-            "nullable": true
-          },
-          "industry": {
-            "type": "string",
+            "format": "date-time",
             "nullable": true
           },
           "subscriptionPlan": {
-            "type": "string"
+            "$ref": "#/components/schemas/SubscriptionPlan"
           },
-          "enabledModules": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+          "licenseExpiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           },
           "maxUsers": {
             "type": "integer",
@@ -2219,6 +2247,20 @@
             "format": "int32"
           }
         }
+      },
+      "SubscriptionPlan": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
       },
       "PaginatedResultOfTenantSummary": {
         "type": "object",
@@ -2762,19 +2804,6 @@
               "type": "string",
               "format": "guid"
             }
-          }
-        }
-      },
-      "RefreshTokenCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "refreshToken"
-        ],
-        "properties": {
-          "refreshToken": {
-            "type": "string",
-            "minLength": 1
           }
         }
       },

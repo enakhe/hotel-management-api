@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
+using HotelManagement.Application.Core.Tenant.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.ComponentModel.DataAnnotations;
 
 namespace HotelManagement.Web.Controllers.SuperAdmin;
 
@@ -15,12 +17,12 @@ namespace HotelManagement.Web.Controllers.SuperAdmin;
 [Authorize(Roles = "SuperAdmin")]
 public class TenantManagementController(
     ISuperAdminService superAdminService,
-    ISuperAdminAuditService auditService,
+    ISender mediator,
     ILogger<TenantManagementController> logger) : ControllerBase
 {
     private readonly ISuperAdminService _superAdminService = superAdminService;
-    private readonly ISuperAdminAuditService _auditService = auditService;
     private readonly ILogger<TenantManagementController> _logger = logger;
+    private readonly ISender _mediator = mediator;
 
     /// <summary>
     /// Create a new tenant
@@ -28,19 +30,11 @@ public class TenantManagementController(
     /// <param name="request">Tenant creation request</param>
     /// <returns>Created tenant result</returns>
     [HttpPost]
-    public async Task<ActionResult<CreateTenantResult>> CreateTenant([FromBody] CreateTenantRequest request)
+    public async Task<ActionResult> CreateTenant([FromBody] CreateTenantCommand command)
     {
-        try
-        {
-            var result = await _superAdminService.CreateTenantAsync(request);
+        var response = await _mediator.Send(command);
 
-            return !result.Success ? (ActionResult<CreateTenantResult>)BadRequest(result) : (ActionResult<CreateTenantResult>)CreatedAtAction(nameof(GetTenant), new { tenantId = result.TenantId }, result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error creating tenant");
-            return StatusCode(500, "An error occurred while creating the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>

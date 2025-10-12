@@ -87,6 +87,8 @@ else
 
 
 app.UseExceptionHandler("/error");
+app.UseMiddleware<CorsMiddleware>();
+app.UseCors("AllowSpecificOrigins");
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
@@ -112,7 +114,6 @@ app.UseAntiforgery();
 app.UseOutputCache();
 
 app.MapControllers();
-app.Map("/", () => Results.Redirect("/api"));
 
 app.Run();
 

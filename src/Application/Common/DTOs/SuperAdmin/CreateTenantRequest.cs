@@ -1,3 +1,5 @@
+using HotelManagement.Domain.Enums;
+
 namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
 
 /// <summary>
@@ -17,10 +19,18 @@ public record CreateTenantRequest
     public string? Country { get; init; }
     public string? Region { get; init; }
     public string? Industry { get; init; }
-    public string SubscriptionPlan { get; init; } = "Basic";
+    public SubscriptionPlan SubscriptionPlan { get; init; } = SubscriptionPlan.Basic;
+    public LicenseStatus LicenseStatus { get; init; } = LicenseStatus.Trial;
     public string[] EnabledModules { get; init; } = [];
     public int MaxUsers { get; init; } = 10;
     public int MaxBranches { get; init; } = 1;
     public int MaxRooms { get; init; } = 100;
     public int MaxReservations { get; init; } = 1000;
+}
+
+public enum SubscriptionPlan
+{
+    Basic,
+    Standard,
+    Premium
 }
