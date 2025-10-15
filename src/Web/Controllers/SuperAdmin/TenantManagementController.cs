@@ -59,7 +59,7 @@ public class TenantManagementController(
     /// </summary>
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Detailed tenant information</returns>
-    [HttpGet("{tenantId}")]
+    [HttpGet("{request}")]
     public async Task<ActionResult<TenantDetail>> GetTenant(GetTenantByIdQuery request)
     {
         var response = await _mediator.Send(request);

@@ -583,7 +583,7 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}": {
+    "/cp/tenant-management/{request}": {
       "get": {
         "tags": [
           "TenantManagement"
@@ -591,11 +591,11 @@
         "operationId": "TenantManagement_GetTenant",
         "parameters": [
           {
-            "name": "tenantId",
+            "name": "request",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/GetTenantByIdQuery"
             },
             "x-position": 2
           }
@@ -631,7 +631,9 @@
             ]
           }
         ]
-      },
+      }
+    },
+    "/cp/tenant-management/{tenantId}": {
       "patch": {
         "tags": [
           "TenantManagement"
