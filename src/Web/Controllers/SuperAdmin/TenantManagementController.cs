@@ -1,8 +1,10 @@
 using System.ComponentModel.DataAnnotations;
+using Azure.Core;
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Core.Tenant.Commands;
+using HotelManagement.Application.Core.Tenant.Queries;
 using HotelManagement.Application.Tenant.Queries.GetTenants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -58,24 +60,11 @@ public class TenantManagementController(
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Detailed tenant information</returns>
     [HttpGet("{tenantId}")]
-    public async Task<ActionResult<TenantDetail>> GetTenant(Guid tenantId)
+    public async Task<ActionResult<TenantDetail>> GetTenant(GetTenantByIdQuery request)
     {
-        try
-        {
-            var tenant = await _superAdminService.GetTenantDetailAsync(tenantId);
+        var response = await _mediator.Send(request);
 
-            if (tenant == null)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(tenant);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while retrieving the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
