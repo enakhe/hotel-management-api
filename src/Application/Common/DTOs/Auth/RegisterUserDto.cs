@@ -16,5 +16,5 @@ public class RegisterUserDto
 
     public required string Tenant { get; set; }
 
-    public List<Guid> Roles { get; set; } = [];
+    public List<string> Roles { get; set; } = [];
 }

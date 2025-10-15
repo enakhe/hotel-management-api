@@ -9,16 +9,10 @@ namespace HotelManagement.Infrastructure.Services;
 /// <summary>
 /// Service for tenant-related operations and validation
 /// </summary>
-public class TenantService : ITenantService
+public class TenantService(ApplicationDbContext context, ILogger<TenantService> logger) : ITenantService
 {
-    private readonly ApplicationDbContext _context;
-    private readonly ILogger<TenantService> _logger;
-
-    public TenantService(ApplicationDbContext context, ILogger<TenantService> logger)
-    {
-        _context = context;
-        _logger = logger;
-    }
+    private readonly ApplicationDbContext _context = context;
+    private readonly ILogger<TenantService> _logger = logger;
 
     public async Task<bool> IsTenantValidAsync(Guid tenantId)
     {

@@ -3,9 +3,11 @@ using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Core.Tenant.Commands;
+using HotelManagement.Application.Tenant.Queries.GetTenants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HotelManagement.Web.Controllers.SuperAdmin;
 
@@ -43,18 +45,11 @@ public class TenantManagementController(
     /// <param name="request">List request parameters</param>
     /// <returns>Paginated list of tenants</returns>
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<TenantSummary>>> GetTenants([FromQuery] TenantListRequest request)
+    public async Task<ActionResult<PaginatedResult<TenantSummary>>> GetTenants([FromQuery] GetTenantsQuery request)
     {
-        try
-        {
-            var result = await _superAdminService.GetTenantsAsync(request);
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting tenants list");
-            return StatusCode(500, "An error occurred while retrieving tenants");
-        }
+        var response = await _mediator.Send(request);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
@@ -96,7 +91,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.UpdateTenantAsync(tenantId, request);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }
@@ -123,7 +118,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.LockTenantAsync(tenantId, request.Reason);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }
@@ -150,7 +145,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.UnlockTenantAsync(tenantId, request.Reason);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }
@@ -177,7 +172,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.SetTenantModeAsync(tenantId, request.Mode, request.Reason);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }
@@ -205,7 +200,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.TerminateTenantAsync(tenantId, request.Reason, request.EffectiveDate);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }
@@ -232,7 +227,7 @@ public class TenantManagementController(
         {
             var result = await _superAdminService.ExportTenantDataAsync(tenantId, request.Options);
 
-            if (!result.Success)
+            if (!result.Succeeded)
             {
                 return BadRequest(result);
             }
@@ -260,7 +255,7 @@ public class TenantManagementController(
         {
             var success = await _superAdminService.PurgeTenantDataAsync(tenantId, request.Reason);
 
-            if (!success)
+            if (!success.Succeeded)
             {
                 return NotFound($"Tenant with ID {tenantId} not found");
             }

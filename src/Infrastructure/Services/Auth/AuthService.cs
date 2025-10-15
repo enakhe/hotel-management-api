@@ -326,9 +326,9 @@ public class AuthService(
         return user;
     }
 
-    private async Task<Result> AssignRolesToUserAsync(ApplicationUser user, List<Guid> roleIds)
+    private async Task<Result> AssignRolesToUserAsync(ApplicationUser user, List<string> roles)
     {
-        var roleNames = roleIds.Select(roleId => roleId.ToString()).ToList();
+        var roleNames = roles.Select(roleId => roleId.ToString()).ToList();
         var roleResult = await _userManager.AddToRolesAsync(user, roleNames);
 
         if (!roleResult.Succeeded)

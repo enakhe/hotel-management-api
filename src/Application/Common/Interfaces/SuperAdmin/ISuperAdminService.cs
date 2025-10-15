@@ -12,20 +12,20 @@ public interface ISuperAdminService
     // Tenant Lifecycle Management
     Task<Result<HotelManagement.Domain.Entities.Configuration.Tenant>> CreateTenantAsync(CreateTenantRequest request);
     Task<Result<PaginatedResult<TenantSummary>>> GetTenantsAsync(TenantListRequest request);
-    Task<TenantDetail?> GetTenantDetailAsync(Guid tenantId);
-    Task<bool> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);
+    Task<Result<TenantDetail>> GetTenantDetailAsync(Guid tenantId);
+    Task<Result<bool>> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);
 
     // Tenant Actions
-    Task<bool> LockTenantAsync(Guid tenantId, string reason);
-    Task<bool> UnlockTenantAsync(Guid tenantId, string reason);
-    Task<bool> SetTenantModeAsync(Guid tenantId, TenantMode mode, string reason);
-    Task<bool> TerminateTenantAsync(Guid tenantId, string reason, DateTime? effectiveDate = null);
+    Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);
+    Task<Result<bool>> UnlockTenantAsync(Guid tenantId, string reason);
+    Task<Result<bool>> SetTenantModeAsync(Guid tenantId, TenantMode mode, string reason);
+    Task<Result<bool>> TerminateTenantAsync(Guid tenantId, string reason, DateTime? effectiveDate = null);
 
     // Data Management
-    Task<ExportJobResult> ExportTenantDataAsync(Guid tenantId, ExportOptions options);
-    Task<bool> PurgeTenantDataAsync(Guid tenantId, string reason);
+    Task<Result<ExportJobResult>> ExportTenantDataAsync(Guid tenantId, ExportOptions options);
+    Task<Result<bool>> PurgeTenantDataAsync(Guid tenantId, string reason);
 
     // Monitoring
-    Task<TenantUsage?> GetTenantUsageAsync(Guid tenantId);
-    Task<TenantHealth?> GetTenantHealthAsync(Guid tenantId);
+    Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId);
+    Task<Result<TenantHealth>> GetTenantHealthAsync(Guid tenantId);
 }

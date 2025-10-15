@@ -471,7 +471,7 @@
         "operationId": "TenantManagement_GetTenants",
         "parameters": [
           {
-            "name": "Query",
+            "name": "Request.Query",
             "in": "query",
             "schema": {
               "type": "string",
@@ -480,7 +480,7 @@
             "x-position": 1
           },
           {
-            "name": "Status",
+            "name": "Request.Status",
             "in": "query",
             "schema": {
               "type": "string",
@@ -489,7 +489,7 @@
             "x-position": 2
           },
           {
-            "name": "Plan",
+            "name": "Request.Plan",
             "in": "query",
             "schema": {
               "type": "string",
@@ -498,7 +498,7 @@
             "x-position": 3
           },
           {
-            "name": "Region",
+            "name": "Request.Region",
             "in": "query",
             "schema": {
               "type": "string",
@@ -507,7 +507,7 @@
             "x-position": 4
           },
           {
-            "name": "CreatedFrom",
+            "name": "Request.CreatedFrom",
             "in": "query",
             "schema": {
               "type": "string",
@@ -517,7 +517,7 @@
             "x-position": 5
           },
           {
-            "name": "CreatedTo",
+            "name": "Request.CreatedTo",
             "in": "query",
             "schema": {
               "type": "string",
@@ -527,7 +527,7 @@
             "x-position": 6
           },
           {
-            "name": "Page",
+            "name": "Request.Page",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -536,7 +536,7 @@
             "x-position": 7
           },
           {
-            "name": "Size",
+            "name": "Request.Size",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -545,7 +545,7 @@
             "x-position": 8
           },
           {
-            "name": "SortBy",
+            "name": "Request.SortBy",
             "in": "query",
             "schema": {
               "type": "string",
@@ -554,7 +554,7 @@
             "x-position": 9
           },
           {
-            "name": "SortDescending",
+            "name": "Request.SortDescending",
             "in": "query",
             "schema": {
               "type": "boolean"

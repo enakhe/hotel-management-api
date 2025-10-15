@@ -9,6 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
+using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Application.Common.DTOs.Auth;
+using HotelManagement.Domain.Constants;
+using HotelManagement.Application.Common.Interfaces.Administrator;
 
 namespace HotelManagement.Infrastructure.Services;
 
@@ -20,13 +25,17 @@ public class SuperAdminService(
     ILogger<SuperAdminService> logger,
     ISuperAdminAuditService auditService,
     IAuthService authService,
+    IUserService userService,
     IMapper mapper) : ISuperAdminService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<SuperAdminService> _logger = logger;
     private readonly ISuperAdminAuditService _auditService = auditService;
+    private readonly IUserService _userService = userService;
     private readonly IAuthService _authService = authService;
     private readonly IMapper _mapper = mapper;
+
+
     public async Task<Result<Tenant>> CreateTenantAsync(CreateTenantRequest request)
     {
         try
@@ -38,32 +47,6 @@ public class SuperAdminService(
                 return Result<Tenant>.Failure($"Tenant with identifier '{request.Identifier}' already exists", 400);
 
             var tenant = _mapper.Map<Tenant>(request);
-
-            //tenant.Id = Guid.NewGuid();
-            //tenant.TenantId = Guid.NewGuid();
-            //tenant.Name = request.Name;
-            //tenant.Identifier = request.Identifier;
-            //tenant.Description = request.Description;
-            //tenant.Address = request.Address;
-            //tenant.ContactNumber = request.ContactNumber;
-            //tenant.Email = request.Email;
-            //tenant.TimeZone = request.TimeZone ?? "UTC";
-            //tenant.CurrencyCode = request.CurrencyCode ?? "USD";
-            //tenant.LanguageCode = request.LanguageCode ?? "en";
-            //tenant.Country = request.Country;
-            //tenant.Region = request.Region;
-            //tenant.Industry = request.Industry;
-            //tenant.SubscriptionPlan = request.SubscriptionPlan.ToString();
-            //tenant.MaxUsers = request.MaxUsers;
-            //tenant.MaxBranches = request.MaxBranches;
-            //tenant.MaxRooms = request.MaxRooms;
-            //tenant.MaxReservations = request.MaxReservations;
-            //tenant.LicenseStatus = LicenseStatus.Trial;
-            //tenant.IsActive = true;
-            //tenant.Created = DateTimeOffset.UtcNow;
-            //tenant.CreatedBy = "SuperAdmin";
-            //tenant.LastModified = DateTimeOffset.UtcNow;
-            //tenant.LastModifiedBy = "SuperAdmin";
 
             _context.Tenants.Add(tenant);
 
@@ -90,6 +73,23 @@ public class SuperAdminService(
                 tenant.Id,
                 $"Created tenant '{request.Name}' with identifier '{request.Identifier}'",
                 JsonSerializer.Serialize(request));
+
+            var registerUserDto = new RegisterUserDto()
+            {
+                Email = tenant.Email!,
+                Tenant = tenant.Identifier,
+                Roles = [Roles.Administrator.ToString()]
+            };
+
+            var response = await _authService.RegisterAsync(registerUserDto);
+
+            if (response.Succeeded)
+                await _auditService.LogActionAsync(
+                    "CreateTenantAdminUser",
+                    "User",
+                    tenant.Name,
+                    tenant.Id,
+                    $"Created initial admin user '{tenant.Email}' for tenant '{tenant.Name}'");
 
             return Result<Tenant>.Success(tenant, 201);
         }
@@ -191,7 +191,7 @@ public class SuperAdminService(
         }
     }
 
-    public async Task<TenantDetail?> GetTenantDetailAsync(Guid tenantId)
+    public async Task<Result<TenantDetail>> GetTenantDetailAsync(Guid tenantId)
     {
         try
         {
@@ -200,14 +200,14 @@ public class SuperAdminService(
                 .FirstOrDefaultAsync(t => t.Id == tenantId);
 
             if (tenant == null)
-                return null;
+                return Result<TenantDetail>.Failure("Tenant not found", 404);
 
             var enabledModules = tenant.Features
                 .Where(f => f.IsEnabled)
                 .Select(f => f.FeatureName)
                 .ToArray();
 
-            return new TenantDetail
+            var tenantDetails =  new TenantDetail
             {
                 Id = tenant.Id,
                 Name = tenant.Name,
@@ -236,21 +236,23 @@ public class SuperAdminService(
                 CreatedAt = tenant.Created.DateTime,
                 LastActivity = tenant.LastModified.DateTime
             };
+
+            return Result<TenantDetail>.Success(tenantDetails, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting tenant detail for {TenantId}", tenantId);
-            return null;
+            return Result<TenantDetail>.Failure("An error occurred while getting the tenant detail", 500);
         }
     }
 
-    public async Task<bool> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request)
+    public async Task<Result<bool>> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             var changes = new Dictionary<string, object>();
 
@@ -367,22 +369,22 @@ public class SuperAdminService(
                 $"Updated tenant '{tenant.Name}'",
                 JsonSerializer.Serialize(changes));
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error updating tenant {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while updating the tenant", 500);
         }
     }
 
-    public async Task<bool> LockTenantAsync(Guid tenantId, string reason)
+    public async Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             tenant.IsActive = false;
             tenant.LastModified = DateTimeOffset.UtcNow;
@@ -397,22 +399,22 @@ public class SuperAdminService(
                 tenantId,
                 $"Locked tenant '{tenant.Name}'. Reason: {reason}");
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error locking tenant {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while locking the tenant", 500);
         }
     }
 
-    public async Task<bool> UnlockTenantAsync(Guid tenantId, string reason)
+    public async Task<Result<bool>> UnlockTenantAsync(Guid tenantId, string reason)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             tenant.IsActive = true;
             tenant.LastModified = DateTimeOffset.UtcNow;
@@ -427,22 +429,22 @@ public class SuperAdminService(
                 tenantId,
                 $"Unlocked tenant '{tenant.Name}'. Reason: {reason}");
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error unlocking tenant {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while unlocking the tenant", 500);
         }
     }
 
-    public async Task<bool> SetTenantModeAsync(Guid tenantId, TenantMode mode, string reason)
+    public async Task<Result<bool>> SetTenantModeAsync(Guid tenantId, TenantMode mode, string reason)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             // This would require additional fields in the Tenant entity
             // For now, we'll use IsActive as a simple implementation
@@ -459,22 +461,22 @@ public class SuperAdminService(
                 tenantId,
                 $"Set tenant '{tenant.Name}' mode to {mode}. Reason: {reason}");
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error setting tenant mode for {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while setting the tenant mode", 500);
         }
     }
 
-    public async Task<bool> TerminateTenantAsync(Guid tenantId, string reason, DateTime? effectiveDate = null)
+    public async Task<Result<bool>> TerminateTenantAsync(Guid tenantId, string reason, DateTime? effectiveDate = null)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             // Mark for termination
             tenant.IsActive = false;
@@ -491,16 +493,16 @@ public class SuperAdminService(
                 tenantId,
                 $"Terminated tenant '{tenant.Name}'. Reason: {reason}. Effective: {effectiveDate}");
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error terminating tenant {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while terminating the tenant", 500);
         }
     }
 
-    public async Task<ExportJobResult> ExportTenantDataAsync(Guid tenantId, ExportOptions options)
+    public async Task<Result<ExportJobResult>> ExportTenantDataAsync(Guid tenantId, ExportOptions options)
     {
         try
         {
@@ -514,31 +516,29 @@ public class SuperAdminService(
                 tenantId,
                 $"Started export job {jobId} for tenant {tenantId}");
 
-            return new ExportJobResult
+            var export = new ExportJobResult
             {
                 Success = true,
                 JobId = jobId,
                 EstimatedCompletion = DateTime.UtcNow.AddHours(1)
             };
+
+            return Result<ExportJobResult>.Success(export, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error starting export for tenant {TenantId}", tenantId);
-            return new ExportJobResult
-            {
-                Success = false,
-                ErrorMessage = "Failed to start export job"
-            };
+            return Result<ExportJobResult>.Failure("An error occurred while starting the export", 500);
         }
     }
 
-    public async Task<bool> PurgeTenantDataAsync(Guid tenantId, string reason)
+    public async Task<Result<bool>> PurgeTenantDataAsync(Guid tenantId, string reason)
     {
         try
         {
             var tenant = await _context.Tenants.FindAsync(tenantId);
             if (tenant == null)
-                return false;
+                return Result<bool>.Failure("Tenant not found", 404);
 
             // This is a destructive action - in production, this should be queued
             // and require additional approval
@@ -550,16 +550,16 @@ public class SuperAdminService(
                 tenantId,
                 $"Purged all data for tenant '{tenant.Name}'. Reason: {reason}");
 
-            return true;
+            return Result<bool>.Success(true, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error purging data for tenant {TenantId}", tenantId);
-            return false;
+            return Result<bool>.Failure("An error occurred while purging the tenant", 500);
         }
     }
 
-    public Task<TenantUsage?> GetTenantUsageAsync(Guid tenantId)
+    public async Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId)
     {
         try
         {
@@ -577,16 +577,16 @@ public class SuperAdminService(
                 ApiCallsLast30d = 0,
                 LastActivity = DateTime.UtcNow
             };
-            return Task.FromResult<TenantUsage?>(usage);
+            return Result<TenantUsage>.Success(usage, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting usage for tenant {TenantId}", tenantId);
-            return Task.FromResult<TenantUsage?>(null);
+            return Result<TenantUsage>.Failure("An error occurred while getting the tenant usage", 500);
         }
     }
 
-    public Task<TenantHealth?> GetTenantHealthAsync(Guid tenantId)
+    public async Task<Result<TenantHealth>> GetTenantHealthAsync(Guid tenantId)
     {
         try
         {
@@ -601,21 +601,12 @@ public class SuperAdminService(
                 Issues = Array.Empty<string>(),
                 CheckedAt = DateTime.UtcNow
             };
-            return Task.FromResult<TenantHealth?>(health);
+            return Result<TenantHealth>.Success(health, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting health for tenant {TenantId}", tenantId);
-            return Task.FromResult<TenantHealth?>(null);
+            return Result<TenantHealth>.Failure("An error occurred while getting the tenant health", 500);
         }
-    }
-
-    private static string GenerateInitialPassword()
-    {
-        // Generate a secure random password
-        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-        var random = new Random();
-        return new string(Enumerable.Repeat(chars, 12)
-            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

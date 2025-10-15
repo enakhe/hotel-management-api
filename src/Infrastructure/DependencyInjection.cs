@@ -5,18 +5,24 @@ using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.Interfaces.License;
+using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
+using HotelManagement.Application.Core.Tenant.Commands;
+using HotelManagement.Application.Tenant.Queries.GetTenants;
 using HotelManagement.Domain.Constants;
 using HotelManagement.Domain.Entities.Data;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceptors;
+using HotelManagement.Infrastructure.Data.Services;
 using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
+using HotelManagement.Infrastructure.Services;
 using HotelManagement.Infrastructure.Services.Administrator;
 using HotelManagement.Infrastructure.Services.Auth;
-using HotelManagement.Infrastructure.Services;
-using HotelManagement.Infrastructure.Data.Services;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -27,11 +33,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
-using HotelManagement.Application.Common.Interfaces.License;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
-using HotelManagement.Application.Common.Mappings;
-using HotelManagement.Application.Core.Tenant.Commands;
 
 namespace HotelManagement.Infrastructure;
 public static class DependencyInjection
@@ -147,6 +148,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<CreateBranchValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<ResetPasswordRequestDtoValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetTenantsQueryValidator>();
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
