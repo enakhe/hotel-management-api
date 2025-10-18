@@ -425,7 +425,7 @@
         ]
       }
     },
-    "/cp/tenant-management": {
+    "/cp/tenant": {
       "post": {
         "tags": [
           "TenantManagement"
@@ -581,9 +581,47 @@
             ]
           }
         ]
+      },
+      "patch": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_UpdateTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       }
     },
-    "/cp/tenant-management/{request}": {
+    "/cp/tenant/{tenantId}": {
       "get": {
         "tags": [
           "TenantManagement"
@@ -591,27 +629,16 @@
         "operationId": "TenantManagement_GetTenant",
         "parameters": [
           {
-            "name": "request",
+            "name": "tenantId",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/GetTenantByIdQuery"
+              "type": "string",
+              "format": "guid"
             },
-            "x-position": 2
+            "x-position": 1
           }
         ],
-        "requestBody": {
-          "x-name": "request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetTenantByIdQuery"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
         "responses": {
           "200": {
             "description": "",
@@ -633,87 +660,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}": {
-      "patch": {
-        "tags": [
-          "TenantManagement"
-        ],
-        "operationId": "TenantManagement_UpdateTenant",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
-        "requestBody": {
-          "x-name": "request",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpdateTenantRequest"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 2
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "JWT": [
-              "SuperAdmin"
-            ]
-          }
-        ]
-      }
-    },
-    "/cp/tenant-management/{tenantId}/lock": {
+    "/cp/tenant/lock": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_LockTenant",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/LockTenantRequest"
+                "$ref": "#/components/schemas/LockTenantCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -737,35 +700,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/unlock": {
+    "/cp/tenant/unlock": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_UnlockTenant",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/UnlockTenantRequest"
+                "$ref": "#/components/schemas/UnlockTenantCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -789,35 +740,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/mode": {
+    "/cp/tenant/mode": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_SetTenantMode",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SetTenantModeRequest"
+                "$ref": "#/components/schemas/SetTenantModeCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -841,35 +780,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/terminate": {
+    "/cp/tenant/terminate": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_TerminateTenant",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TerminateTenantRequest"
+                "$ref": "#/components/schemas/TerminateTenantCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -893,35 +820,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/export": {
+    "/cp/tenant/export": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_ExportTenantData",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ExportTenantDataRequest"
+                "$ref": "#/components/schemas/ExportTenantDataCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -944,35 +859,23 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/purge": {
+    "/cp/tenant/purge": {
       "post": {
         "tags": [
           "TenantManagement"
         ],
         "operationId": "TenantManagement_PurgeTenantData",
-        "parameters": [
-          {
-            "name": "tenantId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "guid"
-            },
-            "x-position": 1
-          }
-        ],
         "requestBody": {
-          "x-name": "request",
+          "x-name": "command",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/PurgeTenantDataRequest"
+                "$ref": "#/components/schemas/PurgeTenantDataCommand"
               }
             }
           },
           "required": true,
-          "x-position": 2
+          "x-position": 1
         },
         "responses": {
           "200": {
@@ -996,7 +899,7 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/usage": {
+    "/cp/tenant/usage/{tenantId}": {
       "get": {
         "tags": [
           "TenantManagement"
@@ -1035,7 +938,7 @@
         ]
       }
     },
-    "/cp/tenant-management/{tenantId}/health": {
+    "/cp/tenant/health/{tenantId}": {
       "get": {
         "tags": [
           "TenantManagement"
@@ -2563,13 +2466,16 @@
           }
         }
       },
-      "GetTenantByIdQuery": {
+      "UpdateTenantCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "tenantId": {
             "type": "string",
             "format": "guid"
+          },
+          "request": {
+            "$ref": "#/components/schemas/UpdateTenantRequest"
           }
         }
       },
@@ -2654,12 +2560,29 @@
           }
         }
       },
-      "LockTenantRequest": {
+      "LockTenantCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
           "reason": {
             "type": "string"
+          }
+        }
+      },
+      "UnlockTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "request": {
+            "$ref": "#/components/schemas/UnlockTenantRequest"
           }
         }
       },
@@ -2672,10 +2595,14 @@
           }
         }
       },
-      "SetTenantModeRequest": {
+      "SetTenantModeCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
           "mode": {
             "$ref": "#/components/schemas/TenantMode"
           },
@@ -2699,6 +2626,19 @@
           2,
           3
         ]
+      },
+      "TerminateTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "terminateRequest": {
+            "$ref": "#/components/schemas/TerminateTenantRequest"
+          }
+        }
       },
       "TerminateTenantRequest": {
         "type": "object",
@@ -2740,11 +2680,15 @@
           }
         }
       },
-      "ExportTenantDataRequest": {
+      "ExportTenantDataCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "options": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "request": {
             "$ref": "#/components/schemas/ExportOptions"
           }
         }
@@ -2780,10 +2724,14 @@
           }
         }
       },
-      "PurgeTenantDataRequest": {
+      "PurgeTenantDataCommand": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
           "reason": {
             "type": "string"
           }

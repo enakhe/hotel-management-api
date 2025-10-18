@@ -17,7 +17,7 @@ namespace HotelManagement.Web.Controllers.SuperAdmin;
 /// SuperAdmin tenant management controller
 /// </summary>
 [ApiController]
-[Route("cp/tenant-management")]
+[Route("cp/tenant")]
 [Authorize(Roles = "SuperAdmin")]
 public class TenantManagementController(
     ISuperAdminService superAdminService,
@@ -31,7 +31,7 @@ public class TenantManagementController(
     /// <summary>
     /// Create a new tenant
     /// </summary>
-    /// <param name="request">Tenant creation request</param>
+    /// <param name="CreateTenantCommand">Tenant creation request</param>
     /// <returns>Created tenant result</returns>
     [HttpPost]
     public async Task<ActionResult> CreateTenant([FromBody] CreateTenantCommand command)
@@ -44,7 +44,7 @@ public class TenantManagementController(
     /// <summary>
     /// Get list of tenants with filtering and pagination
     /// </summary>
-    /// <param name="request">List request parameters</param>
+    /// <param name="GetTenantsQuery">List request parameters</param>
     /// <returns>Paginated list of tenants</returns>
     [HttpGet]
     public async Task<ActionResult<PaginatedResult<TenantSummary>>> GetTenants([FromQuery] GetTenantsQuery request)
@@ -59,9 +59,14 @@ public class TenantManagementController(
     /// </summary>
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Detailed tenant information</returns>
-    [HttpGet("{request}")]
-    public async Task<ActionResult<TenantDetail>> GetTenant(GetTenantByIdQuery request)
+    [HttpGet("{tenantId}")]
+    public async Task<ActionResult<TenantDetail>> GetTenant(Guid tenantId)
     {
+        var request = new GetTenantByIdQuery
+        {
+            TenantId = tenantId
+        };
+
         var response = await _mediator.Send(request);
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
@@ -70,164 +75,80 @@ public class TenantManagementController(
     /// <summary>
     /// Update tenant profile, branding, and contacts
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Update request</param>
+    /// <param name="UpdateTenantCommand">Update Tenant Command</param>
     /// <returns>Update result</returns>
-    [HttpPatch("{tenantId}")]
-    public async Task<ActionResult> UpdateTenant(Guid tenantId, [FromBody] UpdateTenantRequest request)
+    [HttpPatch]
+    public async Task<ActionResult> UpdateTenant([FromBody] UpdateTenantCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.UpdateTenantAsync(tenantId, request);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error updating tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while updating the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
     /// Lock a tenant (blocks logins and API access)
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Lock request with reason</param>
+    /// <param name="LockTenantCommand">Lock Tenant Command</param>
     /// <returns>Lock result</returns>
-    [HttpPost("{tenantId}/lock")]
-    public async Task<ActionResult> LockTenant(Guid tenantId, [FromBody] LockTenantRequest request)
+    [HttpPost("lock")]
+    public async Task<ActionResult> LockTenant([FromBody] LockTenantCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.LockTenantAsync(tenantId, request.Reason);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(new { Message = "Tenant locked successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error locking tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while locking the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
     /// Unlock a tenant
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Unlock request with reason</param>
+    /// <param name="UnlockTenantCommand">Unlock request with reason</param>
     /// <returns>Unlock result</returns>
-    [HttpPost("{tenantId}/unlock")]
-    public async Task<ActionResult> UnlockTenant(Guid tenantId, [FromBody] UnlockTenantRequest request)
+    [HttpPost("unlock")]
+    public async Task<ActionResult> UnlockTenant([FromBody] UnlockTenantCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.UnlockTenantAsync(tenantId, request.Reason);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(new { Message = "Tenant unlocked successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error unlocking tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while unlocking the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
     /// Set tenant mode (Active, ReadOnly, Suspended, Locked)
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Mode change request</param>
+    /// <param name="SetTenantModeCommand">Mode change request</param>
     /// <returns>Mode change result</returns>
-    [HttpPost("{tenantId}/mode")]
-    public async Task<ActionResult> SetTenantMode(Guid tenantId, [FromBody] SetTenantModeRequest request)
+    [HttpPost("mode")]
+    public async Task<ActionResult> SetTenantMode([FromBody] SetTenantModeCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.SetTenantModeAsync(tenantId, request.Mode, request.Reason);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(new { Message = $"Tenant mode set to {request.Mode} successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error setting tenant mode for {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while setting tenant mode");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
     /// Terminate a tenant (requires step-up authentication)
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Termination request</param>
+    /// <param name="TerminateTenantCommand">Termination request</param>
     /// <returns>Termination result</returns>
-    [HttpPost("{tenantId}/terminate")]
+    [HttpPost("terminate")]
     [Authorize(Policy = "RequireStepUpAuth")]
-    public async Task<ActionResult> TerminateTenant(Guid tenantId, [FromBody] TerminateTenantRequest request)
+    public async Task<ActionResult> TerminateTenant([FromBody] TerminateTenantCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.TerminateTenantAsync(tenantId, request.Reason, request.EffectiveDate);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(new { Message = "Tenant termination scheduled successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error terminating tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while terminating the tenant");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
     /// Export tenant data
     /// </summary>
-    /// <param name="tenantId">Tenant ID</param>
-    /// <param name="request">Export request</param>
+    /// <param name="ExportTenantDataCommand">Export command</param>
     /// <returns>Export job result</returns>
-    [HttpPost("{tenantId}/export")]
-    public async Task<ActionResult<ExportJobResult>> ExportTenantData(Guid tenantId, [FromBody] ExportTenantDataRequest request)
+    [HttpPost("export")]
+    public async Task<ActionResult<ExportJobResult>> ExportTenantData([FromBody] ExportTenantDataCommand command)
     {
-        try
-        {
-            var result = await _superAdminService.ExportTenantDataAsync(tenantId, request.Options);
+        var response = await _mediator.Send(command);
 
-            if (!result.Succeeded)
-            {
-                return BadRequest(result);
-            }
-
-            return Ok(result);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error starting export for tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while starting the export");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
@@ -236,26 +157,13 @@ public class TenantManagementController(
     /// <param name="tenantId">Tenant ID</param>
     /// <param name="request">Purge request</param>
     /// <returns>Purge result</returns>
-    [HttpPost("{tenantId}/purge")]
+    [HttpPost("purge")]
     [Authorize(Policy = "RequireStepUpAuth")]
-    public async Task<ActionResult> PurgeTenantData(Guid tenantId, [FromBody] PurgeTenantDataRequest request)
+    public async Task<ActionResult> PurgeTenantData([FromBody] PurgeTenantDataCommand command)
     {
-        try
-        {
-            var success = await _superAdminService.PurgeTenantDataAsync(tenantId, request.Reason);
+        var response = await _mediator.Send(command);
 
-            if (!success.Succeeded)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(new { Message = "Tenant data purge completed successfully" });
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error purging data for tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while purging tenant data");
-        }
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
@@ -263,25 +171,16 @@ public class TenantManagementController(
     /// </summary>
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Usage statistics</returns>
-    [HttpGet("{tenantId}/usage")]
+    [HttpGet("usage/{tenantId}")]
     public async Task<ActionResult<TenantUsage>> GetTenantUsage(Guid tenantId)
     {
-        try
+        var request = new GetTenantHealthCommand
         {
-            var usage = await _superAdminService.GetTenantUsageAsync(tenantId);
+            TenantId = tenantId
+        };
 
-            if (usage == null)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(usage);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting usage for tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while retrieving tenant usage");
-        }
+        var response = await _mediator.Send(request);
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 
     /// <summary>
@@ -289,24 +188,15 @@ public class TenantManagementController(
     /// </summary>
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Health status</returns>
-    [HttpGet("{tenantId}/health")]
+    [HttpGet("health/{tenantId}")]
     public async Task<ActionResult<TenantHealth>> GetTenantHealth(Guid tenantId)
     {
-        try
+        var request = new GetTenantHealthCommand
         {
-            var health = await _superAdminService.GetTenantHealthAsync(tenantId);
+            TenantId = tenantId
+        };
 
-            if (health == null)
-            {
-                return NotFound($"Tenant with ID {tenantId} not found");
-            }
-
-            return Ok(health);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error getting health for tenant {TenantId}", tenantId);
-            return StatusCode(500, "An error occurred while retrieving tenant health");
-        }
+        var response = await _mediator.Send(request);
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 }
