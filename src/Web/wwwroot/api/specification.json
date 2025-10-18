@@ -471,7 +471,7 @@
         "operationId": "TenantManagement_GetTenants",
         "parameters": [
           {
-            "name": "Request.Query",
+            "name": "Query",
             "in": "query",
             "schema": {
               "type": "string",
@@ -480,7 +480,7 @@
             "x-position": 1
           },
           {
-            "name": "Request.Status",
+            "name": "Status",
             "in": "query",
             "schema": {
               "type": "string",
@@ -489,7 +489,7 @@
             "x-position": 2
           },
           {
-            "name": "Request.Plan",
+            "name": "Plan",
             "in": "query",
             "schema": {
               "type": "string",
@@ -498,7 +498,7 @@
             "x-position": 3
           },
           {
-            "name": "Request.Region",
+            "name": "Region",
             "in": "query",
             "schema": {
               "type": "string",
@@ -507,7 +507,7 @@
             "x-position": 4
           },
           {
-            "name": "Request.CreatedFrom",
+            "name": "CreatedFrom",
             "in": "query",
             "schema": {
               "type": "string",
@@ -517,7 +517,7 @@
             "x-position": 5
           },
           {
-            "name": "Request.CreatedTo",
+            "name": "CreatedTo",
             "in": "query",
             "schema": {
               "type": "string",
@@ -527,7 +527,7 @@
             "x-position": 6
           },
           {
-            "name": "Request.Page",
+            "name": "Page",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -536,7 +536,7 @@
             "x-position": 7
           },
           {
-            "name": "Request.Size",
+            "name": "Size",
             "in": "query",
             "schema": {
               "type": "integer",
@@ -545,7 +545,7 @@
             "x-position": 8
           },
           {
-            "name": "Request.SortBy",
+            "name": "SortBy",
             "in": "query",
             "schema": {
               "type": "string",
@@ -554,7 +554,7 @@
             "x-position": 9
           },
           {
-            "name": "Request.SortDescending",
+            "name": "SortDescending",
             "in": "query",
             "schema": {
               "type": "boolean"
@@ -2243,6 +2243,13 @@
             "type": "string",
             "nullable": true
           },
+          "modules": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TenantFeature"
+            }
+          },
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -2261,6 +2268,598 @@
             "format": "int32"
           }
         }
+      },
+      "TenantFeature": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTenantEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "featureName"
+            ],
+            "properties": {
+              "featureName": {
+                "type": "string",
+                "maxLength": 50,
+                "minLength": 1
+              },
+              "isEnabled": {
+                "type": "boolean"
+              },
+              "enabledAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "disabledAt": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "notes": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true
+              },
+              "tenant": {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            }
+          }
+        ]
+      },
+      "Tenant": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTenantAuditableEntity"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "identifier"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "maxLength": 100,
+                "minLength": 1
+              },
+              "identifier": {
+                "type": "string",
+                "maxLength": 50,
+                "minLength": 1
+              },
+              "description": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true
+              },
+              "address": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true
+              },
+              "contactNumber": {
+                "type": "string",
+                "format": "phone",
+                "nullable": true
+              },
+              "email": {
+                "type": "string",
+                "format": "email",
+                "nullable": true
+              },
+              "timeZone": {
+                "type": "string",
+                "maxLength": 50,
+                "nullable": true
+              },
+              "currencyCode": {
+                "type": "string",
+                "maxLength": 10,
+                "nullable": true
+              },
+              "languageCode": {
+                "type": "string",
+                "maxLength": 10,
+                "nullable": true
+              },
+              "isActive": {
+                "type": "boolean"
+              },
+              "subscriptionStartDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "subscriptionEndDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "subscriptionPlan": {
+                "type": "string",
+                "maxLength": 50,
+                "nullable": true
+              },
+              "licenseStatus": {
+                "$ref": "#/components/schemas/LicenseStatus"
+              },
+              "licenseExpiryDate": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "lastLicenseCheck": {
+                "type": "string",
+                "format": "date-time",
+                "nullable": true
+              },
+              "maxUsers": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "maxBranches": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "maxRooms": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "maxReservations": {
+                "type": "integer",
+                "format": "int32"
+              },
+              "databaseConnectionString": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true
+              },
+              "databaseProvider": {
+                "type": "string",
+                "maxLength": 50,
+                "nullable": true
+              },
+              "useSharedDatabase": {
+                "type": "boolean"
+              },
+              "featureFlags": {
+                "type": "string",
+                "nullable": true
+              },
+              "industry": {
+                "type": "string",
+                "maxLength": 100,
+                "nullable": true
+              },
+              "country": {
+                "type": "string",
+                "maxLength": 50,
+                "nullable": true
+              },
+              "region": {
+                "type": "string",
+                "maxLength": 50,
+                "nullable": true
+              },
+              "billingContactName": {
+                "type": "string",
+                "maxLength": 100,
+                "nullable": true
+              },
+              "billingEmail": {
+                "type": "string",
+                "format": "email",
+                "nullable": true
+              },
+              "billingAddress": {
+                "type": "string",
+                "maxLength": 200,
+                "nullable": true
+              },
+              "branches": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Branch"
+                }
+              },
+              "features": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/TenantFeature"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "LicenseStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Trial",
+          "Active",
+          "Expired",
+          "Suspended",
+          "Cancelled"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "Branch": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "format": "phone",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 50,
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "tenant": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Tenant"
+              }
+            ]
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApplicationUser"
+            }
+          }
+        }
+      },
+      "ApplicationUser": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/IdentityUserOfGuid"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "tenantId": {
+                "type": "string",
+                "format": "guid",
+                "nullable": true
+              },
+              "firstName": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastName": {
+                "type": "string",
+                "nullable": true
+              },
+              "middleName": {
+                "type": "string",
+                "nullable": true
+              },
+              "fullName": {
+                "type": "string",
+                "nullable": true
+              },
+              "profilePicture": {
+                "type": "string",
+                "format": "byte",
+                "nullable": true
+              },
+              "gender": {
+                "$ref": "#/components/schemas/GenderData"
+              },
+              "isActive": {
+                "type": "boolean"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastUpdatedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "branchId": {
+                "type": "string",
+                "format": "guid"
+              },
+              "branch": {
+                "$ref": "#/components/schemas/Branch"
+              },
+              "tenant": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Tenant"
+                  }
+                ]
+              },
+              "auditLogs": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "$ref": "#/components/schemas/AuditLog"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GenderData": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Male",
+          "Female"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "AuditLog": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "user": {
+            "$ref": "#/components/schemas/ApplicationUser"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "action": {
+            "type": "string"
+          },
+          "entityName": {
+            "type": "string"
+          },
+          "entityId": {
+            "type": "string"
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "userAgent": {
+            "type": "string",
+            "nullable": true
+          },
+          "propertyChanges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AuditLogDetail"
+            }
+          }
+        }
+      },
+      "AuditLogDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "auditLogId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "auditLog": {
+            "$ref": "#/components/schemas/AuditLog"
+          },
+          "propertyName": {
+            "type": "string"
+          },
+          "originalValue": {
+            "type": "string"
+          },
+          "newValue": {
+            "type": "string"
+          }
+        }
+      },
+      "IdentityUserOfGuid": {
+        "type": "object",
+        "description": "Represents a user in the identity system",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Gets or sets the primary key for this user.",
+            "format": "guid"
+          },
+          "userName": {
+            "type": "string",
+            "description": "Gets or sets the user name for this user.",
+            "nullable": true
+          },
+          "normalizedUserName": {
+            "type": "string",
+            "description": "Gets or sets the normalized user name for this user.",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "description": "Gets or sets the email address for this user.",
+            "nullable": true
+          },
+          "normalizedEmail": {
+            "type": "string",
+            "description": "Gets or sets the normalized email address for this user.",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their email address."
+          },
+          "passwordHash": {
+            "type": "string",
+            "description": "Gets or sets a salted and hashed representation of the password for this user.",
+            "nullable": true
+          },
+          "securityStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a users credentials change (password changed, login removed)",
+            "nullable": true
+          },
+          "concurrencyStamp": {
+            "type": "string",
+            "description": "A random value that must change whenever a user is persisted to the store",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "description": "Gets or sets a telephone number for the user.",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if a user has confirmed their telephone address."
+          },
+          "twoFactorEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if two factor authentication is enabled for this user."
+          },
+          "lockoutEnd": {
+            "type": "string",
+            "description": "Gets or sets the date and time, in UTC, when any user lockout ends.",
+            "format": "date-time",
+            "nullable": true
+          },
+          "lockoutEnabled": {
+            "type": "boolean",
+            "description": "Gets or sets a flag indicating if the user could be locked out."
+          },
+          "accessFailedCount": {
+            "type": "integer",
+            "description": "Gets or sets the number of failed login attempts for the current user.",
+            "format": "int32"
+          }
+        }
+      },
+      "BaseTenantAuditableEntity": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseTenantEntity"
+          },
+          {
+            "type": "object",
+            "x-abstract": true,
+            "additionalProperties": false,
+            "properties": {
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "type": "string",
+                "nullable": true
+              },
+              "lastModified": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "lastModifiedBy": {
+                "type": "string",
+                "nullable": true
+              }
+            }
+          }
+        ]
+      },
+      "BaseTenantEntity": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "domainEvents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BaseEvent"
+            }
+          }
+        }
+      },
+      "BaseEvent": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false
       },
       "TenantDetail": {
         "type": "object",
@@ -2474,15 +3073,6 @@
             "type": "string",
             "format": "guid"
           },
-          "request": {
-            "$ref": "#/components/schemas/UpdateTenantRequest"
-          }
-        }
-      },
-      "UpdateTenantRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
           "name": {
             "type": "string",
             "nullable": true
@@ -2581,15 +3171,6 @@
             "type": "string",
             "format": "guid"
           },
-          "request": {
-            "$ref": "#/components/schemas/UnlockTenantRequest"
-          }
-        }
-      },
-      "UnlockTenantRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
           "reason": {
             "type": "string"
           }
@@ -2635,15 +3216,6 @@
             "type": "string",
             "format": "guid"
           },
-          "terminateRequest": {
-            "$ref": "#/components/schemas/TerminateTenantRequest"
-          }
-        }
-      },
-      "TerminateTenantRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
           "reason": {
             "type": "string"
           },
@@ -2688,15 +3260,6 @@
             "type": "string",
             "format": "guid"
           },
-          "request": {
-            "$ref": "#/components/schemas/ExportOptions"
-          }
-        }
-      },
-      "ExportOptions": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
           "includeUsers": {
             "type": "boolean"
           },
@@ -3072,18 +3635,6 @@
             }
           }
         }
-      },
-      "GenderData": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Male",
-          "Female"
-        ],
-        "enum": [
-          0,
-          1
-        ]
       },
       "UserDto": {
         "type": "object",

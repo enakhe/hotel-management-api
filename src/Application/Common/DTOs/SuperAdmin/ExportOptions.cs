@@ -5,6 +5,7 @@ namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
 /// </summary>
 public record ExportOptions
 {
+    public Guid TenantId { get; init; }
     public bool IncludeUsers { get; init; } = true;
     public bool IncludeReservations { get; init; } = true;
     public bool IncludeRooms { get; init; } = true;

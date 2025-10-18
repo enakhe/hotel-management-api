@@ -5,6 +5,7 @@ namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
 /// </summary>
 public record UpdateTenantRequest
 {
+    public Guid TenantId { get; init; }
     public string? Name { get; init; }
     public string? Description { get; init; }
     public string? Address { get; init; }

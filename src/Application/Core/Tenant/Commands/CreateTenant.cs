@@ -7,7 +7,7 @@ using HotelManagement.Domain.Entities.Configuration;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
 
-public record CreateTenantCommand : IRequest<Result<HotelManagement.Domain.Entities.Configuration.Tenant>>
+public record CreateTenantCommand : IRequest<Result<TenantSummary>>
 {
     public required string Name { get; init; }
     public required string Identifier { get; init; }
@@ -87,13 +87,13 @@ public class CreateTenantCommandValidator : AbstractValidator<CreateTenantComman
     }
 }
 
-public class CreateTenantCommandHandler(IApplicationDbContext context, ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<Domain.Entities.Configuration.Tenant>>
+public class CreateTenantCommandHandler(IApplicationDbContext context, ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<TenantSummary>>
 {
     private readonly IApplicationDbContext _context = context;
     private readonly ISuperAdminService _superAdminService = superAdminService;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<Result<Domain.Entities.Configuration.Tenant>> Handle(CreateTenantCommand request, CancellationToken cancellationToken)
+    public async Task<Result<TenantSummary>> Handle(CreateTenantCommand request, CancellationToken cancellationToken)
     {
         var tenant = _mapper.Map<CreateTenantRequest>(request);
 

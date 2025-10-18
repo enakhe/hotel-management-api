@@ -12,6 +12,9 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<CreateTenantRequest, Domain.Entities.Configuration.Tenant>();
         CreateMap<Domain.Entities.Configuration.Tenant, CreateTenantRequest>();
 
+        CreateMap<UpdateTenantRequest, Domain.Entities.Configuration.Tenant>();
+        CreateMap<Domain.Entities.Configuration.Tenant, UpdateTenantRequest>();
+
         // Map from CreateTenantCommand to CreateTenantRequest
         CreateMap<CreateTenantCommand, CreateTenantRequest>()
             .ForMember(dest => dest.Country, opt => opt.Ignore())

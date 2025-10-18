@@ -10,7 +10,7 @@ namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
 public interface ISuperAdminService
 {
     // Tenant Lifecycle Management
-    Task<Result<HotelManagement.Domain.Entities.Configuration.Tenant>> CreateTenantAsync(CreateTenantRequest request);
+    Task<Result<TenantSummary>> CreateTenantAsync(CreateTenantRequest request);
     Task<Result<PaginatedResult<TenantSummary>>> GetTenantsAsync(TenantListRequest request);
     Task<Result<TenantDetail>> GetTenantDetailAsync(Guid tenantId);
     Task<Result<bool>> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);

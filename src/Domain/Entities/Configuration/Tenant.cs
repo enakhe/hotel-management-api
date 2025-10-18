@@ -90,7 +90,7 @@ public class Tenant : BaseTenantAuditableEntity
     public string? BillingAddress { get; set; }
 
     // Navigation properties
-    public ICollection<Branch> Branches { get; set; } = new List<Branch>();
-    public ICollection<TenantFeature> Features { get; set; } = new List<TenantFeature>();
+    public ICollection<Branch> Branches { get; set; } = [];
+    public ICollection<TenantFeature> Features { get; set; } = [];
 }
 

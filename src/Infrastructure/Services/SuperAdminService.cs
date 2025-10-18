@@ -36,7 +36,7 @@ public class SuperAdminService(
     private readonly IMapper _mapper = mapper;
 
 
-    public async Task<Result<Tenant>> CreateTenantAsync(CreateTenantRequest request)
+    public async Task<Result<TenantSummary>> CreateTenantAsync(CreateTenantRequest request)
     {
         try
         {
@@ -44,7 +44,7 @@ public class SuperAdminService(
                 .FirstOrDefaultAsync(t => t.Identifier == request.Identifier);
 
             if (existingTenant != null)
-                return Result<Tenant>.Failure($"Tenant with identifier '{request.Identifier}' already exists", 400);
+                return Result<TenantSummary>.Failure($"Tenant with identifier '{request.Identifier}' already exists", 400);
 
             var tenant = _mapper.Map<Tenant>(request);
 
@@ -91,12 +91,30 @@ public class SuperAdminService(
                     tenant.Id,
                     $"Created initial admin user '{tenant.Email}' for tenant '{tenant.Name}'");
 
-            return Result<Tenant>.Success(tenant, 201);
+            var tenantSummary = new TenantSummary
+            {
+                Id = tenant.Id,
+                Name = tenant.Name,
+                Identifier = tenant.Identifier,
+                IsActive = tenant.IsActive,
+                LicenseStatus = tenant.LicenseStatus.ToString(),
+                SubscriptionPlan = tenant.SubscriptionPlan ?? "Basic",
+                Country = tenant.Country,
+                Region = tenant.Region,
+
+
+                CreatedAt = tenant.Created.DateTime,
+                LastActivity = tenant.LastModified.DateTime,
+                UserCount = 0,
+                BranchCount = 0
+            };
+
+            return Result<TenantSummary>.Success(tenantSummary, 201);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating tenant: {Identifier}", request.Identifier);
-            return Result<Tenant>.Failure("An error occurred while creating the tenant", 500);
+            return Result<TenantSummary>.Failure("An error occurred while creating the tenant", 500);
         }
     }
 
@@ -167,6 +185,8 @@ public class SuperAdminService(
                     SubscriptionPlan = t.SubscriptionPlan ?? "Basic",
                     Country = t.Country,
                     Region = t.Region,
+                    
+
                     CreatedAt = t.Created.DateTime,
                     LastActivity = t.LastModified.DateTime,
                     UserCount = 0, // This would need to be calculated
