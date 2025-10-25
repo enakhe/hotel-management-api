@@ -20,9 +20,6 @@ public class SuperAdministratorMappingProfile : Profile
             .ForMember(dest => dest.Country, opt => opt.Ignore())
             .ForMember(dest => dest.Region, opt => opt.Ignore())
             .ForMember(dest => dest.Industry, opt => opt.Ignore())
-            .ForMember(dest => dest.LicenseStatus, opt => opt.MapFrom(src => src.LicenseExpiryDate.HasValue ?
-                (src.LicenseExpiryDate > DateTime.UtcNow ? LicenseStatus.Active : LicenseStatus.Expired) :
-                LicenseStatus.Trial))
             .ForMember(dest => dest.EnabledModules, opt => opt.MapFrom(src => new string[0]))
             .ForMember(dest => dest.TimeZone, opt => opt.MapFrom(src => src.TimeZone ?? "UTC"))
             .ForMember(dest => dest.CurrencyCode, opt => opt.MapFrom(src => src.CurrencyCode ?? "USD"));

@@ -12,21 +12,22 @@ public record CreateTenantCommand : IRequest<Result<TenantSummary>>
     public required string Name { get; init; }
     public required string Identifier { get; init; }
     public string? Description { get; init; }
-    public string? Address { get; init; }
-    public string? ContactNumber { get; init; }
     public string? Email { get; init; }
-    public string? TimeZone { get; init; } = "WAT";
-    public string? CurrencyCode { get; init; } = "NGN";
-    public string? LanguageCode { get; init; } = "en";
-    public bool IsActive { get; init; } = true;
-    public DateTime? SubscriptionStartDate { get; init; }
-    public DateTime? SubscriptionEndDate { get; init; }
+    public string? ContactNumber { get; init; }
     public SubscriptionPlan SubscriptionPlan { get; init; } = SubscriptionPlan.Basic;
-    public DateTime? LicenseExpiryDate { get; init; }
+    public string[]? Modules { get; init; }
     public int MaxUsers { get; init; } = 10;
     public int MaxBranches { get; init; } = 1;
     public int MaxRooms { get; init; } = 100;
     public int MaxReservations { get; init; } = 1000;
+    public string? Address { get; init; }
+    public string? Country { get; init; }
+    public string? Region { get; init; }
+    public string? Industry { get; init; }
+    public string? TimeZone { get; init; } = "WAT";
+    public string? CurrencyCode { get; init; } = "NGN";
+    public string? LanguageCode { get; init; } = "en";
+    public bool IsActive { get; init; } = true;
 }
 
 public class CreateTenantCommandValidator : AbstractValidator<CreateTenantCommand>
@@ -87,9 +88,8 @@ public class CreateTenantCommandValidator : AbstractValidator<CreateTenantComman
     }
 }
 
-public class CreateTenantCommandHandler(IApplicationDbContext context, ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<TenantSummary>>
+public class CreateTenantCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<TenantSummary>>
 {
-    private readonly IApplicationDbContext _context = context;
     private readonly ISuperAdminService _superAdminService = superAdminService;
     private readonly IMapper _mapper = mapper;
 
@@ -97,8 +97,6 @@ public class CreateTenantCommandHandler(IApplicationDbContext context, ISuperAdm
     {
         var tenant = _mapper.Map<CreateTenantRequest>(request);
 
-        var response = await _superAdminService.CreateTenantAsync(tenant);
-
-        return response;
+        return await _superAdminService.CreateTenantAsync(tenant);
     }
 }

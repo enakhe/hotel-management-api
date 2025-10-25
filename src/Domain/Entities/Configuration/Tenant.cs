@@ -41,7 +41,7 @@ public class Tenant : BaseTenantAuditableEntity
 
     // License & Subscription Management
     public bool IsActive { get; set; } = true;
-    public DateTime? SubscriptionStartDate { get; set; }
+    public DateTime? SubscriptionStartDate { get; set; } 
     public DateTime? SubscriptionEndDate { get; set; }
 
     [MaxLength(50)]

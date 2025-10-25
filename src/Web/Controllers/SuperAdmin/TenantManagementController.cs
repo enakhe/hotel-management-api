@@ -47,7 +47,7 @@ public class TenantManagementController(
     /// <param name="GetTenantsQuery">List request parameters</param>
     /// <returns>Paginated list of tenants</returns>
     [HttpGet]
-    public async Task<ActionResult<PaginatedResult<TenantSummary>>> GetTenants([FromQuery] GetTenantsQuery request)
+    public async Task<ActionResult> GetTenants([FromQuery] GetTenantsQuery request)
     {
         var response = await _mediator.Send(request);
 
@@ -60,7 +60,7 @@ public class TenantManagementController(
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Detailed tenant information</returns>
     [HttpGet("{tenantId}")]
-    public async Task<ActionResult<TenantDetail>> GetTenant(Guid tenantId)
+    public async Task<ActionResult> GetTenant(Guid tenantId)
     {
         var request = new GetTenantByIdQuery
         {
@@ -77,7 +77,7 @@ public class TenantManagementController(
     /// </summary>
     /// <param name="UpdateTenantCommand">Update Tenant Command</param>
     /// <returns>Update result</returns>
-    [HttpPatch]
+    [HttpPatch("update")]
     public async Task<ActionResult> UpdateTenant([FromBody] UpdateTenantCommand command)
     {
         var response = await _mediator.Send(command);
@@ -144,7 +144,7 @@ public class TenantManagementController(
     /// <param name="ExportTenantDataCommand">Export command</param>
     /// <returns>Export job result</returns>
     [HttpPost("export")]
-    public async Task<ActionResult<ExportJobResult>> ExportTenantData([FromBody] ExportTenantDataCommand command)
+    public async Task<ActionResult> ExportTenantData([FromBody] ExportTenantDataCommand command)
     {
         var response = await _mediator.Send(command);
 
@@ -172,7 +172,7 @@ public class TenantManagementController(
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Usage statistics</returns>
     [HttpGet("usage/{tenantId}")]
-    public async Task<ActionResult<TenantUsage>> GetTenantUsage(Guid tenantId)
+    public async Task<ActionResult> GetTenantUsage(Guid tenantId)
     {
         var request = new GetTenantHealthCommand
         {
@@ -189,7 +189,7 @@ public class TenantManagementController(
     /// <param name="tenantId">Tenant ID</param>
     /// <returns>Health status</returns>
     [HttpGet("health/{tenantId}")]
-    public async Task<ActionResult<TenantHealth>> GetTenantHealth(Guid tenantId)
+    public async Task<ActionResult> GetTenantHealth(Guid tenantId)
     {
         var request = new GetTenantHealthCommand
         {
