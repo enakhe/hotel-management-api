@@ -1,0 +1,5060 @@
+{
+	"info": {
+		"_postman_id": "3182ca68-f5e2-4333-bbda-a58d15c2e67f",
+		"name": "HotelManagement API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_uid": "49075485-3182ca68-f5e2-4333-bbda-a58d15c2e67f"
+	},
+	"item": [
+		{
+			"name": "api",
+			"item": [
+				{
+					"name": "v1",
+					"item": [
+						{
+							"name": "tenant-settings",
+							"item": [
+								{
+									"name": "settings",
+									"item": [
+										{
+											"name": "Tenant Settings Get Tenant Settings",
+											"id": "b572541f-ae9a-420a-9c45-2c083ee4ebf6",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/tenant-settings/settings",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"tenant-settings",
+														"settings"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "b4074535-c124-4fc1-a19c-47eaecff2e8b",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/tenant-settings/settings",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"tenant-settings",
+																"settings"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "03c22e3d-85cc-4004-bd73-68951a649693"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"tenantId\": \"<string>\",\n\t\"tenantName\": \"<string>\",\n\t\"tenantIdentifier\": \"<string>\",\n\t\"isActive\": \"<boolean>\",\n\t\"subscriptionPlan\": \"<string>\",\n\t\"subscriptionEndDate\": \"<dateTime>\",\n\t\"maxUsers\": \"<integer>\",\n\t\"maxBranches\": \"<integer>\",\n\t\"enabledFeatures\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t],\n\t\"customSettings\": {\n\t\t\"dolore_1d9\": {}\n\t}\n}"
+												}
+											]
+										}
+									],
+									"id": "bae436ac-a2ab-4d78-8959-38038b1f2651"
+								},
+								{
+									"name": "features",
+									"item": [
+										{
+											"name": "{featureName}",
+											"item": [
+												{
+													"name": "enabled",
+													"item": [
+														{
+															"name": "Tenant Settings Is Feature Enabled",
+															"id": "f52cdf63-5e59-4ff1-9af1-2226cff5a767",
+															"protocolProfileBehavior": {
+																"disableBodyPruning": true
+															},
+															"request": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/json"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/tenant-settings/features/:featureName/enabled",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"tenant-settings",
+																		"features",
+																		":featureName",
+																		"enabled"
+																	],
+																	"variable": [
+																		{
+																			"key": "featureName",
+																			"value": "<string>",
+																			"description": "(Required) "
+																		}
+																	]
+																}
+															},
+															"response": [
+																{
+																	"id": "6743f714-3f75-48d1-88c8-72e393a0c705",
+																	"name": "Untitled Example",
+																	"originalRequest": {
+																		"method": "GET",
+																		"header": [
+																			{
+																				"key": "Accept",
+																				"value": "application/json"
+																			},
+																			{
+																				"description": "Added as a part of security scheme: apikey",
+																				"key": "Authorization",
+																				"value": "<API Key>"
+																			}
+																		],
+																		"url": {
+																			"raw": "{{baseUrl}}/api/v1/tenant-settings/features/:featureName/enabled",
+																			"host": [
+																				"{{baseUrl}}"
+																			],
+																			"path": [
+																				"api",
+																				"v1",
+																				"tenant-settings",
+																				"features",
+																				":featureName",
+																				"enabled"
+																			],
+																			"variable": [
+																				{
+																					"key": "featureName"
+																				}
+																			]
+																		}
+																	},
+																	"status": "OK",
+																	"code": 200,
+																	"_postman_previewlanguage": "json",
+																	"header": [
+																		{
+																			"key": "Content-Type",
+																			"value": "application/json",
+																			"uuid": "5b556150-00cb-4ce6-b415-9d74c03b5d29"
+																		}
+																	],
+																	"cookie": [],
+																	"body": "<boolean>"
+																}
+															]
+														}
+													],
+													"id": "eb512b40-fd11-4a99-a0de-3019f30a4e2c"
+												}
+											],
+											"id": "e05d132c-e644-440d-93d0-b957655c4811"
+										},
+										{
+											"name": "Tenant Settings Get Enabled Features",
+											"id": "bb8aff9a-9e1b-435d-8484-0d032588555a",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/tenant-settings/features",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"tenant-settings",
+														"features"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "3248a668-dab5-4553-80ba-7407a0c4c50d",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/tenant-settings/features",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"tenant-settings",
+																"features"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "f61d78c9-e6a5-4247-852c-8636e824ae70"
+														}
+													],
+													"cookie": [],
+													"body": "[\n\t\"<string>\",\n\t\"<string>\"\n]"
+												}
+											]
+										}
+									],
+									"id": "0eee8a84-0f0c-4df3-8899-d62ee5e4e67e"
+								},
+								{
+									"name": "license",
+									"item": [
+										{
+											"name": "valid",
+											"item": [
+												{
+													"name": "Tenant Settings Is License Valid",
+													"id": "ec9f3f3d-f267-4c2a-9381-3c09944e9123",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/tenant-settings/license/valid",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"tenant-settings",
+																"license",
+																"valid"
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "3c1dfe5e-f48d-474d-95da-145a473483d2",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/json"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/tenant-settings/license/valid",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"tenant-settings",
+																		"license",
+																		"valid"
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json",
+																	"uuid": "74306cdb-3893-4c9a-b32d-a65a59c6fa04"
+																}
+															],
+															"cookie": [],
+															"body": "<boolean>"
+														}
+													]
+												}
+											],
+											"id": "3d9a5be5-0b57-48d4-b5e1-ba4905003233"
+										}
+									],
+									"id": "5d5490c3-9552-47aa-9c24-d55d7fa2558a"
+								}
+							],
+							"id": "4061ed19-0b5d-47d3-b719-3737aeadd31c"
+						},
+						{
+							"name": "sync",
+							"item": [
+								{
+									"name": "sync",
+									"item": [
+										{
+											"name": "Sync Sync",
+											"id": "beca232d-79b6-4096-992e-9f550c4fd6c7",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/sync/sync",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"sync",
+														"sync"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "97b501d7-dc2b-48ae-8545-85c372949c4d",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/sync/sync",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"sync",
+																"sync"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [],
+													"cookie": [],
+													"body": null
+												}
+											]
+										}
+									],
+									"id": "8365a159-6880-4374-86f3-b767fffe4a21"
+								}
+							],
+							"id": "2a460d05-a8bb-4773-863d-75be130e201c"
+						},
+						{
+							"name": "auth",
+							"item": [
+								{
+									"name": "login",
+									"item": [
+										{
+											"name": "Auth Login",
+											"id": "9696bee5-2b1a-4428-a89f-1eaa76e950f6",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/login",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"login"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "3e976492-cb22-4260-984b-ec85df5a278a",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/login",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"login"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "f59a4e48-96c6-42c7-8717-ae0b8834e402"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "c64c9207-187f-44d9-8f86-fe95a36b0f25"
+								},
+								{
+									"name": "register",
+									"item": [
+										{
+											"name": "Auth Register",
+											"id": "83f146c6-16a4-4aa9-8f33-905f03fec96a",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"firstName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"branchId\": \"<string>\",\n\t\"tenant\": \"<string>\",\n\t\"roles\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/register",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"register"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "c88223c3-a55e-48e3-b9f6-ce8f1bebc3fa",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"firstName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"branchId\": \"<string>\",\n\t\"tenant\": \"<string>\",\n\t\"roles\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/register",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"register"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "5bd0e0bf-f74e-47c3-ae9e-2a5537f62054"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "a6da891e-853d-41ed-b590-3c7a220af797"
+								},
+								{
+									"name": "refresh-token",
+									"item": [
+										{
+											"name": "Auth Refresh Token",
+											"id": "35267426-1c5c-4092-b50e-ca9b49c964ea",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"refreshToken\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/refresh-token",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"refresh-token"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "b0b1de10-aee4-4201-887d-e24bdfb5c15e",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"refreshToken\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/refresh-token",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"refresh-token"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "f4364666-2b9e-43d5-830c-bb39f57f3fb0"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "a5891943-cd8b-47aa-8ec9-aaf8183756af"
+								},
+								{
+									"name": "change-password",
+									"item": [
+										{
+											"name": "Auth Change Password",
+											"id": "bcb0e760-6bc2-4985-936d-ca9f629d3a5f",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"userId\": \"<string>\",\n\t\"currentPassword\": \"<string>\",\n\t\"newPassword\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/change-password",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"change-password"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "72dbd581-4190-4e9a-99d3-d30b6d803c38",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"userId\": \"<string>\",\n\t\"currentPassword\": \"<string>\",\n\t\"newPassword\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/change-password",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"change-password"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "32f0aed8-79b6-4a9b-ad7f-4c64248200e6"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "97b3cdf2-89aa-4ad4-ae83-7b124f734a7b"
+								},
+								{
+									"name": "forgot-password",
+									"item": [
+										{
+											"name": "Auth Forgot Password",
+											"id": "5df06b68-7aba-4b56-99f8-8640d5321069",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"<email>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/forgot-password",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"forgot-password"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "951a00d6-5b2e-49db-995e-0e2f89c1d013",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"email\": \"<email>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/forgot-password",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"forgot-password"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "62b51706-c675-42cd-bbf2-9da8216feffe"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "2c3ed5e9-b1c1-470e-a3c6-32867f5bd06b"
+								},
+								{
+									"name": "confirm-password-reset",
+									"item": [
+										{
+											"name": "Auth Confirm Password Reset",
+											"id": "3961f453-6d3b-409d-97e6-83c2d87a9944",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"email\": \"<string>\",\n\t\"token\": \"<string>\",\n\t\"password\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/auth/confirm-password-reset",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"auth",
+														"confirm-password-reset"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "aed32fa6-28b2-4827-b2a7-803e5dc01b84",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"email\": \"<string>\",\n\t\"token\": \"<string>\",\n\t\"password\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/auth/confirm-password-reset",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"auth",
+																"confirm-password-reset"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "e2e099eb-3a8d-474c-866f-baff85f951ae"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "0aac8daf-cf6f-4229-bdc9-de0a238eb47b"
+								}
+							],
+							"id": "e7dd89b6-1515-46b4-a425-ed35b36d9903"
+						},
+						{
+							"name": "branches",
+							"item": [
+								{
+									"name": "{id}",
+									"item": [
+										{
+											"name": "users",
+											"item": [
+												{
+													"name": "Branch Get Users By Branch",
+													"id": "e3a72be6-04ed-4d18-94a9-77136941ae15",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/branches/:id/users",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"branches",
+																":id",
+																"users"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "7527afa1-5e4b-4875-9913-472acc2b9d89",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/octet-stream"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/branches/:id/users",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"branches",
+																		":id",
+																		"users"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "text",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/octet-stream",
+																	"uuid": "2ad21e96-f883-41c5-983d-01fda2086ee1"
+																}
+															],
+															"cookie": [],
+															"body": "<binary>"
+														}
+													]
+												}
+											],
+											"id": "c3fde3c7-218f-4f69-893c-52ffa4a509d7"
+										},
+										{
+											"name": "Branch Update Branch",
+											"id": "26689bc9-2e1a-4eb4-97dc-809aec872fb4",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"name\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/branches/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"branches",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "89743341-fb20-4206-9d5a-526d9ec0da59",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "PUT",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"name\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/branches/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"branches",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "ac4cebe2-fbbb-49be-a88b-929411958ea3"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										},
+										{
+											"name": "Branch Delete Branch",
+											"id": "9e94d4bf-b244-4e30-a5bb-ee6645c5dd20",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/branches/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"branches",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "4cb26acd-64a4-4774-b16f-94d36e07f0d0",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/branches/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"branches",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "6eb9f231-da37-455c-a5cd-d0d995ad533e"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										},
+										{
+											"name": "Branch Get Branch By Id",
+											"id": "b574e3e4-7a4c-4f0a-9078-17966a242062",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/branches/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"branches",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "ffa73398-6f41-4b47-8d13-6cff3ad3d494",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/branches/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"branches",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "69589402-a529-4bf5-a197-c7ed890df935"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"id\": \"<string>\",\n\t\"name\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<string>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\",\n\t\"isActive\": \"<boolean>\"\n}"
+												}
+											]
+										}
+									],
+									"id": "6a6645ef-274a-4900-95cf-750b67956374"
+								},
+								{
+									"name": "Branch Create Branch",
+									"id": "eef31852-1dbc-4b08-8e39-58efee33d97c",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"name\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/branches",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"branches"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "87b8c44c-73f9-42b2-a0b2-c9dfc41e0260",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"name\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/branches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"branches"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "9933eada-8cba-46b9-83bd-a3974bb5ee8a"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								},
+								{
+									"name": "Branch Get All Branches",
+									"id": "32ed024d-56fb-44c5-9944-b5867415a4c4",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/branches",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"branches"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "b048499a-486c-44ff-a490-cb97b2ae12cc",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/branches",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"branches"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "edd8d96a-17df-436b-95be-c76fa622db57"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "71ac7f02-075f-4712-8798-4d461639de01"
+						},
+						{
+							"name": "role",
+							"item": [
+								{
+									"name": "create",
+									"item": [
+										{
+											"name": "Role Create Role",
+											"id": "702ecd71-99ca-473e-a0a4-cd8cbb600b43",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"name\": \"<string>\",\n\t\"description\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role/create",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role",
+														"create"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "659bbace-407f-412a-9e7c-04703b20eeec",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"name\": \"<string>\",\n\t\"description\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/create",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																"create"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "14bbf2da-7ea9-4fe4-92eb-97fda51165ba"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "e53bd0b4-45b5-4c73-8dc4-90d175c1de5d"
+								},
+								{
+									"name": "assign",
+									"item": [
+										{
+											"name": "Role Assign Role To User",
+											"id": "a01d9f78-c12b-4bcc-8e71-b1e334628b7b",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"userId\": \"<string>\",\n\t\"roleName\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role/assign",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role",
+														"assign"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "cb7250e0-e7c6-44a3-94c5-a32dffac0f84",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "POST",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "{\n\t\"userId\": \"<string>\",\n\t\"roleName\": \"<string>\"\n}",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/assign",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																"assign"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "9ee2e462-b05b-44d3-b0a4-30c23e9208c9"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "b0353d49-5e0d-42ee-89bc-917e3a29eee5"
+								},
+								{
+									"name": "all",
+									"item": [
+										{
+											"name": "Role Get All Roles",
+											"id": "e35c177c-7856-4e50-b386-f3e1ced51bce",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role/all",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role",
+														"all"
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "3003e458-6a06-4f6e-bd8f-877a17a15bbd",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/all",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																"all"
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "a144aa8e-eed4-4bca-93b6-b4cecbe39b0d"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "5e0d9eb5-5039-442a-918e-dbc4bc833b02"
+								},
+								{
+									"name": "user",
+									"item": [
+										{
+											"name": "{id}",
+											"item": [
+												{
+													"name": "Role Get User Roles",
+													"id": "0889eb6a-4148-4ae8-a937-a7b7de0a8a7f",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/user/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																"user",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "d8fc4158-8dd4-43f4-a19f-153591c3e540",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/octet-stream"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/role/user/:id",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"role",
+																		"user",
+																		":id"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "text",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/octet-stream",
+																	"uuid": "aeb6a42a-0559-4570-85f0-91254342c34a"
+																}
+															],
+															"cookie": [],
+															"body": "<binary>"
+														}
+													]
+												}
+											],
+											"id": "95e4586f-31e7-46f9-b220-4c338250fb2a"
+										}
+									],
+									"id": "e6bc5cf9-b95c-4556-a103-99a2253d3c8f"
+								},
+								{
+									"name": "{id}",
+									"item": [
+										{
+											"name": "Role Get Role By Id",
+											"id": "47ca45a9-0710-4130-ad8a-6c455c2ed742",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "209d28cd-a162-4e62-8ad2-41e8a0d151fe",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "4608f1d7-4176-4b22-8061-11f84e0c40cb"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										},
+										{
+											"name": "Role Delete Role",
+											"id": "56d9dbc0-0b20-45eb-82c0-2172ecf5c8d6",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "060b644d-e8b7-4b15-9201-1ead1842ad9c",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/role/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"role",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "de3ed0f6-be44-44db-a896-b162ad5640ed"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "ec1213f2-a5f9-4200-9d1d-2333fca20a3c"
+								},
+								{
+									"name": "Role Update Role",
+									"id": "ea7c51a5-7745-4e8b-8320-ae1c5238a1a3",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"id\": \"<string>\",\n\t\"name\": \"<string>\",\n\t\"description\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/role",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"role"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "5fe5f621-31e6-4e47-be84-5dda521aa919",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"id\": \"<string>\",\n\t\"name\": \"<string>\",\n\t\"description\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/role",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"role"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "ef9830e3-07b7-4e62-b02e-a24b1f4c2604"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "5fc350d0-556e-4f38-b109-109c8bb52e9f"
+						},
+						{
+							"name": "users",
+							"item": [
+								{
+									"name": "{id}",
+									"item": [
+										{
+											"name": "deactivate",
+											"item": [
+												{
+													"name": "User Deactivate User",
+													"id": "e0ffd8e9-c3b1-4cac-9083-a595838341bb",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "PATCH",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id/deactivate",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id",
+																"deactivate"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "fb778d46-663a-4745-b09b-efdbea18fb3d",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "PATCH",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/octet-stream"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/users/:id/deactivate",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"users",
+																		":id",
+																		"deactivate"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "text",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/octet-stream",
+																	"uuid": "6baca846-da64-4a95-8f6b-7c71cdd7dfab"
+																}
+															],
+															"cookie": [],
+															"body": "<binary>"
+														}
+													]
+												}
+											],
+											"id": "0b9fe10f-6b02-42d5-83bd-71bd5af13f71"
+										},
+										{
+											"name": "activate",
+											"item": [
+												{
+													"name": "User Activate User",
+													"id": "7fbc94f4-6c44-472c-bc3b-5a844a08d1d5",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "PATCH",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id/activate",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id",
+																"activate"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "49a18d0b-de8c-4d0e-bab6-d2c8b328059f",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "PATCH",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/octet-stream"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/users/:id/activate",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"users",
+																		":id",
+																		"activate"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "text",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/octet-stream",
+																	"uuid": "4e8b5e36-7136-4ae7-96ef-d9db5b1ed2d4"
+																}
+															],
+															"cookie": [],
+															"body": "<binary>"
+														}
+													]
+												}
+											],
+											"id": "8d5b265f-03aa-41ca-a26b-65e85194959d"
+										},
+										{
+											"name": "roles",
+											"item": [
+												{
+													"name": "User Assign Roles",
+													"id": "429528c6-6f39-49d1-abc9-b8e04a2e6ad1",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "PUT",
+														"header": [
+															{
+																"key": "Content-Type",
+																"value": "application/json"
+															},
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															}
+														],
+														"body": {
+															"mode": "raw",
+															"raw": "[\n\t\"<string>\",\n\t\"<string>\"\n]",
+															"options": {
+																"raw": {
+																	"headerFamily": "json",
+																	"language": "json"
+																}
+															}
+														},
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id/roles",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id",
+																"roles"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "5f2e5837-19cf-4eae-9bd1-d175026b4ba5",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "PUT",
+																"header": [
+																	{
+																		"key": "Content-Type",
+																		"value": "application/json"
+																	},
+																	{
+																		"key": "Accept",
+																		"value": "application/octet-stream"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"body": {
+																	"mode": "raw",
+																	"raw": "[\n\t\"<string>\",\n\t\"<string>\"\n]",
+																	"options": {
+																		"raw": {
+																			"headerFamily": "json",
+																			"language": "json"
+																		}
+																	}
+																},
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/users/:id/roles",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"users",
+																		":id",
+																		"roles"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "text",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/octet-stream",
+																	"uuid": "82925cbd-c19a-4bcf-97d5-62a3fda54704"
+																}
+															],
+															"cookie": [],
+															"body": "<binary>"
+														}
+													]
+												},
+												{
+													"name": "User Get User Roles",
+													"id": "dcb170ff-30af-46a7-a78f-a55ce647a256",
+													"protocolProfileBehavior": {
+														"disableBodyPruning": true
+													},
+													"request": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id/roles",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id",
+																"roles"
+															],
+															"variable": [
+																{
+																	"key": "id",
+																	"value": "<string>",
+																	"description": "(Required) "
+																}
+															]
+														}
+													},
+													"response": [
+														{
+															"id": "c7d9e758-7f81-4a8b-99bf-8b4f187689ac",
+															"name": "Untitled Example",
+															"originalRequest": {
+																"method": "GET",
+																"header": [
+																	{
+																		"key": "Accept",
+																		"value": "application/json"
+																	},
+																	{
+																		"description": "Added as a part of security scheme: apikey",
+																		"key": "Authorization",
+																		"value": "<API Key>"
+																	}
+																],
+																"url": {
+																	"raw": "{{baseUrl}}/api/v1/users/:id/roles",
+																	"host": [
+																		"{{baseUrl}}"
+																	],
+																	"path": [
+																		"api",
+																		"v1",
+																		"users",
+																		":id",
+																		"roles"
+																	],
+																	"variable": [
+																		{
+																			"key": "id"
+																		}
+																	]
+																}
+															},
+															"status": "OK",
+															"code": 200,
+															"_postman_previewlanguage": "json",
+															"header": [
+																{
+																	"key": "Content-Type",
+																	"value": "application/json",
+																	"uuid": "cff19df8-0776-480a-ada0-685b02d80fe6"
+																}
+															],
+															"cookie": [],
+															"body": "[\n\t\"<string>\",\n\t\"<string>\"\n]"
+														}
+													]
+												}
+											],
+											"id": "e779703b-cd4a-46f1-80cd-dff841ea9fac"
+										},
+										{
+											"name": "User Get User By Id",
+											"id": "603cb4fb-f639-4f2f-99c1-fac15e1adc4e",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/users/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "71427c5c-f887-49c4-98c6-5e451d7e3aaa",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "56fdb49f-9eb1-4cf9-a6a3-7b9d18706458"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"id\": \"<string>\",\n\t\"fullName\": \"<string>\",\n\t\"email\": \"<string>\",\n\t\"phoneNumber\": \"<string>\",\n\t\"isActive\": \"<boolean>\",\n\t\"branchId\": \"<string>\",\n\t\"branchName\": \"<string>\",\n\t\"roles\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}"
+												}
+											]
+										},
+										{
+											"name": "User Delete User",
+											"id": "aa4f1600-3e57-40fa-bae6-579f4d87360c",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "DELETE",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/users/:id",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users",
+														":id"
+													],
+													"variable": [
+														{
+															"key": "id",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "a622f99c-8644-4259-88e8-957234c25e30",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "DELETE",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/octet-stream"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/api/v1/users/:id",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"api",
+																"v1",
+																"users",
+																":id"
+															],
+															"variable": [
+																{
+																	"key": "id"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "text",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/octet-stream",
+															"uuid": "7b0b8029-5502-4c69-8465-0ea6b4cb5dc2"
+														}
+													],
+													"cookie": [],
+													"body": "<binary>"
+												}
+											]
+										}
+									],
+									"id": "aa3e49bd-760f-4d58-b9dd-f2673d9e9157"
+								},
+								{
+									"name": "User Create User",
+									"id": "2b46d637-aef4-4457-9579-bc48b512a731",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"firstName\": \"<string>\",\n\t\"middleName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\",\n\t\"phoneNumber\": \"<string>\",\n\t\"branchId\": \"<string>\",\n\t\"roleIds\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/users",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "36c2e1a5-a2b5-4d17-badd-e9a9ba76eec2",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"firstName\": \"<string>\",\n\t\"middleName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\",\n\t\"phoneNumber\": \"<string>\",\n\t\"branchId\": \"<string>\",\n\t\"roleIds\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/users",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "fd756e01-8d59-43de-a7bf-bed32b6b35ee"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								},
+								{
+									"name": "User Update User",
+									"id": "0fa8eb07-c432-4945-b5bf-2af9bafbc707",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"id\": \"<string>\",\n\t\"firstName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"middleName\": \"<string>\",\n\t\"gender\": 1,\n\t\"phoneNumber\": \"<string>\",\n\t\"branchId\": \"<string>\",\n\t\"roleIds\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/users",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "76d8f5f3-91b0-45e5-accc-8db7bdfd960f",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "PUT",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"id\": \"<string>\",\n\t\"firstName\": \"<string>\",\n\t\"lastName\": \"<string>\",\n\t\"middleName\": \"<string>\",\n\t\"gender\": 1,\n\t\"phoneNumber\": \"<string>\",\n\t\"branchId\": \"<string>\",\n\t\"roleIds\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t]\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/users",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "687b5d8b-e133-454d-be39-e3aa872fbb6c"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								},
+								{
+									"name": "User Get All Users",
+									"id": "86d5cbd2-5924-4a4c-a27b-699c30cc5364",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/api/v1/users",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"users"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "10aefd84-0277-4ff1-888e-6e8355234612",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/api/v1/users",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"api",
+														"v1",
+														"users"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json",
+													"uuid": "36091a75-b93b-4fc3-9dd5-dad7a4edd96d"
+												}
+											],
+											"cookie": [],
+											"body": "[\n\t{\n\t\t\"id\": \"<string>\",\n\t\t\"fullName\": \"<string>\",\n\t\t\"email\": \"<string>\",\n\t\t\"phoneNumber\": \"<string>\",\n\t\t\"isActive\": \"<boolean>\",\n\t\t\"branchId\": \"<string>\",\n\t\t\"branchName\": \"<string>\",\n\t\t\"roles\": [\n\t\t\t\"<string>\",\n\t\t\t\"<string>\"\n\t\t]\n\t},\n\t{\n\t\t\"id\": \"<string>\",\n\t\t\"fullName\": \"<string>\",\n\t\t\"email\": \"<string>\",\n\t\t\"phoneNumber\": \"<string>\",\n\t\t\"isActive\": \"<boolean>\",\n\t\t\"branchId\": \"<string>\",\n\t\t\"branchName\": \"<string>\",\n\t\t\"roles\": [\n\t\t\t\"<string>\",\n\t\t\t\"<string>\"\n\t\t]\n\t}\n]"
+										}
+									]
+								}
+							],
+							"id": "dc10c4c2-fb65-476b-a101-ab613b04ecd8"
+						}
+					],
+					"id": "13b01e98-643c-4cd7-8f70-f31fe1b1e7ff"
+				}
+			],
+			"id": "e2cd16cb-30c1-420d-93a5-719abb96f7a2"
+		},
+		{
+			"name": "cp",
+			"item": [
+				{
+					"name": "audit",
+					"item": [
+						{
+							"name": "superadmin",
+							"item": [
+								{
+									"name": "{superAdminId}",
+									"item": [
+										{
+											"name": "Audit Get Super Admin Audit Logs",
+											"id": "d4433c4c-bb2a-42af-89e2-949d7dd8723c",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/audit/superadmin/:superAdminId?Page=<integer>&Size=<integer>&FromDate=<dateTime>&ToDate=<dateTime>",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"audit",
+														"superadmin",
+														":superAdminId"
+													],
+													"query": [
+														{
+															"key": "Page",
+															"value": "<integer>"
+														},
+														{
+															"key": "Size",
+															"value": "<integer>"
+														},
+														{
+															"key": "FromDate",
+															"value": "<dateTime>"
+														},
+														{
+															"key": "ToDate",
+															"value": "<dateTime>"
+														}
+													],
+													"variable": [
+														{
+															"key": "superAdminId",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "938cf1e8-13a7-4851-b997-d086ab2e2c6a",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/cp/audit/superadmin/:superAdminId?Page=<integer>&Size=<integer>&FromDate=<dateTime>&ToDate=<dateTime>",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"cp",
+																"audit",
+																"superadmin",
+																":superAdminId"
+															],
+															"query": [
+																{
+																	"key": "Page",
+																	"value": "<integer>"
+																},
+																{
+																	"key": "Size",
+																	"value": "<integer>"
+																},
+																{
+																	"key": "FromDate",
+																	"value": "<dateTime>"
+																},
+																{
+																	"key": "ToDate",
+																	"value": "<dateTime>"
+																}
+															],
+															"variable": [
+																{
+																	"key": "superAdminId"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "d6ce983b-fbb8-4627-a8d7-50191cb28847"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"items\": [\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t},\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t}\n\t],\n\t\"totalCount\": \"<integer>\",\n\t\"page\": \"<integer>\",\n\t\"size\": \"<integer>\",\n\t\"totalPages\": \"<integer>\",\n\t\"hasNext\": \"<boolean>\",\n\t\"hasPrevious\": \"<boolean>\"\n}"
+												}
+											]
+										}
+									],
+									"id": "4af26a4f-0476-4f98-b25a-4c7f34a17f16"
+								}
+							],
+							"id": "80527381-f160-4e16-b71c-e90e00bbecf9"
+						},
+						{
+							"name": "tenant",
+							"item": [
+								{
+									"name": "{tenantId}",
+									"item": [
+										{
+											"name": "Audit Get Tenant Audit Logs",
+											"id": "e3738826-16f2-4358-882b-3af381503cf6",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/audit/tenant/:tenantId?Page=<integer>&Size=<integer>",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"audit",
+														"tenant",
+														":tenantId"
+													],
+													"query": [
+														{
+															"key": "Page",
+															"value": "<integer>"
+														},
+														{
+															"key": "Size",
+															"value": "<integer>"
+														}
+													],
+													"variable": [
+														{
+															"key": "tenantId",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "f46c014d-73f6-480d-a17c-549c1acd8b80",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/cp/audit/tenant/:tenantId?Page=<integer>&Size=<integer>",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"cp",
+																"audit",
+																"tenant",
+																":tenantId"
+															],
+															"query": [
+																{
+																	"key": "Page",
+																	"value": "<integer>"
+																},
+																{
+																	"key": "Size",
+																	"value": "<integer>"
+																}
+															],
+															"variable": [
+																{
+																	"key": "tenantId"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "5fe03386-57ac-4d65-9b29-dba98868d63b"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"items\": [\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t},\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t}\n\t],\n\t\"totalCount\": \"<integer>\",\n\t\"page\": \"<integer>\",\n\t\"size\": \"<integer>\",\n\t\"totalPages\": \"<integer>\",\n\t\"hasNext\": \"<boolean>\",\n\t\"hasPrevious\": \"<boolean>\"\n}"
+												}
+											]
+										}
+									],
+									"id": "9de89a42-0f70-4863-94b8-b483b56baee0"
+								}
+							],
+							"id": "91c84793-a9d6-4f15-9da8-1ea133b2aa7e"
+						},
+						{
+							"name": "all",
+							"item": [
+								{
+									"name": "Audit Get All Audit Logs",
+									"id": "c1ff1b17-f05a-4145-8c4a-bc98542878df",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/cp/audit/all?Page=<integer>&Size=<integer>&FromDate=<dateTime>&ToDate=<dateTime>&Action=<string>&TargetType=<string>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"audit",
+												"all"
+											],
+											"query": [
+												{
+													"key": "Page",
+													"value": "<integer>"
+												},
+												{
+													"key": "Size",
+													"value": "<integer>"
+												},
+												{
+													"key": "FromDate",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "ToDate",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "Action",
+													"value": "<string>"
+												},
+												{
+													"key": "TargetType",
+													"value": "<string>"
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "b6402e98-9ef6-4bc2-ac27-c00e7f04bab8",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/audit/all?Page=<integer>&Size=<integer>&FromDate=<dateTime>&ToDate=<dateTime>&Action=<string>&TargetType=<string>",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"audit",
+														"all"
+													],
+													"query": [
+														{
+															"key": "Page",
+															"value": "<integer>"
+														},
+														{
+															"key": "Size",
+															"value": "<integer>"
+														},
+														{
+															"key": "FromDate",
+															"value": "<dateTime>"
+														},
+														{
+															"key": "ToDate",
+															"value": "<dateTime>"
+														},
+														{
+															"key": "Action",
+															"value": "<string>"
+														},
+														{
+															"key": "TargetType",
+															"value": "<string>"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json",
+													"uuid": "b3cd2f3c-559a-4eeb-ba7a-a3d6493250bd"
+												}
+											],
+											"cookie": [],
+											"body": "{\n\t\"items\": [\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t},\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"superAdminId\": \"<string>\",\n\t\t\t\"username\": \"<string>\",\n\t\t\t\"action\": \"<string>\",\n\t\t\t\"targetType\": \"<string>\",\n\t\t\t\"targetId\": \"<string>\",\n\t\t\t\"tenantId\": \"<string>\",\n\t\t\t\"details\": \"<string>\",\n\t\t\t\"changes\": \"<string>\",\n\t\t\t\"ipAddress\": \"<string>\",\n\t\t\t\"userAgent\": \"<string>\",\n\t\t\t\"timestamp\": \"<dateTime>\"\n\t\t}\n\t],\n\t\"totalCount\": \"<integer>\",\n\t\"page\": \"<integer>\",\n\t\"size\": \"<integer>\",\n\t\"totalPages\": \"<integer>\",\n\t\"hasNext\": \"<boolean>\",\n\t\"hasPrevious\": \"<boolean>\"\n}"
+										}
+									]
+								}
+							],
+							"id": "32cdb077-b3ee-4fd3-a6cf-52c082e8769f"
+						}
+					],
+					"id": "86be1936-8023-4ace-8d28-2c5bd1de8eae"
+				},
+				{
+					"name": "login",
+					"item": [
+						{
+							"name": "Super Admin Login",
+							"id": "5c4d9bf0-1746-41ef-bf3a-5bfcdad18d36",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cp/login",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"login"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "5432b14a-1f06-47d1-b520-158fbac31cb8",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/login",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"login"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream",
+											"uuid": "d5eb98d6-0e56-42b9-bec7-b43649315e69"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						}
+					],
+					"id": "4184d78d-e18a-4c17-959c-23d035691ae0"
+				},
+				{
+					"name": "refresh-token",
+					"item": [
+						{
+							"name": "Super Admin Refresh Token",
+							"id": "733706ed-756b-4a7e-bb63-56a66f74b5de",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"refreshToken\": \"<string>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cp/refresh-token",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"refresh-token"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "8da5d1ae-9c0d-475d-88e6-cfcbcec2bee5",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"refreshToken\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/refresh-token",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"refresh-token"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream",
+											"uuid": "d4de8add-8ef6-4207-b5de-2d0b46af1d5a"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						}
+					],
+					"id": "c0c67647-944b-43d3-b775-417d788bd567"
+				},
+				{
+					"name": "tenant",
+					"item": [
+						{
+							"name": "{tenantId}",
+							"item": [
+								{
+									"name": "Tenant Management Get Tenant",
+									"id": "cd5528d3-acb6-43f1-ab6e-34e5cacc5734",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/:tenantId",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												":tenantId"
+											],
+											"variable": [
+												{
+													"key": "tenantId",
+													"value": "<string>",
+													"description": "(Required) "
+												}
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "3ce09064-6a88-41a0-8943-6da47cb5385d",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/:tenantId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														":tenantId"
+													],
+													"variable": [
+														{
+															"key": "tenantId"
+														}
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json",
+													"uuid": "420d96fa-1d2f-49dd-9a0e-bd344b8cb81d"
+												}
+											],
+											"cookie": [],
+											"body": "{\n\t\"id\": \"<string>\",\n\t\"name\": \"<string>\",\n\t\"identifier\": \"<string>\",\n\t\"description\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<string>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\",\n\t\"languageCode\": \"<string>\",\n\t\"country\": \"<string>\",\n\t\"region\": \"<string>\",\n\t\"industry\": \"<string>\",\n\t\"isActive\": \"<boolean>\",\n\t\"licenseStatus\": \"<string>\",\n\t\"licenseExpiryDate\": \"<dateTime>\",\n\t\"subscriptionPlan\": \"<string>\",\n\t\"subscriptionStartDate\": \"<dateTime>\",\n\t\"subscriptionEndDate\": \"<dateTime>\",\n\t\"maxUsers\": \"<integer>\",\n\t\"maxBranches\": \"<integer>\",\n\t\"maxRooms\": \"<integer>\",\n\t\"maxReservations\": \"<integer>\",\n\t\"enabledModules\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t],\n\t\"createdAt\": \"<dateTime>\",\n\t\"lastActivity\": \"<dateTime>\",\n\t\"usage\": {\n\t\t\"userCount\": \"<integer>\",\n\t\t\"branchCount\": \"<integer>\",\n\t\t\"roomCount\": \"<integer>\",\n\t\t\"reservationCount\": \"<integer>\",\n\t\t\"activeReservations\": \"<integer>\",\n\t\t\"storageUsedBytes\": \"<long>\",\n\t\t\"apiCallsLast24h\": \"<integer>\",\n\t\t\"apiCallsLast7d\": \"<integer>\",\n\t\t\"apiCallsLast30d\": \"<integer>\",\n\t\t\"lastActivity\": \"<dateTime>\"\n\t},\n\t\"health\": {\n\t\t\"isHealthy\": \"<boolean>\",\n\t\t\"status\": \"<string>\",\n\t\t\"lastHeartbeat\": \"<dateTime>\",\n\t\t\"errorRate\": \"<double>\",\n\t\t\"errorCountLast24h\": \"<integer>\",\n\t\t\"issues\": [\n\t\t\t\"<string>\",\n\t\t\t\"<string>\"\n\t\t],\n\t\t\"checkedAt\": \"<dateTime>\"\n\t}\n}"
+										}
+									]
+								}
+							],
+							"id": "61530de3-dc36-4207-ab61-228ee748242d"
+						},
+						{
+							"name": "lock",
+							"item": [
+								{
+									"name": "Tenant Management Lock Tenant",
+									"id": "5e96e4d7-2ecf-4430-b8b0-5f2c0466f510",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"reason\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/lock",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"lock"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "e92a59ef-ad4a-412c-8194-a0c574645af8",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"reason\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/lock",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"lock"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "06612a57-1949-429b-9c5a-b7c8240c83e6"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "7302af4f-af8d-4bf7-8503-ab574855ae69"
+						},
+						{
+							"name": "unlock",
+							"item": [
+								{
+									"name": "Tenant Management Unlock Tenant",
+									"id": "9d6711bb-3d53-417c-b115-7fe57c12d2cc",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"tenantId\": \"<string>\",\n  \"reason\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/unlock",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"unlock"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "0c441bf5-a80d-4277-9812-ee278e671d37",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"request\": {\n\t\t\"reason\": \"<string>\"\n\t}\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/unlock",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"unlock"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "86b2c5cb-ce64-4aa8-aca7-3f243bf45a48"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "06ad93ab-c6b4-4cef-8b23-490c490cc138"
+						},
+						{
+							"name": "mode",
+							"item": [
+								{
+									"name": "Tenant Management Set Tenant Mode",
+									"id": "ca2e95e3-3a21-470c-b871-1ebbe9e07722",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"mode\": 0,\n\t\"reason\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/mode",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"mode"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "e163726c-98ab-4845-ad9b-f2beaf23864b",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"mode\": 0,\n\t\"reason\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/mode",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"mode"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "d27c4f37-fbdf-48b8-9b6c-22fa99587537"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "e48bbb8f-aa88-4bae-908b-5573c53595d6"
+						},
+						{
+							"name": "terminate",
+							"item": [
+								{
+									"name": "Tenant Management Terminate Tenant",
+									"id": "7c30ba77-ebbe-4db9-a9d2-10dc0d9a0d91",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"tenantId\": \"<string>\",\n  \"reason\": \"<string>\",\n  \"effectiveDate\": \"<dateTime>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/terminate",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"terminate"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "8a010f90-abed-421b-98d2-3539ef535a71",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"terminateRequest\": {\n\t\t\"reason\": \"<string>\",\n\t\t\"effectiveDate\": \"<dateTime>\"\n\t}\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/terminate",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"terminate"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "253a92e0-db17-45a9-affc-f888c0c338f5"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "2353e2e0-8a8c-4231-a6ca-c10dc90d8a80"
+						},
+						{
+							"name": "export",
+							"item": [
+								{
+									"name": "Tenant Management Export Tenant Data",
+									"id": "5b966d45-c9ba-4978-94e6-7031ee74c3e2",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/json"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"tenantId\": \"<string>\",\n  \"includeUsers\": \"<boolean>\",\n  \"includeReservations\": \"<boolean>\",\n  \"includeRooms\": \"<boolean>\",\n  \"includeAuditLogs\": \"<boolean>\",\n  \"fromDate\": \"<dateTime>\",\n  \"toDate\": \"<dateTime>\",\n  \"format\": \"<string>\"\n}"
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/export",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"export"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "03adb183-bbd1-493b-81d6-4508c05ea770",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/json"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"request\": {\n\t\t\"includeUsers\": \"<boolean>\",\n\t\t\"includeReservations\": \"<boolean>\",\n\t\t\"includeRooms\": \"<boolean>\",\n\t\t\"includeAuditLogs\": \"<boolean>\",\n\t\t\"fromDate\": \"<dateTime>\",\n\t\t\"toDate\": \"<dateTime>\",\n\t\t\"format\": \"<string>\"\n\t}\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/export",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"export"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/json",
+													"uuid": "d9439f8c-fff1-4e40-b7a6-19ac8140a1e0"
+												}
+											],
+											"cookie": [],
+											"body": "{\n\t\"success\": \"<boolean>\",\n\t\"jobId\": \"<string>\",\n\t\"errorMessage\": \"<string>\",\n\t\"downloadUrl\": \"<string>\",\n\t\"estimatedCompletion\": \"<dateTime>\"\n}"
+										}
+									]
+								}
+							],
+							"id": "6e498840-0c2a-4501-9716-23e025943fe3"
+						},
+						{
+							"name": "purge",
+							"item": [
+								{
+									"name": "Tenant Management Purge Tenant Data",
+									"id": "f0ea618a-f450-416b-9ea2-3e809cb01ba7",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"reason\": \"<string>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/purge",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"purge"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "a9e859a8-0142-498f-bd9a-a58fd757a48c",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "POST",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"reason\": \"<string>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/purge",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"purge"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream",
+													"uuid": "79b2627e-d46d-437f-a04f-a869b2dfb663"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "920364d5-0862-42fc-a629-3fecab87d8d4"
+						},
+						{
+							"name": "usage",
+							"item": [
+								{
+									"name": "{tenantId}",
+									"item": [
+										{
+											"name": "Tenant Management Get Tenant Usage",
+											"id": "fca6f6ae-a25a-4cae-b7f2-a30f2f9b8636",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/usage/:tenantId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"usage",
+														":tenantId"
+													],
+													"variable": [
+														{
+															"key": "tenantId",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "cfbcfc16-4207-4f88-b90a-979d62c51b7d",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/cp/tenant/usage/:tenantId",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"cp",
+																"tenant",
+																"usage",
+																":tenantId"
+															],
+															"variable": [
+																{
+																	"key": "tenantId"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "67150b89-32cb-44b4-afa1-59e290915132"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"userCount\": \"<integer>\",\n\t\"branchCount\": \"<integer>\",\n\t\"roomCount\": \"<integer>\",\n\t\"reservationCount\": \"<integer>\",\n\t\"activeReservations\": \"<integer>\",\n\t\"storageUsedBytes\": \"<long>\",\n\t\"apiCallsLast24h\": \"<integer>\",\n\t\"apiCallsLast7d\": \"<integer>\",\n\t\"apiCallsLast30d\": \"<integer>\",\n\t\"lastActivity\": \"<dateTime>\"\n}"
+												}
+											]
+										}
+									],
+									"id": "437e4b16-0518-4e0e-9ae0-8a06c95dd6e7"
+								}
+							],
+							"id": "889a0670-6903-45de-a842-7ee0d5b413f4"
+						},
+						{
+							"name": "health",
+							"item": [
+								{
+									"name": "{tenantId}",
+									"item": [
+										{
+											"name": "Tenant Management Get Tenant Health",
+											"id": "eb598000-19a2-4c01-96ca-7c8e6431d4db",
+											"protocolProfileBehavior": {
+												"disableBodyPruning": true
+											},
+											"request": {
+												"method": "GET",
+												"header": [
+													{
+														"key": "Accept",
+														"value": "application/json"
+													}
+												],
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/health/:tenantId",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"health",
+														":tenantId"
+													],
+													"variable": [
+														{
+															"key": "tenantId",
+															"value": "<string>",
+															"description": "(Required) "
+														}
+													]
+												}
+											},
+											"response": [
+												{
+													"id": "24dd9f5a-ef56-4bb8-aa72-136fcca314d1",
+													"name": "Untitled Example",
+													"originalRequest": {
+														"method": "GET",
+														"header": [
+															{
+																"key": "Accept",
+																"value": "application/json"
+															},
+															{
+																"description": "Added as a part of security scheme: apikey",
+																"key": "Authorization",
+																"value": "<API Key>"
+															}
+														],
+														"url": {
+															"raw": "{{baseUrl}}/cp/tenant/health/:tenantId",
+															"host": [
+																"{{baseUrl}}"
+															],
+															"path": [
+																"cp",
+																"tenant",
+																"health",
+																":tenantId"
+															],
+															"variable": [
+																{
+																	"key": "tenantId"
+																}
+															]
+														}
+													},
+													"status": "OK",
+													"code": 200,
+													"_postman_previewlanguage": "json",
+													"header": [
+														{
+															"key": "Content-Type",
+															"value": "application/json",
+															"uuid": "4cda0151-e1ea-4940-bb69-0e6b6336fec7"
+														}
+													],
+													"cookie": [],
+													"body": "{\n\t\"isHealthy\": \"<boolean>\",\n\t\"status\": \"<string>\",\n\t\"lastHeartbeat\": \"<dateTime>\",\n\t\"errorRate\": \"<double>\",\n\t\"errorCountLast24h\": \"<integer>\",\n\t\"issues\": [\n\t\t\"<string>\",\n\t\t\"<string>\"\n\t],\n\t\"checkedAt\": \"<dateTime>\"\n}"
+												}
+											]
+										}
+									],
+									"id": "92cfb8d3-c7d2-4a5b-8db5-7c548504b748"
+								}
+							],
+							"id": "e72749bd-5cef-4836-9dc8-08cf797c9a15"
+						},
+						{
+							"name": "Tenant Management Create Tenant",
+							"id": "938d9d37-adc8-47d5-af1f-7ebaac8c8c8b",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"<string>\",\n\t\"identifier\": \"<string>\",\n\t\"description\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<string>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\",\n\t\"languageCode\": \"<string>\",\n\t\"isActive\": \"<boolean>\",\n\t\"subscriptionStartDate\": \"<dateTime>\",\n\t\"subscriptionEndDate\": \"<dateTime>\",\n\t\"subscriptionPlan\": 1,\n\t\"licenseExpiryDate\": \"<dateTime>\",\n\t\"maxUsers\": \"<integer>\",\n\t\"maxBranches\": \"<integer>\",\n\t\"maxRooms\": \"<integer>\",\n\t\"maxReservations\": \"<integer>\"\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cp/tenant",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"tenant"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "d6579ce1-c764-4660-8965-a62038985ed9",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"name\": \"<string>\",\n\t\"identifier\": \"<string>\",\n\t\"description\": \"<string>\",\n\t\"address\": \"<string>\",\n\t\"contactNumber\": \"<string>\",\n\t\"email\": \"<string>\",\n\t\"timeZone\": \"<string>\",\n\t\"currencyCode\": \"<string>\",\n\t\"languageCode\": \"<string>\",\n\t\"isActive\": \"<boolean>\",\n\t\"subscriptionStartDate\": \"<dateTime>\",\n\t\"subscriptionEndDate\": \"<dateTime>\",\n\t\"subscriptionPlan\": 1,\n\t\"licenseExpiryDate\": \"<dateTime>\",\n\t\"maxUsers\": \"<integer>\",\n\t\"maxBranches\": \"<integer>\",\n\t\"maxRooms\": \"<integer>\",\n\t\"maxReservations\": \"<integer>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream",
+											"uuid": "beaefdd8-dba3-4251-b71a-23d52fd32bd9"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						},
+						{
+							"name": "Tenant Management Get Tenants",
+							"id": "1cb99270-b27e-42b2-845a-5fbe06ef4075",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/cp/tenant?Query=<string>&Status=<string>&Plan=<string>&Region=<string>&CreatedFrom=<dateTime>&CreatedTo=<dateTime>&Page=<integer>&Size=<integer>&SortBy=<string>&SortDescending=<boolean>",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"tenant"
+									],
+									"query": [
+										{
+											"key": "Request.Query",
+											"value": "<string>",
+											"disabled": true
+										},
+										{
+											"key": "Request.Status",
+											"value": "<string>",
+											"disabled": true
+										},
+										{
+											"key": "Request.Plan",
+											"value": "<string>",
+											"disabled": true
+										},
+										{
+											"key": "Request.Region",
+											"value": "<string>",
+											"disabled": true
+										},
+										{
+											"key": "Request.CreatedFrom",
+											"value": "<dateTime>",
+											"disabled": true
+										},
+										{
+											"key": "Request.CreatedTo",
+											"value": "<dateTime>",
+											"disabled": true
+										},
+										{
+											"key": "Request.Page",
+											"value": "<integer>",
+											"disabled": true
+										},
+										{
+											"key": "Request.Size",
+											"value": "<integer>",
+											"disabled": true
+										},
+										{
+											"key": "Request.SortBy",
+											"value": "<string>",
+											"disabled": true
+										},
+										{
+											"key": "Request.SortDescending",
+											"value": "<boolean>",
+											"disabled": true
+										},
+										{
+											"key": "Query",
+											"value": "<string>"
+										},
+										{
+											"key": "Status",
+											"value": "<string>"
+										},
+										{
+											"key": "Plan",
+											"value": "<string>"
+										},
+										{
+											"key": "Region",
+											"value": "<string>"
+										},
+										{
+											"key": "CreatedFrom",
+											"value": "<dateTime>"
+										},
+										{
+											"key": "CreatedTo",
+											"value": "<dateTime>"
+										},
+										{
+											"key": "Page",
+											"value": "<integer>"
+										},
+										{
+											"key": "Size",
+											"value": "<integer>"
+										},
+										{
+											"key": "SortBy",
+											"value": "<string>"
+										},
+										{
+											"key": "SortDescending",
+											"value": "<boolean>"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "34430be4-a68f-410c-a61f-0fbbd90ad344",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/json"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant?Request.Query=<string>&Request.Status=<string>&Request.Plan=<string>&Request.Region=<string>&Request.CreatedFrom=<dateTime>&Request.CreatedTo=<dateTime>&Request.Page=<integer>&Request.Size=<integer>&Request.SortBy=<string>&Request.SortDescending=<boolean>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant"
+											],
+											"query": [
+												{
+													"key": "Request.Query",
+													"value": "<string>"
+												},
+												{
+													"key": "Request.Status",
+													"value": "<string>"
+												},
+												{
+													"key": "Request.Plan",
+													"value": "<string>"
+												},
+												{
+													"key": "Request.Region",
+													"value": "<string>"
+												},
+												{
+													"key": "Request.CreatedFrom",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "Request.CreatedTo",
+													"value": "<dateTime>"
+												},
+												{
+													"key": "Request.Page",
+													"value": "<integer>"
+												},
+												{
+													"key": "Request.Size",
+													"value": "<integer>"
+												},
+												{
+													"key": "Request.SortBy",
+													"value": "<string>"
+												},
+												{
+													"key": "Request.SortDescending",
+													"value": "<boolean>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/json",
+											"uuid": "ac9b5e36-c685-462d-a4eb-20dde0e4fbb4"
+										}
+									],
+									"cookie": [],
+									"body": "{\n\t\"items\": [\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"name\": \"<string>\",\n\t\t\t\"identifier\": \"<string>\",\n\t\t\t\"isActive\": \"<boolean>\",\n\t\t\t\"licenseStatus\": \"<string>\",\n\t\t\t\"subscriptionPlan\": \"<string>\",\n\t\t\t\"country\": \"<string>\",\n\t\t\t\"region\": \"<string>\",\n\t\t\t\"createdAt\": \"<dateTime>\",\n\t\t\t\"lastActivity\": \"<dateTime>\",\n\t\t\t\"userCount\": \"<integer>\",\n\t\t\t\"branchCount\": \"<integer>\"\n\t\t},\n\t\t{\n\t\t\t\"id\": \"<string>\",\n\t\t\t\"name\": \"<string>\",\n\t\t\t\"identifier\": \"<string>\",\n\t\t\t\"isActive\": \"<boolean>\",\n\t\t\t\"licenseStatus\": \"<string>\",\n\t\t\t\"subscriptionPlan\": \"<string>\",\n\t\t\t\"country\": \"<string>\",\n\t\t\t\"region\": \"<string>\",\n\t\t\t\"createdAt\": \"<dateTime>\",\n\t\t\t\"lastActivity\": \"<dateTime>\",\n\t\t\t\"userCount\": \"<integer>\",\n\t\t\t\"branchCount\": \"<integer>\"\n\t\t}\n\t],\n\t\"totalCount\": \"<integer>\",\n\t\"page\": \"<integer>\",\n\t\"size\": \"<integer>\",\n\t\"totalPages\": \"<integer>\",\n\t\"hasNext\": \"<boolean>\",\n\t\"hasPrevious\": \"<boolean>\"\n}"
+								}
+							]
+						},
+						{
+							"name": "Tenant Management Update Tenant",
+							"id": "07d38909-59d0-4470-bf52-a3d9355d624e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"tenantId\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"address\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"email\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"subscriptionPlan\": \"<string>\",\n  \"enabledModules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\"\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cp/tenant",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"tenant"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "e673861d-2f91-4f1c-9d6b-11322266e38d",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n\t\"tenantId\": \"<string>\",\n\t\"request\": {\n\t\t\"name\": \"<string>\",\n\t\t\"description\": \"<string>\",\n\t\t\"address\": \"<string>\",\n\t\t\"contactNumber\": \"<string>\",\n\t\t\"email\": \"<string>\",\n\t\t\"timeZone\": \"<string>\",\n\t\t\"currencyCode\": \"<string>\",\n\t\t\"languageCode\": \"<string>\",\n\t\t\"country\": \"<string>\",\n\t\t\"region\": \"<string>\",\n\t\t\"industry\": \"<string>\",\n\t\t\"subscriptionPlan\": \"<string>\",\n\t\t\"enabledModules\": [\n\t\t\t\"<string>\",\n\t\t\t\"<string>\"\n\t\t],\n\t\t\"maxUsers\": \"<integer>\",\n\t\t\"maxBranches\": \"<integer>\",\n\t\t\"maxRooms\": \"<integer>\",\n\t\t\"maxReservations\": \"<integer>\"\n\t}\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream",
+											"uuid": "df464f05-b6aa-44c6-96e2-98e3ab0a3c08"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						}
+					],
+					"id": "cc8a08a8-185c-43bb-8513-ce91119b9246"
+				}
+			],
+			"id": "43ac555c-071c-4a62-a199-4c301464e5bf"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{accessToken}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "17f678ae-10e3-43b6-a9e4-8226df2a808e",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "0fa228d4-6926-428e-8775-e4ad08c060ef",
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "fe414072-1d71-460c-bcbb-b09e3cab2ed1",
+			"key": "baseUrl",
+			"value": "/"
+		},
+		{
+			"id": "7b956e59-a6ea-463f-907f-3c442c25dff7",
+			"key": "accessToken",
+			"value": ""
+		},
+		{
+			"id": "6c911d66-107c-414f-8254-86f28367a0e1",
+			"key": "refreshToken",
+			"value": ""
+		}
+	]
+}
