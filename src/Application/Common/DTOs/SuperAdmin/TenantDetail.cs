@@ -30,7 +30,7 @@ public record TenantDetail
     public int MaxBranches { get; init; }
     public int MaxRooms { get; init; }
     public int MaxReservations { get; init; }
-    public string[] EnabledModules { get; init; } = Array.Empty<string>();
+    public string[] EnabledModules { get; init; } = [];
     public DateTime CreatedAt { get; init; }
     public DateTime? LastActivity { get; init; }
     public TenantUsage? Usage { get; init; }

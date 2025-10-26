@@ -10,6 +10,6 @@ public record TenantHealth
     public DateTime LastHeartbeat { get; init; }
     public double ErrorRate { get; init; }
     public int ErrorCountLast24h { get; init; }
-    public string[] Issues { get; init; } = Array.Empty<string>();
+    public string[] Issues { get; init; } = [];
     public DateTime CheckedAt { get; init; }
 }

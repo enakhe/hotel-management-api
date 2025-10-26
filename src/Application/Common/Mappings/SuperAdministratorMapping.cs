@@ -20,8 +20,14 @@ public class SuperAdministratorMappingProfile : Profile
             .ForMember(dest => dest.Country, opt => opt.Ignore())
             .ForMember(dest => dest.Region, opt => opt.Ignore())
             .ForMember(dest => dest.Industry, opt => opt.Ignore())
-            .ForMember(dest => dest.EnabledModules, opt => opt.MapFrom(src => new string[0]))
+            .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.Modules ?? Array.Empty<string>()))
             .ForMember(dest => dest.TimeZone, opt => opt.MapFrom(src => src.TimeZone ?? "UTC"))
             .ForMember(dest => dest.CurrencyCode, opt => opt.MapFrom(src => src.CurrencyCode ?? "USD"));
+
+        CreateMap<Domain.Entities.Configuration.Tenant, TenantSummary>()
+            .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.Features.Where(f => f.IsEnabled).Select(f => f.FeatureName).ToArray()));
+
+        CreateMap<Domain.Entities.Configuration.Tenant, TenantDetail>()
+            .ForMember(dest => dest.EnabledModules, opt => opt.MapFrom(src => src.Features.Where(f => f.IsEnabled).Select(f => f.FeatureName).ToArray()));
     }
 }

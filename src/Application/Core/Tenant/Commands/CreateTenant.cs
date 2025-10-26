@@ -27,7 +27,6 @@ public record CreateTenantCommand : IRequest<Result<TenantSummary>>
     public string? TimeZone { get; init; } = "WAT";
     public string? CurrencyCode { get; init; } = "NGN";
     public string? LanguageCode { get; init; } = "en";
-    public bool IsActive { get; init; } = true;
 }
 
 public class CreateTenantCommandValidator : AbstractValidator<CreateTenantCommand>
@@ -54,21 +53,6 @@ public class CreateTenantCommandValidator : AbstractValidator<CreateTenantComman
             .Matches(@"^\+?[1-9]\d{1,14}$")
             .When(x => !string.IsNullOrEmpty(x.ContactNumber))
             .WithMessage("Invalid contact number format.");
-
-        RuleFor(x => x.TimeZone)
-            .NotEmpty()
-            .WithMessage("Time zone is required.");
-
-        RuleFor(x => x.CurrencyCode)
-            .NotEmpty()
-            .WithMessage("Currency code is required.")
-            .Length(3)
-            .WithMessage("Currency code must be a 3-letter ISO code.");
-
-        RuleFor(x => x.LanguageCode)
-            .NotEmpty()
-            .WithMessage("Language code is required.")
-            .Length(2).WithMessage("Language code must be a 2-letter ISO code.");
 
         RuleFor(x => x.MaxUsers)
             .GreaterThan(0)

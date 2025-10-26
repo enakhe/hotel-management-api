@@ -50,7 +50,7 @@ public class SuperAdminService(
 
             _context.Tenants.Add(tenant);
 
-            foreach (var module in request.EnabledModules)
+            foreach (var module in request.Modules!)
             {
                 var feature = new TenantFeature
                 {
@@ -172,31 +172,49 @@ public class SuperAdminService(
 
             var totalCount = await query.CountAsync();
 
+            var pagedTenantIds = await query
+                .Skip((request.Page - 1) * request.Size)
+                .Take(request.Size)
+                .Select(t => t.Id)
+                .ToListAsync();
+
+            var userCountsDict = await _context.Users
+                .Where(u => u.TenantId.HasValue && pagedTenantIds.Contains(u.TenantId.Value))
+                .GroupBy(u => u.TenantId!.Value)
+                .Select(g => new { TenantId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(g => g.TenantId, g => g.Count);
+
+            var branchCountsDict = await _context.Branches
+                .Where(b => pagedTenantIds.Contains(b.TenantId))
+                .GroupBy(b => b.TenantId)
+                .Select(g => new { TenantId = g.Key, Count = g.Count() })
+                .ToDictionaryAsync(g => g.TenantId, g => g.Count);
+
             var items = await query
                 .Skip((request.Page - 1) * request.Size)
                 .Take(request.Size)
-                .Select(t => new TenantSummary
-                {
-                    Id = t.Id,
-                    Name = t.Name,
-                    Identifier = t.Identifier,
-                    IsActive = t.IsActive,
-                    LicenseStatus = t.LicenseStatus.ToString(),
-                    SubscriptionPlan = t.SubscriptionPlan ?? "Basic",
-                    Country = t.Country,
-                    Region = t.Region,
-                    
-
-                    CreatedAt = t.Created.DateTime,
-                    LastActivity = t.LastModified.DateTime,
-                    UserCount = 0, // This would need to be calculated
-                    BranchCount = 0 // This would need to be calculated
-                })
                 .ToListAsync();
+
+            var itemsWithCounts = items.Select(t => new TenantSummary
+            {
+                Id = t.Id,
+                Name = t.Name,
+                Identifier = t.Identifier,
+                IsActive = t.IsActive,
+                LicenseStatus = t.LicenseStatus.ToString(),
+                SubscriptionPlan = t.SubscriptionPlan ?? "Basic",
+                Country = t.Country,
+                Region = t.Region,
+
+                CreatedAt = t.Created.DateTime,
+                LastActivity = t.LastModified.DateTime,
+                UserCount = userCountsDict.GetValueOrDefault(t.Id, 0),
+                BranchCount = branchCountsDict.GetValueOrDefault(t.Id, 0)
+            }).ToList();
 
             var paginatedResult = new PaginatedResult<TenantSummary>
             {
-                Items = items,
+                Items = itemsWithCounts,
                 TotalCount = totalCount,
                 Page = request.Page,
                 Size = request.Size
@@ -227,7 +245,7 @@ public class SuperAdminService(
                 .Select(f => f.FeatureName)
                 .ToArray();
 
-            var tenantDetails =  new TenantDetail
+            var tenantDetails = new TenantDetail
             {
                 Id = tenant.Id,
                 Name = tenant.Name,
@@ -579,7 +597,7 @@ public class SuperAdminService(
         }
     }
 
-    public async Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId)
+    public Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId)
     {
         try
         {
@@ -597,16 +615,16 @@ public class SuperAdminService(
                 ApiCallsLast30d = 0,
                 LastActivity = DateTime.UtcNow
             };
-            return Result<TenantUsage>.Success(usage, 200);
+            return Task.FromResult(Result<TenantUsage>.Success(usage, 200));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting usage for tenant {TenantId}", tenantId);
-            return Result<TenantUsage>.Failure("An error occurred while getting the tenant usage", 500);
+            return Task.FromResult(Result<TenantUsage>.Failure("An error occurred while getting the tenant usage", 500));
         }
     }
 
-    public async Task<Result<TenantHealth>> GetTenantHealthAsync(Guid tenantId)
+    public Task<Result<TenantHealth>> GetTenantHealthAsync(Guid tenantId)
     {
         try
         {
@@ -621,12 +639,12 @@ public class SuperAdminService(
                 Issues = Array.Empty<string>(),
                 CheckedAt = DateTime.UtcNow
             };
-            return Result<TenantHealth>.Success(health, 200);
+            return Task.FromResult(Result<TenantHealth>.Success(health, 200));
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting health for tenant {TenantId}", tenantId);
-            return Result<TenantHealth>.Failure("An error occurred while getting the tenant health", 500);
+            return Task.FromResult(Result<TenantHealth>.Failure("An error occurred while getting the tenant health", 500));
         }
     }
 }
