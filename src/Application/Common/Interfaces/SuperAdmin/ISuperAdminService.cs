@@ -1,6 +1,7 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Configuration;
+using HotelManagement.Domain.Entities.SuperAdmin;
 
 namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
 
@@ -14,6 +15,9 @@ public interface ISuperAdminService
     Task<Result<PaginatedResult<TenantSummary>>> GetTenantsAsync(TenantListRequest request);
     Task<Result<TenantDetail>> GetTenantDetailAsync(Guid tenantId);
     Task<Result<bool>> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);
+
+    // Plan Management
+    Task<Result<Plan>> CreatePlanAsync(CreatePlanRequest request);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

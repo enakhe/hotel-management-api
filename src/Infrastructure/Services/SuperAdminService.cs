@@ -254,8 +254,8 @@ public class SuperAdminService(
                 Address = tenant.Address,
                 ContactNumber = tenant.ContactNumber,
                 Email = tenant.Email,
-                TimeZone = tenant.TimeZone ?? "UTC",
-                CurrencyCode = tenant.CurrencyCode ?? "USD",
+                TimeZone = tenant.TimeZone ?? "WAT",
+                CurrencyCode = tenant.CurrencyCode ?? "NGN",
                 LanguageCode = tenant.LanguageCode ?? "en",
                 Country = tenant.Country,
                 Region = tenant.Region,
@@ -597,17 +597,28 @@ public class SuperAdminService(
         }
     }
 
-    public Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId)
+    public async Task<Result<TenantUsage>> GetTenantUsageAsync(Guid tenantId)
     {
         try
         {
-            // This would typically aggregate data from multiple sources
+
+            var userCount = await _context.Users.CountAsync(u => u.TenantId == tenantId);
+            var branchCount = await _context.Branches.CountAsync(b => b.TenantId == tenantId);
+            var roomCount = await _context.Rooms.CountAsync(r => r.TenantId == tenantId);
+            var reservationCount = await _context.Reservations.CountAsync(r => r.TenantId == tenantId);
+            // var activeReservations = await _context.Reservations.CountAsync(r => r.TenantId == tenantId && r.Status == ReservationStatus.Confirmed);
+            // var storageUsedBytes = await _context.Files.SumAsync(f => f.Size);
+            // var apiCallsLast24h = await _context.ApiLogs.CountAsync(l => l.TenantId == tenantId && l.Created >= DateTime.UtcNow.AddHours(-24));
+            // var apiCallsLast7d = await _context.ApiLogs.CountAsync(l => l.TenantId == tenantId && l.Created >= DateTime.UtcNow.AddDays(-7));
+            // var apiCallsLast30d = await _context.ApiLogs.CountAsync(l => l.TenantId == tenantId && l.Created >= DateTime.UtcNow.AddDays(-30));
+            // var lastActivity = await _context.Users.Where(u => u.TenantId == tenantId).MaxAsync(u => u.LastLogin);
+
             var usage = new TenantUsage
             {
-                UserCount = 0, // Calculate from users table
-                BranchCount = 0, // Calculate from branches table
-                RoomCount = 0, // Calculate from rooms table
-                ReservationCount = 0, // Calculate from reservations table
+                UserCount = userCount,
+                BranchCount = branchCount,
+                RoomCount = roomCount,
+                ReservationCount = reservationCount,
                 ActiveReservations = 0,
                 StorageUsedBytes = 0,
                 ApiCallsLast24h = 0,
@@ -615,12 +626,12 @@ public class SuperAdminService(
                 ApiCallsLast30d = 0,
                 LastActivity = DateTime.UtcNow
             };
-            return Task.FromResult(Result<TenantUsage>.Success(usage, 200));
+            return Result<TenantUsage>.Success(usage, 200);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting usage for tenant {TenantId}", tenantId);
-            return Task.FromResult(Result<TenantUsage>.Failure("An error occurred while getting the tenant usage", 500));
+            return Result<TenantUsage>.Failure("An error occurred while getting the tenant usage", 500);
         }
     }
 
@@ -645,6 +656,82 @@ public class SuperAdminService(
         {
             _logger.LogError(ex, "Error getting health for tenant {TenantId}", tenantId);
             return Task.FromResult(Result<TenantHealth>.Failure("An error occurred while getting the tenant health", 500));
+        }
+    }
+
+    public async Task<Result<Domain.Entities.SuperAdmin.Plan>> CreatePlanAsync(CreatePlanRequest request)
+    {
+        try
+        {
+            var existingPlan = await _context.Plans
+                .FirstOrDefaultAsync(p => p.Name == request.Name);
+
+            if (existingPlan != null)
+                return Result<Domain.Entities.SuperAdmin.Plan>.Failure($"Plan with name '{request.Name}' already exists", 400);
+
+            var plan = _mapper.Map<Domain.Entities.SuperAdmin.Plan>(request);
+            plan.Id = Guid.NewGuid();
+            plan.CreatedAt = DateTime.UtcNow;
+            plan.UpdatedAt = DateTime.UtcNow;
+
+            _context.Plans.Add(plan);
+
+            // Create plan features
+            foreach (var featureRequest in request.Features)
+            {
+                var feature = new Domain.Entities.SuperAdmin.PlanFeature
+                {
+                    Id = Guid.NewGuid(),
+                    PlanId = plan.Id,
+                    Name = featureRequest.Name,
+                    Description = featureRequest.Description,
+                    Included = featureRequest.Included,
+                    Limit = featureRequest.Limit,
+                    Unit = featureRequest.Unit,
+                    Plan = plan
+                };
+                _context.PlanFeatures.Add(feature);
+            }
+
+            // Create plan limits
+            var limits = new Domain.Entities.SuperAdmin.PlanLimits
+            {
+                Id = Guid.NewGuid(),
+                PlanId = plan.Id,
+                MaxUsers = request.Limits.MaxUsers,
+                MaxBranches = request.Limits.MaxBranches,
+                MaxRooms = request.Limits.MaxRooms,
+                MaxReservations = request.Limits.MaxReservations,
+                MaxStorageGB = request.Limits.MaxStorageGB,
+                ApiRateLimit = request.Limits.ApiRateLimit,
+                SupportLevel = request.Limits.SupportLevel,
+                SLA = request.Limits.SLA,
+                Plan = plan
+            };
+            _context.PlanLimits.Add(limits);
+
+            // Store modules as JSON
+            if (request.Modules.Length > 0)
+            {
+                plan.Modules = System.Text.Json.JsonSerializer.Serialize(request.Modules);
+            }
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.LogActionAsync(
+                "CreatePlan",
+                "Plan",
+                plan.Id.ToString(),
+                plan.Id,
+                $"Created plan '{request.Name}' with {request.Features.Length} features",
+                System.Text.Json.JsonSerializer.Serialize(request));
+
+            return Result<Domain.Entities.SuperAdmin.Plan>.Success(plan, 201);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error creating plan: {PlanName}", request.Name);
+            return Result<Domain.Entities.SuperAdmin.Plan>.Failure("An error occurred while creating the plan", 500);
         }
     }
 }

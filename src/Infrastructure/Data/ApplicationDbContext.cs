@@ -28,6 +28,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     public DbSet<SuperAdminAuditLogEntity> SuperAdminAuditLogs { get; set; }
 
+    // Plan Management
+    public DbSet<Domain.Entities.SuperAdmin.Plan> Plans { get; set; }
+    public DbSet<Domain.Entities.SuperAdmin.PlanFeature> PlanFeatures { get; set; }
+    public DbSet<Domain.Entities.SuperAdmin.PlanLimits> PlanLimits { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -47,6 +52,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.ApplyConfiguration(new ReservationConfiguration());
 
         builder.ApplyConfiguration(new SuperAdminAuditLogConfiguration());
+
+        // Plan Management Configurations
+        builder.ApplyConfiguration(new PlanConfiguration());
+        builder.ApplyConfiguration(new PlanFeatureConfiguration());
+        builder.ApplyConfiguration(new PlanLimitsConfiguration());
 
         ConfigureTenantQueryFilters(builder);
     }

@@ -352,6 +352,46 @@
         ]
       }
     },
+    "/cp/plans": {
+      "post": {
+        "tags": [
+          "PlanManagement"
+        ],
+        "operationId": "PlanManagement_CreatePlan",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePlanCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
     "/cp/login": {
       "post": {
         "tags": [
@@ -2061,6 +2101,142 @@
             "format": "date-time"
           }
         }
+      },
+      "CreatePlanCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "billingCycle": {
+            "$ref": "#/components/schemas/BillingCycle"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isPopular": {
+            "type": "boolean"
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePlanFeatureCommand"
+            }
+          },
+          "limits": {
+            "$ref": "#/components/schemas/CreatePlanLimitsCommand"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BillingCycle": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Monthly",
+          "Yearly",
+          "Lifetime"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "CreatePlanFeatureCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "included": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreatePlanLimitsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "supportLevel": {
+            "$ref": "#/components/schemas/SupportLevel"
+          },
+          "sla": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "SupportLevel": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Basic",
+          "Standard",
+          "Premium",
+          "Enterprise"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
       },
       "LoginCommand": {
         "type": "object",

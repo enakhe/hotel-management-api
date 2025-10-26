@@ -1,0 +1,37 @@
+using HotelManagement.Application.Core.PlanManagement.Commands;
+using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Models;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace HotelManagement.Web.Controllers.SuperAdmin;
+
+/// <summary>
+/// SuperAdmin plan management controller
+/// </summary>
+[ApiController]
+[Route("cp/plans")]
+[Authorize(Roles = "SuperAdmin")]
+public class PlanManagementController(
+    ISuperAdminService superAdminService,
+    ISender mediator,
+    ILogger<PlanManagementController> logger) : ControllerBase
+{
+    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ILogger<PlanManagementController> _logger = logger;
+    private readonly ISender _mediator = mediator;
+
+    /// <summary>
+    /// Create a new subscription plan
+    /// </summary>
+    /// <param name="command">Plan creation request</param>
+    /// <returns>Created plan result</returns>
+    [HttpPost]
+    public async Task<ActionResult> CreatePlan([FromBody] CreatePlanCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
+}
