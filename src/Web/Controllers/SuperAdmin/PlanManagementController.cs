@@ -1,4 +1,5 @@
 using HotelManagement.Application.Core.PlanManagement.Commands;
+using HotelManagement.Application.Core.PlanManagement.Queries;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using MediatR;
@@ -21,6 +22,19 @@ public class PlanManagementController(
     private readonly ISuperAdminService _superAdminService = superAdminService;
     private readonly ILogger<PlanManagementController> _logger = logger;
     private readonly ISender _mediator = mediator;
+
+    /// <summary>
+    /// Get list of plans with filtering and pagination
+    /// </summary>
+    /// <param name="request">List request parameters</param>
+    /// <returns>Paginated list of plans</returns>
+    [HttpGet]
+    public async Task<ActionResult> GetPlans([FromQuery] GetPlansQuery request)
+    {
+        var response = await _mediator.Send(request);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 
     /// <summary>
     /// Create a new subscription plan

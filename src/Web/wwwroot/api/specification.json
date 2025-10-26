@@ -353,6 +353,115 @@
       }
     },
     "/cp/plans": {
+      "get": {
+        "tags": [
+          "PlanManagement"
+        ],
+        "operationId": "PlanManagement_GetPlans",
+        "parameters": [
+          {
+            "name": "Query",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "BillingCycle",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PriceMin",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PriceMax",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 7
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 9
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
       "post": {
         "tags": [
           "PlanManagement"

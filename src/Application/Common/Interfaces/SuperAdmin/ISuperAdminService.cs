@@ -18,6 +18,7 @@ public interface ISuperAdminService
 
     // Plan Management
     Task<Result<PlanResponseDto>> CreatePlanAsync(CreatePlanRequest request);
+    Task<Result<PaginatedResult<PlanResponseDto>>> GetPlansAsync(PlanListRequest request);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

@@ -681,10 +681,21 @@ public class SuperAdminService(
             foreach (var featureRequest in request.Features)
             {
                 var feature = _mapper.Map<Domain.Entities.SuperAdmin.PlanFeature>(featureRequest);
-                feature.Id = Guid.NewGuid();
-                feature.PlanId = plan.Id;
-                feature.Plan = plan;
-                _context.PlanFeatures.Add(feature);
+                var existingFeature = await _context.PlanFeatures.FirstOrDefaultAsync(f => f.Name == featureRequest.Name && f.PlanId == plan.Id);
+                if (existingFeature == null)
+                {
+                    feature.Id = Guid.NewGuid();
+                    feature.PlanId = plan.Id;
+                    feature.Plan = plan;
+                    _context.PlanFeatures.Add(feature);
+                }
+                else
+                {
+                    existingFeature.Included = featureRequest.Included;
+                    existingFeature.Limit = featureRequest.Limit;
+                    existingFeature.Unit = featureRequest.Unit;
+                    _context.PlanFeatures.Update(existingFeature);
+                }
             }
 
             // Create plan limits
@@ -727,6 +738,101 @@ public class SuperAdminService(
         {
             _logger.LogError(ex, "Error creating plan: {PlanName}", request.Name);
             return Result<PlanResponseDto>.Failure("An error occurred while creating the plan", 500);
+        }
+    }
+
+    public async Task<Result<PaginatedResult<PlanResponseDto>>> GetPlansAsync(PlanListRequest request)
+    {
+        try
+        {
+            var query = _context.Plans
+                .Include(p => p.Features)
+                .Include(p => p.Limits)
+                .AsNoTracking();
+
+            // Apply filters
+            if (!string.IsNullOrEmpty(request.Query))
+            {
+                query = query.Where(p => p.Name.Contains(request.Query) ||
+                        p.Description!.Contains(request.Query));
+            }
+
+            if (request.IsActive.HasValue)
+            {
+                query = query.Where(p => p.IsActive == request.IsActive.Value);
+            }
+
+            if (!string.IsNullOrEmpty(request.BillingCycle))
+            {
+                if (Enum.TryParse<Domain.Enums.BillingCycle>(request.BillingCycle, true, out var billingCycle))
+                {
+                    query = query.Where(p => p.BillingCycle == billingCycle);
+                }
+            }
+
+            if (request.PriceMin.HasValue)
+            {
+                query = query.Where(p => p.Price >= request.PriceMin.Value);
+            }
+
+            if (request.PriceMax.HasValue)
+            {
+                query = query.Where(p => p.Price <= request.PriceMax.Value);
+            }
+
+            // Apply sorting
+            query = request.SortBy.ToLowerInvariant() switch
+            {
+                "name" => request.SortDescending ? query.OrderByDescending(p => p.Name) : query.OrderBy(p => p.Name),
+                "price" => request.SortDescending ? query.OrderByDescending(p => p.Price) : query.OrderBy(p => p.Price),
+                "createdat" => request.SortDescending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt),
+                "updatedat" => request.SortDescending ? query.OrderByDescending(p => p.UpdatedAt) : query.OrderBy(p => p.UpdatedAt),
+                "isactive" => request.SortDescending ? query.OrderByDescending(p => p.IsActive) : query.OrderBy(p => p.IsActive),
+                "ispopular" => request.SortDescending ? query.OrderByDescending(p => p.IsPopular) : query.OrderBy(p => p.IsPopular),
+                _ => request.SortDescending ? query.OrderByDescending(p => p.CreatedAt) : query.OrderBy(p => p.CreatedAt)
+            };
+
+            // Get total count
+            var totalCount = await query.CountAsync();
+
+            // Apply pagination
+            var plans = await query
+                .Skip((request.Page - 1) * request.Size)
+                .Take(request.Size)
+                .ToListAsync();
+
+            // Map to DTOs
+            var planDtos = new List<PlanResponseDto>();
+            foreach (var plan in plans)
+            {
+                var planDto = _mapper.Map<PlanResponseDto>(plan);
+
+                // Handle modules deserialization manually
+                if (!string.IsNullOrEmpty(plan.Modules))
+                {
+                    planDto = planDto with
+                    {
+                        Modules = System.Text.Json.JsonSerializer.Deserialize<string[]>(plan.Modules)
+                    };
+                }
+
+                planDtos.Add(planDto);
+            }
+
+            var paginatedResult = new PaginatedResult<PlanResponseDto>
+            {
+                Items = planDtos,
+                TotalCount = totalCount,
+                Page = request.Page,
+                Size = request.Size
+            };
+
+            return Result<PaginatedResult<PlanResponseDto>>.Success(paginatedResult, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting plans");
+            return Result<PaginatedResult<PlanResponseDto>>.Failure("An error occurred while getting plans", 500);
         }
     }
 }

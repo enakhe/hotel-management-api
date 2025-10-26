@@ -12,6 +12,7 @@ using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Application.Core.PlanManagement.Commands;
+using HotelManagement.Application.Core.PlanManagement.Queries;
 using HotelManagement.Application.Core.Tenant.Commands;
 using HotelManagement.Application.Tenant.Queries.GetTenants;
 using HotelManagement.Domain.Constants;
@@ -146,6 +147,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateTenantCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<CreatePlanCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetPlansQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateBranchValidator>();
         services.AddValidatorsFromAssemblyContaining<CreateUserDtoValidator>();
