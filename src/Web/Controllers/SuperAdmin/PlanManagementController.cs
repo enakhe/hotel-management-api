@@ -134,4 +134,17 @@ public class PlanManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Get plan usage analytics
+    /// </summary>
+    /// <returns>Plan usage analytics</returns>
+    [HttpGet("usage")]
+    public async Task<ActionResult> GetPlanUsage()
+    {
+        var query = new GetPlanUsageQuery();
+        var response = await _mediator.Send(query);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }

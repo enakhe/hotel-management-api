@@ -166,6 +166,10 @@ public static class DependencyInjection
         // Bulk Operation Validators
         services.AddValidatorsFromAssemblyContaining<BulkUpdatePlansCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<BulkUpdateModulesCommandValidator>();
+        
+        // Analytics Validators
+        services.AddValidatorsFromAssemblyContaining<GetPlanUsageQueryValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetModuleUsageQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlansQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlanByIdQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();

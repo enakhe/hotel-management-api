@@ -40,6 +40,10 @@ public interface ISuperAdminService
     Task<Result<bool>> BulkUpdatePlansAsync(HotelManagement.Application.Core.PlanManagement.Commands.BulkPlanUpdateRequest[] updates);
     Task<Result<bool>> BulkUpdateModulesAsync(HotelManagement.Application.Core.ModuleManagement.Commands.BulkModuleUpdateRequest[] updates);
 
+    // Analytics
+    Task<Result<PlanUsageDto[]>> GetPlanUsageAsync();
+    Task<Result<ModuleUsageDto[]>> GetModuleUsageAsync();
+
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);
     Task<Result<bool>> UnlockTenantAsync(Guid tenantId, string reason);

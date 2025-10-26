@@ -1751,4 +1751,94 @@ public class SuperAdminService(
             return Result<bool>.Failure("An error occurred during bulk update of modules", 500);
         }
     }
+
+    public async Task<Result<PlanUsageDto[]>> GetPlanUsageAsync()
+    {
+        try
+        {
+            var plans = await _context.Plans
+                .AsNoTracking()
+                .ToListAsync();
+
+            var planUsageList = new List<PlanUsageDto>();
+
+            foreach (var plan in plans)
+            {
+                // Count tenants using this plan
+                var tenantCount = await _context.Tenants
+                    .CountAsync(t => t.SubscriptionPlan == plan.Name);
+
+                // Calculate revenue (simplified - would need actual billing data)
+                var totalRevenue = tenantCount * plan.Price;
+
+                // Calculate average tenant value
+                var averageTenantValue = tenantCount > 0 ? totalRevenue / tenantCount : 0;
+
+                // Calculate churn rate (simplified - would need historical data)
+                var churnRate = 0.05m; // Placeholder: 5% churn rate
+
+                planUsageList.Add(new PlanUsageDto
+                {
+                    PlanId = plan.Id,
+                    PlanName = plan.Name,
+                    TenantCount = tenantCount,
+                    TotalRevenue = totalRevenue,
+                    AverageTenantValue = averageTenantValue,
+                    ChurnRate = churnRate,
+                    LastUpdated = DateTime.UtcNow
+                });
+            }
+
+            return Result<PlanUsageDto[]>.Success(planUsageList.ToArray(), 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting plan usage analytics");
+            return Result<PlanUsageDto[]>.Failure("An error occurred while getting plan usage analytics", 500);
+        }
+    }
+
+    public async Task<Result<ModuleUsageDto[]>> GetModuleUsageAsync()
+    {
+        try
+        {
+            var modules = await _context.Modules
+                .AsNoTracking()
+                .ToListAsync();
+
+            var moduleUsageList = new List<ModuleUsageDto>();
+
+            foreach (var module in modules)
+            {
+                // Count tenants using this module
+                var tenantCount = await _context.Tenants
+                    .Include(t => t.Features)
+                    .CountAsync(t => t.Features.Any(f => f.FeatureName == module.Name && f.IsEnabled));
+
+                // Calculate adoption rate (percentage of tenants using this module)
+                var totalTenants = await _context.Tenants.CountAsync();
+                var adoptionRate = totalTenants > 0 ? (decimal)tenantCount / totalTenants * 100 : 0;
+
+                // Calculate revenue (simplified - would need actual billing data)
+                var revenue = tenantCount * (module.Pricing?.Price ?? 0);
+
+                moduleUsageList.Add(new ModuleUsageDto
+                {
+                    ModuleId = module.Id,
+                    ModuleName = module.Name,
+                    TenantCount = tenantCount,
+                    AdoptionRate = adoptionRate,
+                    Revenue = revenue,
+                    LastUpdated = DateTime.UtcNow
+                });
+            }
+
+            return Result<ModuleUsageDto[]>.Success(moduleUsageList.ToArray(), 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting module usage analytics");
+            return Result<ModuleUsageDto[]>.Failure("An error occurred while getting module usage analytics", 500);
+        }
+    }
 }

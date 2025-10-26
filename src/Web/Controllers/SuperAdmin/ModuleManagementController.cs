@@ -104,4 +104,17 @@ public class ModuleManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Get module usage analytics
+    /// </summary>
+    /// <returns>Module usage analytics</returns>
+    [HttpGet("usage")]
+    public async Task<ActionResult> GetModuleUsage()
+    {
+        var query = new GetModuleUsageQuery();
+        var response = await _mediator.Send(query);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }
