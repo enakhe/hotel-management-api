@@ -48,4 +48,18 @@ public class PlanManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Get a specific plan by ID
+    /// </summary>
+    /// <param name="planId">Plan ID</param>
+    /// <returns>Plan details</returns>
+    [HttpGet("{planId}")]
+    public async Task<ActionResult> GetPlanById(Guid planId)
+    {
+        var query = new GetPlanByIdQuery { PlanId = planId };
+        var response = await _mediator.Send(query);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }

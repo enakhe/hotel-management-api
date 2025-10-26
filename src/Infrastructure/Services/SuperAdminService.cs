@@ -835,4 +835,37 @@ public class SuperAdminService(
             return Result<PaginatedResult<PlanResponseDto>>.Failure("An error occurred while getting plans", 500);
         }
     }
+
+    public async Task<Result<PlanResponseDto>> GetPlanByIdAsync(Guid planId)
+    {
+        try
+        {
+            var plan = await _context.Plans
+                .Include(p => p.Features)
+                .Include(p => p.Limits)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == planId);
+
+            if (plan == null)
+                return Result<PlanResponseDto>.Failure("Plan not found", 404);
+
+            var planDto = _mapper.Map<PlanResponseDto>(plan);
+
+            // Handle modules deserialization manually
+            if (!string.IsNullOrEmpty(plan.Modules))
+            {
+                planDto = planDto with
+                {
+                    Modules = System.Text.Json.JsonSerializer.Deserialize<string[]>(plan.Modules)
+                };
+            }
+
+            return Result<PlanResponseDto>.Success(planDto, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error getting plan by ID: {PlanId}", planId);
+            return Result<PlanResponseDto>.Failure("An error occurred while getting the plan", 500);
+        }
+    }
 }
