@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Domain.Entities.SuperAdmin;
@@ -58,5 +59,6 @@ public class PlanLimits
     /// <summary>
     /// Navigation property to the Plan
     /// </summary>
+    [JsonIgnore]
     public Plan? Plan { get; set; }
 }

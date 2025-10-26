@@ -51,5 +51,25 @@ public class SuperAdministratorMappingProfile : Profile
 
         CreateMap<CreatePlanFeatureCommand, CreatePlanFeatureRequest>();
         CreateMap<CreatePlanLimitsCommand, CreatePlanLimitsRequest>();
+
+        // Additional mappings for service layer
+        CreateMap<CreatePlanFeatureRequest, Domain.Entities.SuperAdmin.PlanFeature>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.PlanId, opt => opt.Ignore())
+            .ForMember(dest => dest.Plan, opt => opt.Ignore());
+
+        CreateMap<CreatePlanLimitsRequest, Domain.Entities.SuperAdmin.PlanLimits>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.PlanId, opt => opt.Ignore())
+            .ForMember(dest => dest.Plan, opt => opt.Ignore());
+
+        // Plan response mappings
+        CreateMap<Domain.Entities.SuperAdmin.Plan, PlanResponseDto>()
+            .ForMember(dest => dest.Modules, opt => opt.Ignore())
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits));
+
+        CreateMap<Domain.Entities.SuperAdmin.PlanFeature, PlanFeatureResponseDto>();
+        CreateMap<Domain.Entities.SuperAdmin.PlanLimits, PlanLimitsResponseDto>();
     }
 }

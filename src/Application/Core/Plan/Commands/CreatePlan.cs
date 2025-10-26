@@ -8,7 +8,7 @@ using MediatR;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
-public record CreatePlanCommand : IRequest<Result<Plan>>
+public record CreatePlanCommand : IRequest<Result<PlanResponseDto>>
 {
     public required string Name { get; init; }
     public string? Description { get; init; }
@@ -154,12 +154,12 @@ public class CreatePlanLimitsCommandValidator : AbstractValidator<CreatePlanLimi
     }
 }
 
-public class CreatePlanCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreatePlanCommand, Result<Domain.Entities.SuperAdmin.Plan>>
+public class CreatePlanCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreatePlanCommand, Result<PlanResponseDto>>
 {
     private readonly ISuperAdminService _superAdminService = superAdminService;
     private readonly IMapper _mapper = mapper;
 
-    public async Task<Result<Domain.Entities.SuperAdmin.Plan>> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
+    public async Task<Result<PlanResponseDto>> Handle(CreatePlanCommand request, CancellationToken cancellationToken)
     {
         var planRequest = _mapper.Map<CreatePlanRequest>(request);
         return await _superAdminService.CreatePlanAsync(planRequest);

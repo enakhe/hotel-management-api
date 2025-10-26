@@ -659,7 +659,7 @@ public class SuperAdminService(
         }
     }
 
-    public async Task<Result<Domain.Entities.SuperAdmin.Plan>> CreatePlanAsync(CreatePlanRequest request)
+    public async Task<Result<PlanResponseDto>> CreatePlanAsync(CreatePlanRequest request)
     {
         try
         {
@@ -667,47 +667,31 @@ public class SuperAdminService(
                 .FirstOrDefaultAsync(p => p.Name == request.Name);
 
             if (existingPlan != null)
-                return Result<Domain.Entities.SuperAdmin.Plan>.Failure($"Plan with name '{request.Name}' already exists", 400);
+                return Result<PlanResponseDto>.Failure($"Plan with name '{request.Name}' already exists", 400);
 
             var plan = _mapper.Map<Domain.Entities.SuperAdmin.Plan>(request);
             plan.Id = Guid.NewGuid();
             plan.CreatedAt = DateTime.UtcNow;
             plan.UpdatedAt = DateTime.UtcNow;
-
+            plan.CreatedBy = "SuperAdmin";
+            plan.UpdatedBy = "SuperAdmin";
             _context.Plans.Add(plan);
 
             // Create plan features
             foreach (var featureRequest in request.Features)
             {
-                var feature = new Domain.Entities.SuperAdmin.PlanFeature
-                {
-                    Id = Guid.NewGuid(),
-                    PlanId = plan.Id,
-                    Name = featureRequest.Name,
-                    Description = featureRequest.Description,
-                    Included = featureRequest.Included,
-                    Limit = featureRequest.Limit,
-                    Unit = featureRequest.Unit,
-                    Plan = plan
-                };
+                var feature = _mapper.Map<Domain.Entities.SuperAdmin.PlanFeature>(featureRequest);
+                feature.Id = Guid.NewGuid();
+                feature.PlanId = plan.Id;
+                feature.Plan = plan;
                 _context.PlanFeatures.Add(feature);
             }
 
             // Create plan limits
-            var limits = new Domain.Entities.SuperAdmin.PlanLimits
-            {
-                Id = Guid.NewGuid(),
-                PlanId = plan.Id,
-                MaxUsers = request.Limits.MaxUsers,
-                MaxBranches = request.Limits.MaxBranches,
-                MaxRooms = request.Limits.MaxRooms,
-                MaxReservations = request.Limits.MaxReservations,
-                MaxStorageGB = request.Limits.MaxStorageGB,
-                ApiRateLimit = request.Limits.ApiRateLimit,
-                SupportLevel = request.Limits.SupportLevel,
-                SLA = request.Limits.SLA,
-                Plan = plan
-            };
+            var limits = _mapper.Map<Domain.Entities.SuperAdmin.PlanLimits>(request.Limits);
+            limits.Id = Guid.NewGuid();
+            limits.PlanId = plan.Id;
+            limits.Plan = plan;
             _context.PlanLimits.Add(limits);
 
             // Store modules as JSON
@@ -726,12 +710,23 @@ public class SuperAdminService(
                 $"Created plan '{request.Name}' with {request.Features.Length} features",
                 System.Text.Json.JsonSerializer.Serialize(request));
 
-            return Result<Domain.Entities.SuperAdmin.Plan>.Success(plan, 201);
+            var planResponse = _mapper.Map<PlanResponseDto>(plan);
+
+            // Handle modules deserialization manually
+            if (!string.IsNullOrEmpty(plan.Modules))
+            {
+                planResponse = planResponse with
+                {
+                    Modules = System.Text.Json.JsonSerializer.Deserialize<string[]>(plan.Modules)
+                };
+            }
+
+            return Result<PlanResponseDto>.Success(planResponse, 201);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error creating plan: {PlanName}", request.Name);
-            return Result<Domain.Entities.SuperAdmin.Plan>.Failure("An error occurred while creating the plan", 500);
+            return Result<PlanResponseDto>.Failure("An error occurred while creating the plan", 500);
         }
     }
 }

@@ -17,7 +17,7 @@ public interface ISuperAdminService
     Task<Result<bool>> UpdateTenantAsync(Guid tenantId, UpdateTenantRequest request);
 
     // Plan Management
-    Task<Result<Plan>> CreatePlanAsync(CreatePlanRequest request);
+    Task<Result<PlanResponseDto>> CreatePlanAsync(CreatePlanRequest request);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

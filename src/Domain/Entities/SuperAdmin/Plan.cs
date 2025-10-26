@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Domain.Entities.SuperAdmin;
@@ -6,7 +7,7 @@ namespace HotelManagement.Domain.Entities.SuperAdmin;
 /// <summary>
 /// Represents a subscription plan for the hotel management system
 /// </summary>
-public class Plan
+public class Plan 
 {
     public Guid Id { get; set; }
 
@@ -73,10 +74,12 @@ public class Plan
     /// <summary>
     /// Features included in this plan
     /// </summary>
+    [JsonIgnore]
     public ICollection<PlanFeature> Features { get; set; } = new List<PlanFeature>();
 
     /// <summary>
     /// Resource limits for this plan
     /// </summary>
+    [JsonIgnore]
     public PlanLimits? Limits { get; set; }
 }

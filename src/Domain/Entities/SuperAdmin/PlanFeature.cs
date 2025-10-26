@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace HotelManagement.Domain.Entities.SuperAdmin;
 
@@ -40,5 +41,6 @@ public class PlanFeature
     /// <summary>
     /// Navigation property to the Plan
     /// </summary>
+    [JsonIgnore]
     public Plan? Plan { get; set; }
 }

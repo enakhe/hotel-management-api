@@ -175,7 +175,7 @@ public class AuthService(
         try
         {
             var user = await _userManager.FindByEmailAsync(resetPasswordRequestDto.Email);
-            if(user == null || !user.IsActive)
+            if (user == null || !user.IsActive)
                 return Result<string>.Failure("User not found or inactve", 404);
 
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
@@ -226,10 +226,20 @@ public class AuthService(
             new(Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new("branchId", user.BranchId.ToString() ?? ""),
+            new("preferred_username", user.UserName ?? user.Email!),
+            new("username", user.UserName ?? user.Email!),
+            new("session_id", Guid.NewGuid().ToString()),
         };
 
         var userRoles = await _userManager.GetRolesAsync(user);
         authClaims.AddRange(userRoles.Select(role => new Claim(ClaimTypes.Role, role)));
+
+        // Add SuperAdmin specific claims
+        if (userRoles.Contains("SuperAdmin"))
+        {
+            authClaims.Add(new Claim("superadmin_id", user.Id.ToString()));
+            authClaims.Add(new Claim("mfa_verified", "true")); // Assuming SuperAdmin has MFA verified
+        }
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
 

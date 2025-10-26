@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace HotelManagement.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Intial : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -37,6 +37,29 @@ namespace HotelManagement.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Permissions", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Plans",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Currency = table.Column<string>(type: "nvarchar(3)", maxLength: 3, nullable: false),
+                    BillingCycle = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
+                    IsPopular = table.Column<bool>(type: "bit", nullable: false, defaultValue: false),
+                    Modules = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true),
+                    UpdatedBy = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plans", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -184,6 +207,55 @@ namespace HotelManagement.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PlanFeatures",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    Included = table.Column<bool>(type: "bit", nullable: false),
+                    Limit = table.Column<int>(type: "int", nullable: true),
+                    Unit = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlanFeatures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlanFeatures_Plans_PlanId",
+                        column: x => x.PlanId,
+                        principalTable: "Plans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PlanLimits",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    MaxUsers = table.Column<int>(type: "int", nullable: false),
+                    MaxBranches = table.Column<int>(type: "int", nullable: false),
+                    MaxRooms = table.Column<int>(type: "int", nullable: false),
+                    MaxReservations = table.Column<int>(type: "int", nullable: false),
+                    MaxStorageGB = table.Column<int>(type: "int", nullable: false),
+                    ApiRateLimit = table.Column<int>(type: "int", nullable: false),
+                    SupportLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SLA = table.Column<decimal>(type: "decimal(5,2)", nullable: false),
+                    PlanId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PlanLimits", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PlanLimits_Plans_PlanId",
+                        column: x => x.PlanId,
+                        principalTable: "Plans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Reservations",
                 columns: table => new
                 {
@@ -290,7 +362,7 @@ namespace HotelManagement.Infrastructure.Migrations
                     IsActive = table.Column<bool>(type: "bit", nullable: false, defaultValue: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    BranchId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -518,6 +590,33 @@ namespace HotelManagement.Infrastructure.Migrations
                 column: "TenantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_PlanFeatures_PlanId",
+                table: "PlanFeatures",
+                column: "PlanId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PlanLimits_PlanId",
+                table: "PlanLimits",
+                column: "PlanId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plans_IsActive",
+                table: "Plans",
+                column: "IsActive");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plans_IsPopular",
+                table: "Plans",
+                column: "IsPopular");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Plans_Name",
+                table: "Plans",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Reservations_BranchId",
                 table: "Reservations",
                 column: "BranchId");
@@ -694,6 +793,12 @@ namespace HotelManagement.Infrastructure.Migrations
                 name: "AuditLogDetails");
 
             migrationBuilder.DropTable(
+                name: "PlanFeatures");
+
+            migrationBuilder.DropTable(
+                name: "PlanLimits");
+
+            migrationBuilder.DropTable(
                 name: "Reservations");
 
             migrationBuilder.DropTable(
@@ -707,6 +812,9 @@ namespace HotelManagement.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "AuditLogs");
+
+            migrationBuilder.DropTable(
+                name: "Plans");
 
             migrationBuilder.DropTable(
                 name: "Rooms");
