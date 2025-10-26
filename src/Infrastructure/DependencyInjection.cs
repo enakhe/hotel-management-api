@@ -148,6 +148,7 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<CreateTenantCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<CreatePlanCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<UpdatePlanCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<DeletePlanCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlansQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlanByIdQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();

@@ -21,6 +21,7 @@ public interface ISuperAdminService
     Task<Result<PaginatedResult<PlanResponseDto>>> GetPlansAsync(PlanListRequest request);
     Task<Result<PlanResponseDto>> GetPlanByIdAsync(Guid planId);
     Task<Result<PlanResponseDto>> UpdatePlanAsync(Guid planId, UpdatePlanRequest request);
+    Task<Result<bool>> DeletePlanAsync(Guid planId);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

@@ -995,4 +995,51 @@ public class SuperAdminService(
             return Result<PlanResponseDto>.Failure("An error occurred while updating the plan", 500);
         }
     }
+
+    public async Task<Result<bool>> DeletePlanAsync(Guid planId)
+    {
+        try
+        {
+            var plan = await _context.Plans
+                .Include(p => p.Features)
+                .Include(p => p.Limits)
+                .FirstOrDefaultAsync(p => p.Id == planId);
+
+            if (plan == null)
+                return Result<bool>.Failure("Plan not found", 404);
+
+            // Check if plan is being used by any tenants
+            var tenantsUsingPlan = await _context.Tenants
+                .AnyAsync(t => t.SubscriptionPlan == plan.Name);
+
+            if (tenantsUsingPlan)
+                return Result<bool>.Failure("Cannot delete plan that is currently being used by tenants", 400);
+
+            // Remove related entities first (due to foreign key constraints)
+            _context.PlanFeatures.RemoveRange(plan.Features);
+
+            if (plan.Limits != null)
+                _context.PlanLimits.Remove(plan.Limits);
+
+            // Remove the plan
+            _context.Plans.Remove(plan);
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.LogActionAsync(
+                "DeletePlan",
+                "Plan",
+                planId.ToString(),
+                planId,
+                $"Deleted plan '{plan.Name}'",
+                null);
+
+            return Result<bool>.Success(true, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error deleting plan: {PlanId}", planId);
+            return Result<bool>.Failure("An error occurred while deleting the plan", 500);
+        }
+    }
 }

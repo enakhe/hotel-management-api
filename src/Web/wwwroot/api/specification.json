@@ -539,6 +539,56 @@
             ]
           }
         ]
+      },
+      "patch": {
+        "tags": [
+          "PlanManagement"
+        ],
+        "operationId": "PlanManagement_UpdatePlan",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePlanCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
       }
     },
     "/cp/login": {
@@ -2386,6 +2436,147 @@
           2,
           3
         ]
+      },
+      "UpdatePlanCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingCycle": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BillingCycle"
+              }
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "isPopular": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "features": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UpdatePlanFeatureCommand"
+            }
+          },
+          "limits": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdatePlanLimitsCommand"
+              }
+            ]
+          },
+          "modules": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "UpdatePlanFeatureCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "included": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdatePlanLimitsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "supportLevel": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SupportLevel"
+              }
+            ]
+          },
+          "sla": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          }
+        }
       },
       "LoginCommand": {
         "type": "object",

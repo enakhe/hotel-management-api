@@ -77,4 +77,18 @@ public class PlanManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Delete a plan
+    /// </summary>
+    /// <param name="planId">Plan ID</param>
+    /// <returns>Deletion result</returns>
+    [HttpDelete("{planId}")]
+    public async Task<ActionResult> DeletePlan(Guid planId)
+    {
+        var command = new DeletePlanCommand { PlanId = planId };
+        var response = await _mediator.Send(command);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }
