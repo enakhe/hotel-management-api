@@ -48,7 +48,7 @@ public class GetPlansQueryValidator : AbstractValidator<GetPlansQuery>
 
         RuleFor(x => x.SortBy)
             .Must(BeValidSortField)
-            .WithMessage("Invalid sort field. Valid fields are: name, price, createdAt, updatedAt, isActive, isPopular.");
+            .WithMessage("Invalid sort field. Valid fields are: name, price, createdat, updatedat, isactive, ispopular.");
 
         RuleFor(x => x.BillingCycle)
             .Must(billingCycle => billingCycle == null || BeValidBillingCycle(billingCycle!))
@@ -58,7 +58,7 @@ public class GetPlansQueryValidator : AbstractValidator<GetPlansQuery>
 
     private static bool BeValidSortField(string sortBy)
     {
-        var validFields = new[] { "name", "price", "createdAt", "updatedAt", "isActive", "isPopular" };
+        var validFields = new[] { "name", "price", "createdat", "updatedat", "isactive", "ispopular" };
         return validFields.Contains(sortBy.ToLowerInvariant());
     }
 
