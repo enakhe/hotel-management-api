@@ -3539,7 +3539,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n\t\"email\": \"<email>\",\n\t\"password\": \"<string>\"\n}",
+									"raw": "{\n\t\"email\": \"superadmin@eitiltech.com\",\n\t\"password\": \"SuperAdmin1!\"\n}",
 									"options": {
 										"raw": {
 											"headerFamily": "json",
@@ -4614,6 +4614,129 @@
 							"id": "e72749bd-5cef-4836-9dc8-08cf797c9a15"
 						},
 						{
+							"name": "update",
+							"item": [
+								{
+									"name": "Tenant Management Update Tenant",
+									"id": "38a8d43d-ba40-420b-9b51-2c6e2243220e",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"auth": {
+											"type": "apikey",
+											"apikey": [
+												{
+													"key": "key",
+													"value": "Authorization",
+													"type": "string"
+												},
+												{
+													"key": "value",
+													"value": "{{apiKey}}",
+													"type": "string"
+												},
+												{
+													"key": "in",
+													"value": "header",
+													"type": "string"
+												}
+											]
+										},
+										"method": "PATCH",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"tenantId\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"address\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"email\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"subscriptionPlan\": \"<string>\",\n  \"enabledModules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\"\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/tenant/update",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"tenant",
+												"update"
+											]
+										}
+									},
+									"response": [
+										{
+											"id": "82fb9418-a208-4656-82da-2cd1b3ca72a3",
+											"name": "Untitled Example",
+											"originalRequest": {
+												"method": "PATCH",
+												"header": [
+													{
+														"key": "Content-Type",
+														"value": "application/json"
+													},
+													{
+														"key": "Accept",
+														"value": "application/octet-stream"
+													},
+													{
+														"description": "Added as a part of security scheme: apikey",
+														"key": "Authorization",
+														"value": "<API Key>"
+													}
+												],
+												"body": {
+													"mode": "raw",
+													"raw": "{\n  \"tenantId\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"address\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"email\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"subscriptionPlan\": \"<string>\",\n  \"enabledModules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\"\n}",
+													"options": {
+														"raw": {
+															"headerFamily": "json",
+															"language": "json"
+														}
+													}
+												},
+												"url": {
+													"raw": "{{baseUrl}}/cp/tenant/update",
+													"host": [
+														"{{baseUrl}}"
+													],
+													"path": [
+														"cp",
+														"tenant",
+														"update"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "text",
+											"header": [
+												{
+													"key": "Content-Type",
+													"value": "application/octet-stream"
+												}
+											],
+											"cookie": [],
+											"body": "<binary>"
+										}
+									]
+								}
+							],
+							"id": "ef7bd5c7-9a90-43ac-90c0-fc8dc931d816"
+						},
+						{
 							"name": "Tenant Management Create Tenant",
 							"id": "938d9d37-adc8-47d5-af1f-7ebaac8c8c8b",
 							"protocolProfileBehavior": {
@@ -4633,7 +4756,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"name\": \"<string>\",\n  \"identifier\": \"<string>\",\n  \"description\": \"<string>\",\n  \"email\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"subscriptionPlan\": 2,\n  \"modules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\",\n  \"address\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"isActive\": \"<boolean>\"\n}"
+									"raw": "{\n  \"name\": \"<string>\",\n  \"identifier\": \"<string>\",\n  \"description\": \"<string>\",\n  \"email\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"subscriptionPlan\": 2,\n  \"modules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\",\n  \"address\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\"\n}"
 								},
 								"url": {
 									"raw": "{{baseUrl}}/cp/tenant",
@@ -4908,126 +5031,253 @@
 						}
 					],
 					"id": "cc8a08a8-185c-43bb-8513-ce91119b9246"
+				},
+				{
+					"name": "plans",
+					"item": [
+						{
+							"name": "Plan Management Create Plan",
+							"id": "d7e6dfbf-cbbb-4a33-9c3a-9bf44b60591e",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"name\": \"Starters Plan\",\n  \"description\": \"Perfect for small hotels just getting started\",\n  \"price\": 500000.00,\n  \"currency\": \"NGN\",\n  \"billingCycle\": 0,\n  \"isActive\": true,\n  \"isPopular\": true,\n  \"features\": [\n    {\n      \"name\": \"Basic Reservations\",\n      \"description\": \"Manage room reservations and bookings\",\n      \"included\": true,\n      \"limit\": null,\n      \"unit\": null\n    },\n    {\n      \"name\": \"Guest Management\",\n      \"description\": \"Basic guest information management\",\n      \"included\": true,\n      \"limit\": null,\n      \"unit\": null\n    },\n    {\n      \"name\": \"Email Support\",\n      \"description\": \"Email support during business hours\",\n      \"included\": true,\n      \"limit\": null,\n      \"unit\": null\n    }\n  ],\n  \"limits\": {\n    \"maxUsers\": 5,\n    \"maxBranches\": 1,\n    \"maxRooms\": 50,\n    \"maxReservations\": 1000,\n    \"maxStorageGB\": 10,\n    \"apiRateLimit\": 1000,\n    \"supportLevel\": 0,\n    \"sla\": 99.0\n  },\n  \"modules\": [\n    \"reservations\",\n    \"rooms\",\n    \"guests\"\n  ]\n}",
+									"options": {
+										"raw": {
+											"headerFamily": "json",
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{baseUrl}}/cp/plans",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"plans"
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "2991c28e-9a34-444b-819d-a323a04d55cf",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"price\": \"<number>\",\n  \"currency\": \"<string>\",\n  \"billingCycle\": 0,\n  \"isActive\": \"<boolean>\",\n  \"isPopular\": \"<boolean>\",\n  \"features\": [\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\",\n      \"included\": \"<boolean>\",\n      \"limit\": \"<integer>\",\n      \"unit\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"description\": \"<string>\",\n      \"included\": \"<boolean>\",\n      \"limit\": \"<integer>\",\n      \"unit\": \"<string>\"\n    }\n  ],\n  \"limits\": {\n    \"maxUsers\": \"<integer>\",\n    \"maxBranches\": \"<integer>\",\n    \"maxRooms\": \"<integer>\",\n    \"maxReservations\": \"<integer>\",\n    \"maxStorageGB\": \"<integer>\",\n    \"apiRateLimit\": \"<integer>\",\n    \"supportLevel\": 1,\n    \"sla\": \"<number>\"\n  },\n  \"modules\": [\n    \"<string>\",\n    \"<string>\"\n  ]\n}",
+											"options": {
+												"raw": {
+													"headerFamily": "json",
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{baseUrl}}/cp/plans",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"plans"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						},
+						{
+							"name": "Plan Management Get Plans",
+							"id": "8f5f20f4-3282-41cf-ab18-1a4c2c128c60",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/octet-stream"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/cp/plans?Query=&IsActive=true&BillingCycle=monthly&PriceMin=100&PriceMax=1000000&Page=1&Size=10&SortBy=createdAt&SortDescending=true",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"cp",
+										"plans"
+									],
+									"query": [
+										{
+											"key": "Query",
+											"value": ""
+										},
+										{
+											"key": "IsActive",
+											"value": "true"
+										},
+										{
+											"key": "BillingCycle",
+											"value": "monthly"
+										},
+										{
+											"key": "PriceMin",
+											"value": "100"
+										},
+										{
+											"key": "PriceMax",
+											"value": "1000000"
+										},
+										{
+											"key": "Page",
+											"value": "1"
+										},
+										{
+											"key": "Size",
+											"value": "10"
+										},
+										{
+											"key": "SortBy",
+											"value": "createdAt"
+										},
+										{
+											"key": "SortDescending",
+											"value": "true"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"id": "f8a243da-561b-4ba8-9541-b78e296554aa",
+									"name": "Untitled Example",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "application/octet-stream"
+											},
+											{
+												"description": "Added as a part of security scheme: apikey",
+												"key": "Authorization",
+												"value": "<API Key>"
+											}
+										],
+										"url": {
+											"raw": "{{baseUrl}}/cp/plans?Query=<string>&IsActive=<boolean>&BillingCycle=<string>&PriceMin=<number>&PriceMax=<number>&Page=<integer>&Size=<integer>&SortBy=<string>&SortDescending=<boolean>",
+											"host": [
+												"{{baseUrl}}"
+											],
+											"path": [
+												"cp",
+												"plans"
+											],
+											"query": [
+												{
+													"key": "Query",
+													"value": "<string>"
+												},
+												{
+													"key": "IsActive",
+													"value": "<boolean>"
+												},
+												{
+													"key": "BillingCycle",
+													"value": "<string>"
+												},
+												{
+													"key": "PriceMin",
+													"value": "<number>"
+												},
+												{
+													"key": "PriceMax",
+													"value": "<number>"
+												},
+												{
+													"key": "Page",
+													"value": "<integer>"
+												},
+												{
+													"key": "Size",
+													"value": "<integer>"
+												},
+												{
+													"key": "SortBy",
+													"value": "<string>"
+												},
+												{
+													"key": "SortDescending",
+													"value": "<boolean>"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "text",
+									"header": [
+										{
+											"key": "Content-Type",
+											"value": "application/octet-stream"
+										}
+									],
+									"cookie": [],
+									"body": "<binary>"
+								}
+							]
+						}
+					],
+					"id": "9196aeea-a6e2-433f-9e51-f16816e67b72"
 				}
 			],
 			"id": "43ac555c-071c-4a62-a199-4c301464e5bf"
-		},
-		{
-			"name": "Tenant Management Update Tenant",
-			"id": "38a8d43d-ba40-420b-9b51-2c6e2243220e",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"auth": {
-					"type": "apikey",
-					"apikey": [
-						{
-							"key": "key",
-							"value": "Authorization",
-							"type": "string"
-						},
-						{
-							"key": "value",
-							"value": "{{apiKey}}",
-							"type": "string"
-						},
-						{
-							"key": "in",
-							"value": "header",
-							"type": "string"
-						}
-					]
-				},
-				"method": "PATCH",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					},
-					{
-						"key": "Accept",
-						"value": "application/octet-stream"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"tenantId\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"address\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"email\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"subscriptionPlan\": \"<string>\",\n  \"enabledModules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\"\n}",
-					"options": {
-						"raw": {
-							"headerFamily": "json",
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "{{baseUrl}}/cp/tenant/update",
-					"host": [
-						"{{baseUrl}}"
-					],
-					"path": [
-						"cp",
-						"tenant",
-						"update"
-					]
-				}
-			},
-			"response": [
-				{
-					"id": "82fb9418-a208-4656-82da-2cd1b3ca72a3",
-					"name": "Untitled Example",
-					"originalRequest": {
-						"method": "PATCH",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "application/octet-stream"
-							},
-							{
-								"description": "Added as a part of security scheme: apikey",
-								"key": "Authorization",
-								"value": "<API Key>"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"tenantId\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"address\": \"<string>\",\n  \"contactNumber\": \"<string>\",\n  \"email\": \"<string>\",\n  \"timeZone\": \"<string>\",\n  \"currencyCode\": \"<string>\",\n  \"languageCode\": \"<string>\",\n  \"country\": \"<string>\",\n  \"region\": \"<string>\",\n  \"industry\": \"<string>\",\n  \"subscriptionPlan\": \"<string>\",\n  \"enabledModules\": [\n    \"<string>\",\n    \"<string>\"\n  ],\n  \"maxUsers\": \"<integer>\",\n  \"maxBranches\": \"<integer>\",\n  \"maxRooms\": \"<integer>\",\n  \"maxReservations\": \"<integer>\"\n}",
-							"options": {
-								"raw": {
-									"headerFamily": "json",
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{baseUrl}}/cp/tenant/update",
-							"host": [
-								"{{baseUrl}}"
-							],
-							"path": [
-								"cp",
-								"tenant",
-								"update"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "text",
-					"header": [
-						{
-							"key": "Content-Type",
-							"value": "application/octet-stream"
-						}
-					],
-					"cookie": [],
-					"body": "<binary>"
-				}
-			]
 		}
 	],
 	"auth": {
