@@ -1,5 +1,7 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Models;
+using HotelManagement.Application.Core.ModuleManagement.Commands;
+using HotelManagement.Application.Core.PlanManagement.Commands;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.SuperAdmin;
 
@@ -22,6 +24,21 @@ public interface ISuperAdminService
     Task<Result<PlanResponseDto>> GetPlanByIdAsync(Guid planId);
     Task<Result<PlanResponseDto>> UpdatePlanAsync(Guid planId, UpdatePlanRequest request);
     Task<Result<bool>> DeletePlanAsync(Guid planId);
+
+    // Module Management
+    Task<Result<ModuleResponseDto>> CreateModuleAsync(CreateModuleRequest request);
+    Task<Result<PaginatedResult<ModuleResponseDto>>> GetModulesAsync(ModuleListRequest request);
+    Task<Result<ModuleResponseDto>> GetModuleByIdAsync(Guid moduleId);
+    Task<Result<ModuleResponseDto>> UpdateModuleAsync(Guid moduleId, UpdateModuleRequest request);
+    Task<Result<bool>> DeleteModuleAsync(Guid moduleId);
+
+    // Plan-Module Relationships
+    Task<Result<bool>> AssignModuleToPlanAsync(Guid planId, Guid moduleId);
+    Task<Result<bool>> RemoveModuleFromPlanAsync(Guid planId, Guid moduleId);
+
+    // Bulk Operations
+    Task<Result<bool>> BulkUpdatePlansAsync(HotelManagement.Application.Core.PlanManagement.Commands.BulkPlanUpdateRequest[] updates);
+    Task<Result<bool>> BulkUpdateModulesAsync(HotelManagement.Application.Core.ModuleManagement.Commands.BulkModuleUpdateRequest[] updates);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

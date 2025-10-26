@@ -5,6 +5,7 @@ using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.SuperAdmin;
 using HotelManagement.Domain.Enums;
 using System.Text.Json;
+using HotelManagement.Application.Core.ModuleManagement.Commands;
 
 namespace HotelManagement.Application.Common.Mappings;
 
@@ -91,5 +92,68 @@ public class SuperAdministratorMappingProfile : Profile
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.PlanId, opt => opt.Ignore())
             .ForMember(dest => dest.Plan, opt => opt.Ignore());
+
+        // Module mappings
+        CreateMap<CreateModuleRequest, Domain.Entities.SuperAdmin.Module>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.UpdatedBy, opt => opt.Ignore())
+            .ForMember(dest => dest.Features, opt => opt.Ignore())
+            .ForMember(dest => dest.Pricing, opt => opt.Ignore())
+            .ForMember(dest => dest.Dependencies, opt => opt.Ignore());
+
+        CreateMap<CreateModuleCommand, CreateModuleRequest>()
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.Pricing, opt => opt.MapFrom(src => src.Pricing))
+            .ForMember(dest => dest.Dependencies, opt => opt.MapFrom(src => src.Dependencies));
+
+        CreateMap<CreateModuleFeatureCommand, CreateModuleFeatureRequest>();
+        CreateMap<CreateModulePricingCommand, CreateModulePricingRequest>();
+
+        // Additional mappings for service layer
+        CreateMap<CreateModuleFeatureRequest, Domain.Entities.SuperAdmin.ModuleFeature>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
+            .ForMember(dest => dest.Module, opt => opt.Ignore())
+            .ForMember(dest => dest.Configuration, opt => opt.Ignore());
+
+        CreateMap<CreateModulePricingRequest, Domain.Entities.SuperAdmin.ModulePricing>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
+            .ForMember(dest => dest.Module, opt => opt.Ignore());
+
+        // Update module mappings
+        CreateMap<UpdateModuleCommand, UpdateModuleRequest>()
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.Pricing, opt => opt.MapFrom(src => src.Pricing))
+            .ForMember(dest => dest.Dependencies, opt => opt.MapFrom(src => src.Dependencies));
+
+        CreateMap<UpdateModuleFeatureCommand, UpdateModuleFeatureRequest>();
+        CreateMap<UpdateModulePricingCommand, UpdateModulePricingRequest>();
+
+        // Additional mappings for service layer
+        CreateMap<UpdateModuleFeatureRequest, Domain.Entities.SuperAdmin.ModuleFeature>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
+            .ForMember(dest => dest.Module, opt => opt.Ignore())
+            .ForMember(dest => dest.Configuration, opt => opt.Ignore());
+
+        CreateMap<UpdateModulePricingRequest, Domain.Entities.SuperAdmin.ModulePricing>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
+            .ForMember(dest => dest.Module, opt => opt.Ignore());
+
+        // Module response mappings
+        CreateMap<Domain.Entities.SuperAdmin.Module, ModuleResponseDto>()
+            .ForMember(dest => dest.Dependencies, opt => opt.Ignore())
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.Pricing, opt => opt.MapFrom(src => src.Pricing));
+
+        CreateMap<Domain.Entities.SuperAdmin.ModuleFeature, ModuleFeatureResponseDto>()
+            .ForMember(dest => dest.Configuration, opt => opt.Ignore());
+
+        CreateMap<Domain.Entities.SuperAdmin.ModulePricing, ModulePricingResponseDto>();
     }
 }

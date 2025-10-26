@@ -91,4 +91,47 @@ public class PlanManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Assign a module to a plan
+    /// </summary>
+    /// <param name="planId">Plan ID</param>
+    /// <param name="moduleId">Module ID</param>
+    /// <returns>Assignment result</returns>
+    [HttpPost("{planId}/modules/{moduleId}")]
+    public async Task<ActionResult> AssignModuleToPlan(Guid planId, Guid moduleId)
+    {
+        var command = new AssignModuleToPlanCommand { PlanId = planId, ModuleId = moduleId };
+        var response = await _mediator.Send(command);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
+
+    /// <summary>
+    /// Remove a module from a plan
+    /// </summary>
+    /// <param name="planId">Plan ID</param>
+    /// <param name="moduleId">Module ID</param>
+    /// <returns>Removal result</returns>
+    [HttpDelete("{planId}/modules/{moduleId}")]
+    public async Task<ActionResult> RemoveModuleFromPlan(Guid planId, Guid moduleId)
+    {
+        var command = new RemoveModuleFromPlanCommand { PlanId = planId, ModuleId = moduleId };
+        var response = await _mediator.Send(command);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
+
+    /// <summary>
+    /// Bulk update multiple plans
+    /// </summary>
+    /// <param name="command">Bulk update request</param>
+    /// <returns>Bulk update result</returns>
+    [HttpPatch("bulk")]
+    public async Task<ActionResult> BulkUpdatePlans([FromBody] BulkUpdatePlansCommand command)
+    {
+        var response = await _mediator.Send(command);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }

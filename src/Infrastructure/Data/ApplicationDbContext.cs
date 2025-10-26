@@ -33,6 +33,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Domain.Entities.SuperAdmin.PlanFeature> PlanFeatures { get; set; }
     public DbSet<Domain.Entities.SuperAdmin.PlanLimits> PlanLimits { get; set; }
 
+    // Module entities
+    public DbSet<Domain.Entities.SuperAdmin.Module> Modules { get; set; }
+    public DbSet<Domain.Entities.SuperAdmin.ModuleFeature> ModuleFeatures { get; set; }
+    public DbSet<Domain.Entities.SuperAdmin.ModulePricing> ModulePricing { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);

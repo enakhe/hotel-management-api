@@ -11,6 +11,8 @@ using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
+using HotelManagement.Application.Core.ModuleManagement.Commands;
+using HotelManagement.Application.Core.ModuleManagement.Queries;
 using HotelManagement.Application.Core.PlanManagement.Commands;
 using HotelManagement.Application.Core.PlanManagement.Queries;
 using HotelManagement.Application.Core.Tenant.Commands;
@@ -149,6 +151,21 @@ public static class DependencyInjection
         services.AddValidatorsFromAssemblyContaining<CreatePlanCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<UpdatePlanCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<DeletePlanCommandValidator>();
+
+        // Module Management Validators
+        services.AddValidatorsFromAssemblyContaining<CreateModuleCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<UpdateModuleCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<DeleteModuleCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetModulesQueryValidator>();
+        services.AddValidatorsFromAssemblyContaining<GetModuleByIdQueryValidator>();
+
+        // Plan-Module Relationship Validators
+        services.AddValidatorsFromAssemblyContaining<AssignModuleToPlanCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<RemoveModuleFromPlanCommandValidator>();
+
+        // Bulk Operation Validators
+        services.AddValidatorsFromAssemblyContaining<BulkUpdatePlansCommandValidator>();
+        services.AddValidatorsFromAssemblyContaining<BulkUpdateModulesCommandValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlansQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<GetPlanByIdQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<ChangePasswordDtoValidator>();
