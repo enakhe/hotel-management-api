@@ -1,0 +1,3144 @@
+{
+  "x-generator": "NSwag v14.4.0.0 (NJsonSchema v11.3.2.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "HotelManagement API",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/v1/tenant-settings/settings": {
+      "get": {
+        "tags": [
+          "TenantSettings"
+        ],
+        "operationId": "TenantSettings_GetTenantSettings",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantSettings"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tenant-settings/features/{featureName}/enabled": {
+      "get": {
+        "tags": [
+          "TenantSettings"
+        ],
+        "operationId": "TenantSettings_IsFeatureEnabled",
+        "parameters": [
+          {
+            "name": "featureName",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tenant-settings/features": {
+      "get": {
+        "tags": [
+          "TenantSettings"
+        ],
+        "operationId": "TenantSettings_GetEnabledFeatures",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/tenant-settings/license/valid": {
+      "get": {
+        "tags": [
+          "TenantSettings"
+        ],
+        "operationId": "TenantSettings_IsLicenseValid",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": []
+          }
+        ]
+      }
+    },
+    "/api/v1/sync/sync": {
+      "post": {
+        "tags": [
+          "Sync"
+        ],
+        "operationId": "Sync_Sync",
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/cp/audit/superadmin/{superAdminId}": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "Audit_GetSuperAdminAuditLogs",
+        "parameters": [
+          {
+            "name": "superAdminId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          },
+          {
+            "name": "FromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "ToDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfSuperAdminAuditLog"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/audit/tenant/{tenantId}": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "Audit_GetTenantAuditLogs",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 3
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfSuperAdminAuditLog"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/audit/all": {
+      "get": {
+        "tags": [
+          "Audit"
+        ],
+        "operationId": "Audit_GetAllAuditLogs",
+        "parameters": [
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 2
+          },
+          {
+            "name": "FromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "ToDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Action",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "TargetType",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfSuperAdminAuditLog"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/login": {
+      "post": {
+        "tags": [
+          "SuperAdmin"
+        ],
+        "operationId": "SuperAdmin_Login",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/refresh-token": {
+      "post": {
+        "tags": [
+          "SuperAdmin"
+        ],
+        "operationId": "SuperAdmin_RefreshToken",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_CreateTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_GetTenants",
+        "parameters": [
+          {
+            "name": "Request.Query",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Request.Status",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Request.Plan",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Request.Region",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Request.CreatedFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Request.CreatedTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Request.Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 7
+          },
+          {
+            "name": "Request.Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "Request.SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "Request.SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfTenantSummary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_UpdateTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/{tenantId}": {
+      "get": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_GetTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantDetail"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/lock": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_LockTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LockTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/unlock": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_UnlockTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UnlockTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/mode": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_SetTenantMode",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetTenantModeCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/terminate": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_TerminateTenant",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TerminateTenantCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/export": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_ExportTenantData",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExportTenantDataCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportJobResult"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/purge": {
+      "post": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_PurgeTenantData",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PurgeTenantDataCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/usage/{tenantId}": {
+      "get": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_GetTenantUsage",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantUsage"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/tenant/health/{tenantId}": {
+      "get": {
+        "tags": [
+          "TenantManagement"
+        ],
+        "operationId": "TenantManagement_GetTenantHealth",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantHealth"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_Login",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_Register",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh-token": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_RefreshToken",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/change-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ChangePassword",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ForgotPassword",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestPasswordResetCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/confirm-password-reset": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ConfirmPasswordReset",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPasswordResetCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/branches": {
+      "post": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_CreateBranch",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBranchDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_GetAllBranches",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/branches/{id}": {
+      "put": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_UpdateBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBranchDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_DeleteBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_GetBranchById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BranchDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/branches/{id}/users": {
+      "get": {
+        "tags": [
+          "Branch"
+        ],
+        "operationId": "Branch_GetUsersByBranch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "Administrator"
+            ]
+          }
+        ]
+      }
+    },
+    "/api/v1/role/create": {
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_CreateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/assign": {
+      "post": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_AssignRoleToUser",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignRoleToUserCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/all": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetAllRoles",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/user/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetUserRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role/{id}": {
+      "get": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_GetRoleById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_DeleteRole",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/role": {
+      "patch": {
+        "tags": [
+          "Role"
+        ],
+        "operationId": "Role_UpdateRole",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRoleCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_CreateUser",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_UpdateUser",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetAllUsers",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_DeleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}/deactivate": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_DeactivateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}/activate": {
+      "patch": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_ActivateUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/users/{id}/roles": {
+      "put": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_AssignRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "roleIds",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetUserRoles",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TenantSettings": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantName": {
+            "type": "string"
+          },
+          "tenantIdentifier": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "subscriptionPlan": {
+            "type": "string"
+          },
+          "subscriptionEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enabledFeatures": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "customSettings": {
+            "type": "object",
+            "additionalProperties": {}
+          }
+        }
+      },
+      "PaginatedResultOfSuperAdminAuditLog": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SuperAdminAuditLog"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SuperAdminAuditLog": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "superAdminId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "username": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string"
+          },
+          "targetId": {
+            "type": "string",
+            "nullable": true
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "details": {
+            "type": "string",
+            "nullable": true
+          },
+          "changes": {
+            "type": "string",
+            "nullable": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "userAgent": {
+            "type": "string",
+            "nullable": true
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "LoginCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "RefreshTokenCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "refreshToken"
+        ],
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "CreateTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "languageCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "subscriptionStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "subscriptionEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "subscriptionPlan": {
+            "$ref": "#/components/schemas/SubscriptionPlan"
+          },
+          "licenseExpiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubscriptionPlan": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Basic",
+          "Standard",
+          "Premium"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "PaginatedResultOfTenantSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TenantSummary"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TenantSummary": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "licenseStatus": {
+            "type": "string"
+          },
+          "subscriptionPlan": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastActivity": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "userCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "branchCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TenantDetail": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string"
+          },
+          "currencyCode": {
+            "type": "string"
+          },
+          "languageCode": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "licenseStatus": {
+            "type": "string"
+          },
+          "licenseExpiryDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "subscriptionPlan": {
+            "type": "string"
+          },
+          "subscriptionStartDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "subscriptionEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enabledModules": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastActivity": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "usage": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TenantUsage"
+              }
+            ]
+          },
+          "health": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TenantHealth"
+              }
+            ]
+          }
+        }
+      },
+      "TenantUsage": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "branchCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "roomCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "reservationCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "storageUsedBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "apiCallsLast24h": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiCallsLast7d": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiCallsLast30d": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastActivity": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TenantHealth": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "isHealthy": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          },
+          "lastHeartbeat": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "errorRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "errorCountLast24h": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "issues": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "checkedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "request": {
+            "$ref": "#/components/schemas/UpdateTenantRequest"
+          }
+        }
+      },
+      "UpdateTenantRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "languageCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "country": {
+            "type": "string",
+            "nullable": true
+          },
+          "region": {
+            "type": "string",
+            "nullable": true
+          },
+          "industry": {
+            "type": "string",
+            "nullable": true
+          },
+          "subscriptionPlan": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabledModules": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "LockTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "UnlockTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "request": {
+            "$ref": "#/components/schemas/UnlockTenantRequest"
+          }
+        }
+      },
+      "UnlockTenantRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "SetTenantModeCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "mode": {
+            "$ref": "#/components/schemas/TenantMode"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantMode": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Active",
+          "ReadOnly",
+          "Suspended",
+          "Locked"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "TerminateTenantCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "terminateRequest": {
+            "$ref": "#/components/schemas/TerminateTenantRequest"
+          }
+        }
+      },
+      "TerminateTenantRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ExportJobResult": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "jobId": {
+            "type": "string",
+            "nullable": true
+          },
+          "errorMessage": {
+            "type": "string",
+            "nullable": true
+          },
+          "downloadUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "estimatedCompletion": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "ExportTenantDataCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "request": {
+            "$ref": "#/components/schemas/ExportOptions"
+          }
+        }
+      },
+      "ExportOptions": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "includeUsers": {
+            "type": "boolean"
+          },
+          "includeReservations": {
+            "type": "boolean"
+          },
+          "includeRooms": {
+            "type": "boolean"
+          },
+          "includeAuditLogs": {
+            "type": "boolean"
+          },
+          "fromDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "toDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "format": {
+            "type": "string"
+          }
+        }
+      },
+      "PurgeTenantDataCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "RegisterCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "firstName",
+          "lastName",
+          "email"
+        ],
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "branchId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "tenant": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      },
+      "ChangePasswordCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userId",
+          "currentPassword",
+          "newPassword"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currentPassword": {
+            "type": "string",
+            "minLength": 8
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 8
+          }
+        }
+      },
+      "RequestPasswordResetCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          }
+        }
+      },
+      "ConfirmPasswordResetCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "token",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          }
+        }
+      },
+      "CreateBranchDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1
+          },
+          "address": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "format": "phone",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "maxLength": 50,
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "maxLength": 10,
+            "nullable": true
+          }
+        }
+      },
+      "BranchDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "address": {
+            "type": "string",
+            "nullable": true
+          },
+          "contactNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "timeZone": {
+            "type": "string",
+            "nullable": true
+          },
+          "currencyCode": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          }
+        }
+      },
+      "AssignRoleToUserCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "roleName": {
+            "type": "string"
+          }
+        }
+      },
+      "UpdateRoleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "nullable": true
+          }
+        }
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "firstName",
+          "middleName",
+          "lastName",
+          "email",
+          "password"
+        ],
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 8
+          },
+          "phoneNumber": {
+            "type": "string",
+            "format": "phone",
+            "nullable": true
+          },
+          "branchId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "firstName",
+          "lastName",
+          "middleName"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid",
+            "minLength": 1
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "middleName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "gender": {
+            "$ref": "#/components/schemas/GenderData"
+          },
+          "phoneNumber": {
+            "type": "string",
+            "format": "phone",
+            "nullable": true
+          },
+          "branchId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "guid"
+            }
+          }
+        }
+      },
+      "GenderData": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Male",
+          "Female"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "UserDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "fullName": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "branchId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "branchName": {
+            "type": "string",
+            "nullable": true
+          },
+          "roles": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "JWT": {
+        "type": "apiKey",
+        "description": "Type into the textbox: Bearer {your JWT token}.",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "security": [
+    {
+      "JWT": []
+    }
+  ]
+}
