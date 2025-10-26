@@ -20,6 +20,7 @@ public interface ISuperAdminService
     Task<Result<PlanResponseDto>> CreatePlanAsync(CreatePlanRequest request);
     Task<Result<PaginatedResult<PlanResponseDto>>> GetPlansAsync(PlanListRequest request);
     Task<Result<PlanResponseDto>> GetPlanByIdAsync(Guid planId);
+    Task<Result<PlanResponseDto>> UpdatePlanAsync(Guid planId, UpdatePlanRequest request);
 
     // Tenant Actions
     Task<Result<bool>> LockTenantAsync(Guid tenantId, string reason);

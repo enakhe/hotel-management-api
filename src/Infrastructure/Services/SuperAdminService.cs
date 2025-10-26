@@ -868,4 +868,131 @@ public class SuperAdminService(
             return Result<PlanResponseDto>.Failure("An error occurred while getting the plan", 500);
         }
     }
+
+    public async Task<Result<PlanResponseDto>> UpdatePlanAsync(Guid planId, UpdatePlanRequest request)
+    {
+        try
+        {
+            var plan = await _context.Plans
+                .Include(p => p.Features)
+                .Include(p => p.Limits)
+                .FirstOrDefaultAsync(p => p.Id == planId);
+
+            if (plan == null)
+                return Result<PlanResponseDto>.Failure("Plan not found", 404);
+
+            // Check if name is being changed and if it conflicts with existing plan
+            if (!string.IsNullOrEmpty(request.Name) && request.Name != plan.Name)
+            {
+                var existingPlan = await _context.Plans
+                    .FirstOrDefaultAsync(p => p.Name == request.Name && p.Id != planId);
+
+                if (existingPlan != null)
+                    return Result<PlanResponseDto>.Failure($"Plan with name '{request.Name}' already exists", 400);
+            }
+
+            // Update basic plan properties
+            if (!string.IsNullOrEmpty(request.Name))
+                plan.Name = request.Name;
+
+            if (request.Description != null)
+                plan.Description = request.Description;
+
+            if (request.Price.HasValue)
+                plan.Price = request.Price.Value;
+
+            if (!string.IsNullOrEmpty(request.Currency))
+                plan.Currency = request.Currency;
+
+            if (request.BillingCycle.HasValue)
+                plan.BillingCycle = request.BillingCycle.Value;
+
+            if (request.IsActive.HasValue)
+                plan.IsActive = request.IsActive.Value;
+
+            if (request.IsPopular.HasValue)
+                plan.IsPopular = request.IsPopular.Value;
+
+            if (request.Modules != null)
+            {
+                plan.Modules = request.Modules.Length > 0
+                    ? System.Text.Json.JsonSerializer.Serialize(request.Modules)
+                    : null;
+            }
+
+            plan.UpdatedAt = DateTime.UtcNow;
+            plan.UpdatedBy = "SuperAdmin";
+
+            // Update features if provided
+            if (request.Features != null && request.Features.Length > 0)
+            {
+                // Remove existing features
+                _context.PlanFeatures.RemoveRange(plan.Features);
+
+                // Add new features
+                foreach (var featureRequest in request.Features)
+                {
+                    var feature = _mapper.Map<Domain.Entities.SuperAdmin.PlanFeature>(featureRequest);
+                    feature.Id = Guid.NewGuid();
+                    feature.PlanId = plan.Id;
+                    feature.Plan = plan;
+                    _context.PlanFeatures.Add(feature);
+                }
+            }
+
+            // Update limits if provided
+            if (request.Limits != null)
+            {
+                if (plan.Limits != null)
+                {
+                    // Update existing limits
+                    _mapper.Map(request.Limits, plan.Limits);
+                }
+                else
+                {
+                    // Create new limits
+                    var limits = _mapper.Map<Domain.Entities.SuperAdmin.PlanLimits>(request.Limits);
+                    limits.Id = Guid.NewGuid();
+                    limits.PlanId = plan.Id;
+                    limits.Plan = plan;
+                    _context.PlanLimits.Add(limits);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+
+            await _auditService.LogActionAsync(
+                "UpdatePlan",
+                "Plan",
+                planId.ToString(),
+                planId,
+                $"Updated plan '{plan.Name}'",
+                System.Text.Json.JsonSerializer.Serialize(request));
+
+            // Return updated plan
+            var updatedPlan = await _context.Plans
+                .Include(p => p.Features)
+                .Include(p => p.Limits)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == planId);
+
+            var planDto = _mapper.Map<PlanResponseDto>(updatedPlan);
+
+            // Handle modules deserialization manually
+            if (!string.IsNullOrEmpty(updatedPlan!.Modules))
+            {
+                planDto = planDto with
+                {
+                    Modules = System.Text.Json.JsonSerializer.Deserialize<string[]>(updatedPlan.Modules)
+                };
+            }
+
+            return Result<PlanResponseDto>.Success(planDto, 200);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error updating plan: {PlanId}", planId);
+            return Result<PlanResponseDto>.Failure("An error occurred while updating the plan", 500);
+        }
+    }
 }

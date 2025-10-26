@@ -71,5 +71,25 @@ public class SuperAdministratorMappingProfile : Profile
 
         CreateMap<Domain.Entities.SuperAdmin.PlanFeature, PlanFeatureResponseDto>();
         CreateMap<Domain.Entities.SuperAdmin.PlanLimits, PlanLimitsResponseDto>();
+
+        // Update plan mappings
+        CreateMap<UpdatePlanCommand, UpdatePlanRequest>()
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
+            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits))
+            .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.Modules));
+
+        CreateMap<UpdatePlanFeatureCommand, UpdatePlanFeatureRequest>();
+        CreateMap<UpdatePlanLimitsCommand, UpdatePlanLimitsRequest>();
+
+        // Additional mappings for service layer
+        CreateMap<UpdatePlanFeatureRequest, Domain.Entities.SuperAdmin.PlanFeature>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.PlanId, opt => opt.Ignore())
+            .ForMember(dest => dest.Plan, opt => opt.Ignore());
+
+        CreateMap<UpdatePlanLimitsRequest, Domain.Entities.SuperAdmin.PlanLimits>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.PlanId, opt => opt.Ignore())
+            .ForMember(dest => dest.Plan, opt => opt.Ignore());
     }
 }

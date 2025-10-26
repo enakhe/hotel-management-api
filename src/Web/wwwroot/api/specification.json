@@ -501,6 +501,46 @@
         ]
       }
     },
+    "/cp/plans/{planId}": {
+      "get": {
+        "tags": [
+          "PlanManagement"
+        ],
+        "operationId": "PlanManagement_GetPlanById",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
     "/cp/login": {
       "post": {
         "tags": [

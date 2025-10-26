@@ -62,4 +62,19 @@ public class PlanManagementController(
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
+
+    /// <summary>
+    /// Update an existing plan
+    /// </summary>
+    /// <param name="planId">Plan ID</param>
+    /// <param name="command">Plan update request</param>
+    /// <returns>Updated plan result</returns>
+    [HttpPatch("{planId}")]
+    public async Task<ActionResult> UpdatePlan(Guid planId, [FromBody] UpdatePlanCommand command)
+    {
+        var updateCommand = command with { PlanId = planId };
+        var response = await _mediator.Send(updateCommand);
+
+        return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
+    }
 }
