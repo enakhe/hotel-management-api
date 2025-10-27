@@ -16,7 +16,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<ApplicationDbCont
             .Build();
 
         var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-        optionsBuilder.UseSqlServer(configuration.GetConnectionString("HotelManagementDb"));
+        optionsBuilder.UseSqlServer(configuration.GetConnectionString("sql"));
 
         return new ApplicationDbContext(optionsBuilder.Options);
     }

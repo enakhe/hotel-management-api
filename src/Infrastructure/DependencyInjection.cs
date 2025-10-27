@@ -144,7 +144,7 @@ public static class DependencyInjection
         services.AddScoped<IPlanService, PlanService>();
         services.AddScoped<IModuleService, ModuleService>();
         services.AddScoped<ILicenseService, LicenseService>();
-        services.AddScoped<ILicenseKeyService, LicenseKeyService>();
+        services.AddScoped<ILicenseKeyService, Application.Common.Services.LicenseKey.LicenseKeyService>();
         services.AddScoped<ILimitsService, LimitsService>();
 
         // Register SuperAdmin services
