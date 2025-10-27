@@ -1,7 +1,9 @@
 ﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.Interfaces.Services;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Entities.Configuration;
 
@@ -14,12 +16,8 @@ public record CreateTenantCommand : IRequest<Result<TenantSummary>>
     public string? Description { get; init; }
     public string? Email { get; init; }
     public string? ContactNumber { get; init; }
-    public SubscriptionPlan SubscriptionPlan { get; init; } = SubscriptionPlan.Basic;
-    public string[]? Modules { get; init; }
-    public int MaxUsers { get; init; } = 10;
-    public int MaxBranches { get; init; } = 1;
-    public int MaxRooms { get; init; } = 100;
-    public int MaxReservations { get; init; } = 1000;
+    public Guid PlanId { get; init; }
+    public Guid LicenseId { get; init; }
     public string? Address { get; init; }
     public string? Country { get; init; }
     public string? Region { get; init; }
@@ -54,33 +52,25 @@ public class CreateTenantCommandValidator : AbstractValidator<CreateTenantComman
             .When(x => !string.IsNullOrEmpty(x.ContactNumber))
             .WithMessage("Invalid contact number format.");
 
-        RuleFor(x => x.MaxUsers)
-            .GreaterThan(0)
-            .WithMessage("Max users must be greater than zero.");
+        RuleFor(x => x.PlanId)
+            .NotEmpty()
+            .WithMessage("Plan ID is required.");
 
-        RuleFor(x => x.MaxBranches)
-            .GreaterThan(0)
-            .WithMessage("Max branches must be greater than zero.");
-
-        RuleFor(x => x.MaxRooms)
-            .GreaterThan(0)
-            .WithMessage("Max rooms must be greater than zero.");
-
-        RuleFor(x => x.MaxReservations)
-            .GreaterThan(0)
-            .WithMessage("Max reservations must be greater than zero.");
+        RuleFor(x => x.LicenseId)
+            .NotEmpty()
+            .WithMessage("License ID is required.");
     }
 }
 
-public class CreateTenantCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<TenantSummary>>
+public class CreateTenantCommandHandler(ITenantService service, IMapper mapper) : IRequestHandler<CreateTenantCommand, Result<TenantSummary>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<TenantSummary>> Handle(CreateTenantCommand request, CancellationToken cancellationToken)
     {
         var tenant = _mapper.Map<CreateTenantRequest>(request);
 
-        return await _superAdminService.CreateTenantAsync(tenant);
+        return await _service.CreateTenantAsync(tenant);
     }
 }

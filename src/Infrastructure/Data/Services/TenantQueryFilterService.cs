@@ -37,8 +37,6 @@ public class TenantQueryFilterService
         ApplyFilterToEntitySet(context.Branches, tenantId);
         ApplyFilterToEntitySet(context.Users, tenantId);
         ApplyFilterToEntitySet(context.AuditLogs, tenantId);
-        ApplyFilterToEntitySet(context.AuditLogDetails, tenantId);
-        ApplyFilterToEntitySet(context.TenantFeatures, tenantId);
 
         _logger.LogDebug("Applied tenant filters for tenant {TenantId}", tenantId);
     }

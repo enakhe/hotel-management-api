@@ -2,6 +2,7 @@
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Application.Core.Tenant.Queries;
 
@@ -18,12 +19,12 @@ public class GetTenantHealthCommandValidator : AbstractValidator<GetTenantHealth
     }
 }
 
-public class GetTenantHealthCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<GetTenantHealthCommand, Result<TenantHealth>>
+public class GetTenantHealthCommandHandler(ITenantService service) : IRequestHandler<GetTenantHealthCommand, Result<TenantHealth>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<TenantHealth>> Handle(GetTenantHealthCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.GetTenantHealthAsync(request.TenantId);
+        return await _service.GetTenantHealthAsync(request.TenantId);
     }
 }

@@ -1,4 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Services;
 using HotelManagement.Application.Common.Models;
 using FluentValidation;
 using MediatR;
@@ -20,12 +20,12 @@ public class DeleteModuleCommandValidator : AbstractValidator<DeleteModuleComman
     }
 }
 
-public class DeleteModuleCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<DeleteModuleCommand, Result<bool>>
+public class DeleteModuleCommandHandler(IModuleService service) : IRequestHandler<DeleteModuleCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IModuleService _service = service;
 
     public async Task<Result<bool>> Handle(DeleteModuleCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.DeleteModuleAsync(request.ModuleId);
+        return await _service.DeleteModuleAsync(request.ModuleId);
     }
 }

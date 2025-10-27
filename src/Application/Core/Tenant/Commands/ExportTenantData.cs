@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -14,7 +15,7 @@ public record ExportTenantDataCommand : IRequest<Result<ExportJobResult>>
     public bool IncludeAuditLogs { get; init; } = false;
     public DateTime? FromDate { get; init; }
     public DateTime? ToDate { get; init; }
-    public string Format { get; init; } = "JSON"; // JSON, CSV, Excel
+    public string Format { get; init; } = "JSON";
 }
 
 public class ExportTenantDataCommandValidator : AbstractValidator<ExportTenantDataCommand>
@@ -39,9 +40,9 @@ public class ExportTenantDataCommandValidator : AbstractValidator<ExportTenantDa
     }
 }
 
-public class ExportTenantDataCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<ExportTenantDataCommand, Result<ExportJobResult>>
+public class ExportTenantDataCommandHandler(ITenantService service) : IRequestHandler<ExportTenantDataCommand, Result<ExportJobResult>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<ExportJobResult>> Handle(ExportTenantDataCommand request, CancellationToken cancellationToken)
     {
@@ -56,6 +57,6 @@ public class ExportTenantDataCommandHandler(ISuperAdminService superAdminService
             Format = request.Format
         };
 
-        return await _superAdminService.ExportTenantDataAsync(request.TenantId, exportOptions);
+        return await _service.ExportTenantDataAsync(request.TenantId, exportOptions);
     }
 }

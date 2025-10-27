@@ -2,6 +2,7 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -31,12 +32,12 @@ public class TerminateTenantCommandValidator : AbstractValidator<TerminateTenant
     }
 }
 
-public class TerminateTenantCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<TerminateTenantCommand, Result<bool>>
+public class TerminateTenantCommandHandler(ITenantService service) : IRequestHandler<TerminateTenantCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<bool>> Handle(TerminateTenantCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.TerminateTenantAsync(request.TenantId, request.Reason, request.EffectiveDate);
+        return await _service.TerminateTenantAsync(request.TenantId, request.Reason, request.EffectiveDate);
     }
 }

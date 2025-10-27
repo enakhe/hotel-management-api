@@ -6,9 +6,11 @@ using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Interfaces.License;
+using HotelManagement.Application.Common.Interfaces.Services;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Mappings;
+using HotelManagement.Application.Common.Services.LicenseKey;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
@@ -138,6 +140,13 @@ public static class DependencyInjection
         services.AddScoped<TenantQueryFilterService>();
         services.AddScoped<TenantAwareDbContextFactory>();
 
+        // Register domain services
+        services.AddScoped<IPlanService, PlanService>();
+        services.AddScoped<IModuleService, ModuleService>();
+        services.AddScoped<ILicenseService, LicenseService>();
+        services.AddScoped<ILicenseKeyService, LicenseKeyService>();
+        services.AddScoped<ILimitsService, LimitsService>();
+
         // Register SuperAdmin services
         services.AddScoped<ISuperAdminService, SuperAdminService>();
         services.AddScoped<ISuperAdminAuditService, SuperAdminAuditService>();
@@ -165,8 +174,7 @@ public static class DependencyInjection
 
         // Bulk Operation Validators
         services.AddValidatorsFromAssemblyContaining<BulkUpdatePlansCommandValidator>();
-        services.AddValidatorsFromAssemblyContaining<BulkUpdateModulesCommandValidator>();
-        
+
         // Analytics Validators
         services.AddValidatorsFromAssemblyContaining<GetPlanUsageQueryValidator>();
         services.AddValidatorsFromAssemblyContaining<GetModuleUsageQueryValidator>();

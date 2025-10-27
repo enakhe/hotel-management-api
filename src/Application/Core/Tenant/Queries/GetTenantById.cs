@@ -3,6 +3,7 @@ using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Common.DTOs.Tenant;
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Application.Core.Tenant.Queries;
 
@@ -19,12 +20,12 @@ public class GetTenantByIdQueryValidator : AbstractValidator<GetTenantByIdQuery>
     }
 }
 
-public class GetTenantByIdQueryHandler(ISuperAdminService superAdminService) : IRequestHandler<GetTenantByIdQuery, Result<TenantDetail>>
+public class GetTenantByIdQueryHandler(ITenantService service) : IRequestHandler<GetTenantByIdQuery, Result<TenantDetail>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<TenantDetail>> Handle(GetTenantByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.GetTenantDetailAsync(request.TenantId);
+        return await _service.GetTenantDetailAsync(request.TenantId);
     }
 }

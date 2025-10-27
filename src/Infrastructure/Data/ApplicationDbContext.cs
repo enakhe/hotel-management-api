@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Entities.Administrator;
 using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Entities.Data;
@@ -15,7 +16,6 @@ namespace HotelManagement.Infrastructure.Data;
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options), IApplicationDbContext
 {
     public DbSet<Tenant> Tenants { get; set; }
-    public DbSet<TenantFeature> TenantFeatures { get; set; }
 
     public DbSet<Permission> Permissions { get; set; }
     public DbSet<RolePermission> RolePermissions { get; set; }
@@ -30,13 +30,15 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     // Plan Management
     public DbSet<Domain.Entities.SuperAdmin.Plan> Plans { get; set; }
-    public DbSet<Domain.Entities.SuperAdmin.PlanFeature> PlanFeatures { get; set; }
-    public DbSet<Domain.Entities.SuperAdmin.PlanLimits> PlanLimits { get; set; }
 
     // Module entities
     public DbSet<Domain.Entities.SuperAdmin.Module> Modules { get; set; }
     public DbSet<Domain.Entities.SuperAdmin.ModuleFeature> ModuleFeatures { get; set; }
     public DbSet<Domain.Entities.SuperAdmin.ModulePricing> ModulePricing { get; set; }
+
+    public DbSet<License> Licenses { get; set; }
+    public DbSet<Limits> Limits { get; set; }
+    public DbSet<PlanModule> PlanModules { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -44,7 +46,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         builder.ApplyConfiguration(new TenantConfiguration());
-        builder.ApplyConfiguration(new TenantFeatureConfiguration());
         builder.ApplyConfiguration(new ApplicationUserConfiguration());
         builder.ApplyConfiguration(new ApplicationRoleConfiguration());
         builder.ApplyConfiguration(new PermissionConfiguration());
@@ -60,8 +61,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Plan Management Configurations
         builder.ApplyConfiguration(new PlanConfiguration());
-        builder.ApplyConfiguration(new PlanFeatureConfiguration());
-        builder.ApplyConfiguration(new PlanLimitsConfiguration());
 
         ConfigureTenantQueryFilters(builder);
     }

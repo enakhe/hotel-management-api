@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -20,12 +21,12 @@ public class UnlockTenantCommandValidator : AbstractValidator<UnlockTenantComman
     }
 }
 
-public class UnlockTenantCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<UnlockTenantCommand, Result<bool>>
+public class UnlockTenantCommandHandler(ITenantService service) : IRequestHandler<UnlockTenantCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<bool>> Handle(UnlockTenantCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.UnlockTenantAsync(request.TenantId, request.Reason);
+        return await _service.UnlockTenantAsync(request.TenantId, request.Reason);
     }
 }

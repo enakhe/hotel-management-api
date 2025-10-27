@@ -4,13 +4,14 @@ using HotelManagement.Application.Common.DTOs.Tenant;
 using HotelManagement.Domain.Common;
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Application.Tenant.Queries.GetTenants;
 
 public record GetTenantsQuery : IRequest<Result<PaginatedResult<TenantSummary>>>
 {
     public string? Query { get; init; }
-    public string? Status { get; init; }
+    public bool? Status { get; init; }
     public string? Plan { get; init; }
     public string? Region { get; init; }
     public DateTime? CreatedFrom { get; init; }
@@ -29,9 +30,9 @@ public class GetTenantsQueryValidator : AbstractValidator<GetTenantsQuery>
     }
 }
 
-public class GetTenantsQueryHandler(ISuperAdminService superAdminService) : IRequestHandler<GetTenantsQuery, Result<PaginatedResult<TenantSummary>>>
+public class GetTenantsQueryHandler(ITenantService service) : IRequestHandler<GetTenantsQuery, Result<PaginatedResult<TenantSummary>>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<PaginatedResult<TenantSummary>>> Handle(GetTenantsQuery request, CancellationToken cancellationToken)
     {
@@ -49,6 +50,6 @@ public class GetTenantsQueryHandler(ISuperAdminService superAdminService) : IReq
             SortDescending = request.SortDescending
         };
 
-        return await _superAdminService.GetTenantsAsync(tenantListRequest);
+        return await _service.GetTenantsAsync(tenantListRequest);
     }
 }

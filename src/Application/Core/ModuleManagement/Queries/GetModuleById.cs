@@ -1,5 +1,5 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Services;
 using HotelManagement.Application.Common.Models;
 using FluentValidation;
 using MediatR;
@@ -21,12 +21,12 @@ public class GetModuleByIdQueryValidator : AbstractValidator<GetModuleByIdQuery>
     }
 }
 
-public class GetModuleByIdQueryHandler(ISuperAdminService superAdminService) : IRequestHandler<GetModuleByIdQuery, Result<ModuleResponseDto>>
+public class GetModuleByIdQueryHandler(IModuleService service) : IRequestHandler<GetModuleByIdQuery, Result<ModuleResponseDto>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IModuleService _service = service;
 
     public async Task<Result<ModuleResponseDto>> Handle(GetModuleByIdQuery request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.GetModuleByIdAsync(request.ModuleId);
+        return await _service.GetModuleByIdAsync(request.ModuleId);
     }
 }

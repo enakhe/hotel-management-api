@@ -2,6 +2,7 @@ using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using FluentValidation;
 using MediatR;
+using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
@@ -20,12 +21,12 @@ public class DeletePlanCommandValidator : AbstractValidator<DeletePlanCommand>
     }
 }
 
-public class DeletePlanCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<DeletePlanCommand, Result<bool>>
+public class DeletePlanCommandHandler(IPlanService service) : IRequestHandler<DeletePlanCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IPlanService _service = service;
 
     public async Task<Result<bool>> Handle(DeletePlanCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.DeletePlanAsync(request.PlanId);
+        return await _service.DeletePlanAsync(request.PlanId);
     }
 }

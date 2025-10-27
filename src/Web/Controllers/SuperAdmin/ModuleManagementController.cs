@@ -95,13 +95,12 @@ public class ModuleManagementController(
     /// <summary>
     /// Bulk update multiple modules
     /// </summary>
-    /// <param name="command">Bulk update request</param>
+    /// <param name="updates">Bulk update requests</param>
     /// <returns>Bulk update result</returns>
     [HttpPatch("bulk")]
-    public async Task<ActionResult> BulkUpdateModules([FromBody] BulkUpdateModulesCommand command)
+    public async Task<ActionResult> BulkUpdateModules([FromBody] BulkModuleUpdateRequest[] updates)
     {
-        var response = await _mediator.Send(command);
-
+        var response = await _superAdminService.BulkUpdateModulesAsync(updates);
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);
     }
 

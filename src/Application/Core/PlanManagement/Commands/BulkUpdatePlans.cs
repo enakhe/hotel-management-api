@@ -3,6 +3,7 @@ using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using FluentValidation;
 using MediatR;
+using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
@@ -44,12 +45,13 @@ public class BulkPlanUpdateRequestValidator : AbstractValidator<BulkPlanUpdateRe
     }
 }
 
-public class BulkUpdatePlansCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<BulkUpdatePlansCommand, Result<bool>>
+public class BulkUpdatePlansCommandHandler(IPlanService service) : IRequestHandler<BulkUpdatePlansCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IPlanService _service = service;
 
     public async Task<Result<bool>> Handle(BulkUpdatePlansCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.BulkUpdatePlansAsync(request.Updates);
+        var updates = request.Updates.Select(u => new HotelManagement.Application.Common.Interfaces.SuperAdmin.BulkPlanUpdateRequest { Id = u.Id, Data = u.Data }).ToArray();
+        return await _service.BulkUpdatePlansAsync(updates);
     }
 }

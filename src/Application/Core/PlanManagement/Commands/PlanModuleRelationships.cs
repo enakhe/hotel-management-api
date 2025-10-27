@@ -2,6 +2,7 @@ using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using FluentValidation;
 using MediatR;
+using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
@@ -25,13 +26,13 @@ public class AssignModuleToPlanCommandValidator : AbstractValidator<AssignModule
     }
 }
 
-public class AssignModuleToPlanCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<AssignModuleToPlanCommand, Result<bool>>
+public class AssignModuleToPlanCommandHandler(IPlanService service) : IRequestHandler<AssignModuleToPlanCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IPlanService _service = service;
 
     public async Task<Result<bool>> Handle(AssignModuleToPlanCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.AssignModuleToPlanAsync(request.PlanId, request.ModuleId);
+        return await _service.AssignModuleToPlanAsync(request.PlanId, request.ModuleId);
     }
 }
 
@@ -55,12 +56,12 @@ public class RemoveModuleFromPlanCommandValidator : AbstractValidator<RemoveModu
     }
 }
 
-public class RemoveModuleFromPlanCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<RemoveModuleFromPlanCommand, Result<bool>>
+public class RemoveModuleFromPlanCommandHandler(IPlanService service) : IRequestHandler<RemoveModuleFromPlanCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IPlanService _service = service;
 
     public async Task<Result<bool>> Handle(RemoveModuleFromPlanCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.RemoveModuleFromPlanAsync(request.PlanId, request.ModuleId);
+        return await _service.RemoveModuleFromPlanAsync(request.PlanId, request.ModuleId);
     }
 }

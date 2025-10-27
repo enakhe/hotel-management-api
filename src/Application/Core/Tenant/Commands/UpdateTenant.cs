@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -19,12 +20,8 @@ public record UpdateTenantCommand : IRequest<Result<bool>>
     public string? Country { get; init; }
     public string? Region { get; init; }
     public string? Industry { get; init; }
-    public string? SubscriptionPlan { get; init; }
-    public string[]? EnabledModules { get; init; }
-    public int? MaxUsers { get; init; }
-    public int? MaxBranches { get; init; }
-    public int? MaxRooms { get; init; }
-    public int? MaxReservations { get; init; }
+    public Guid PlanId { get; init; }
+    public Guid LicenseId { get; init; }
 }
 
 public class UpdateTenantCommandValidator : AbstractValidator<UpdateTenantCommand>
@@ -61,33 +58,17 @@ public class UpdateTenantCommandValidator : AbstractValidator<UpdateTenantComman
             .NotEmpty()
             .WithMessage("Language code is required.")
             .Length(2).WithMessage("Language code must be a 2-letter ISO code.");
-
-        RuleFor(x => x.MaxUsers)
-            .GreaterThan(0)
-            .WithMessage("Max users must be greater than zero.");
-
-        RuleFor(x => x.MaxBranches)
-            .GreaterThan(0)
-            .WithMessage("Max branches must be greater than zero.");
-
-        RuleFor(x => x.MaxRooms)
-            .GreaterThan(0)
-            .WithMessage("Max rooms must be greater than zero.");
-
-        RuleFor(x => x.MaxReservations)
-            .GreaterThan(0)
-            .WithMessage("Max reservations must be greater than zero.");
     }
 }
 
-public class UpdateTenantCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<UpdateTenantCommand, Result<bool>>
+public class UpdateTenantCommandHandler(ITenantService service, IMapper mapper) : IRequestHandler<UpdateTenantCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<bool>> Handle(UpdateTenantCommand request, CancellationToken cancellationToken)
     {
         var updateRequest = _mapper.Map<UpdateTenantRequest>(request);
-        return await _superAdminService.UpdateTenantAsync(request.TenantId, updateRequest);
+        return await _service.UpdateTenantAsync(request.TenantId, updateRequest);
     }
 }

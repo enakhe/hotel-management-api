@@ -79,14 +79,9 @@ public class ApplicationDbContextInitialiser
             TimeZone = "WAT",
             CurrencyCode = "NGN",
             LanguageCode = "en",
-            SubscriptionPlan = "Premium",
-            LicenseStatus = LicenseStatus.Active,
-            MaxUsers = 100000,
-            MaxBranches = 10,
-            MaxRooms = 100000,
-            MaxReservations = 100000,
-            UseSharedDatabase = true,
-            DatabaseProvider = "SqlServer"
+            Industry = "Technology",
+            Country = "Nigeria",
+            Region = "Lagos"
         };
 
         if (!_context.Tenants.Any(t => t.Identifier == defaultTenant.Identifier))

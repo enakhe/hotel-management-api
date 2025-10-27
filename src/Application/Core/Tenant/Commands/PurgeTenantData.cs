@@ -1,5 +1,6 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -22,12 +23,12 @@ public class PurgeTenantDataCommandValidator : AbstractValidator<PurgeTenantData
     }
 }
 
-public class PurgeTenantDataCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<PurgeTenantDataCommand, Result<bool>>
+public class PurgeTenantDataCommandHandler(ITenantService service) : IRequestHandler<PurgeTenantDataCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<bool>> Handle(PurgeTenantDataCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.PurgeTenantDataAsync(request.TenantId, request.Reason);
+        return await _service.PurgeTenantDataAsync(request.TenantId, request.Reason);
     }
 }

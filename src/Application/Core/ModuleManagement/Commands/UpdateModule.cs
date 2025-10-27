@@ -1,5 +1,5 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Services;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Enums;
 using FluentValidation;
@@ -117,14 +117,14 @@ public class UpdateModulePricingCommandValidator : AbstractValidator<UpdateModul
     }
 }
 
-public class UpdateModuleCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<UpdateModuleCommand, Result<ModuleResponseDto>>
+public class UpdateModuleCommandHandler(IModuleService service, IMapper mapper) : IRequestHandler<UpdateModuleCommand, Result<ModuleResponseDto>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IModuleService _service = service;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<ModuleResponseDto>> Handle(UpdateModuleCommand request, CancellationToken cancellationToken)
     {
         var updateRequest = _mapper.Map<UpdateModuleRequest>(request);
-        return await _superAdminService.UpdateModuleAsync(request.ModuleId, updateRequest);
+        return await _service.UpdateModuleAsync(request.ModuleId, updateRequest);
     }
 }

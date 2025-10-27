@@ -1,10 +1,10 @@
 using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Enums;
 using FluentValidation;
 using MediatR;
 using AutoMapper;
+using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
@@ -13,23 +13,19 @@ public record UpdatePlanCommand : IRequest<Result<PlanResponseDto>>
     public Guid PlanId { get; init; }
     public string? Name { get; init; }
     public string? Description { get; init; }
-    public decimal? Price { get; init; }
     public string? Currency { get; init; }
     public BillingCycle? BillingCycle { get; init; }
     public bool? IsActive { get; init; }
     public bool? IsPopular { get; init; }
-    public UpdatePlanFeatureCommand[]? Features { get; init; }
     public UpdatePlanLimitsCommand? Limits { get; init; }
-    public string[]? Modules { get; init; }
+    public UpdatePlanModuleCommand[]? Modules { get; init; }
 }
 
-public record UpdatePlanFeatureCommand
+public record UpdatePlanModuleCommand
 {
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public bool? Included { get; init; }
-    public int? Limit { get; init; }
-    public string? Unit { get; init; }
+    public Guid Id { get; init; }
+    public bool IsRequired { get; init; } = false;
+    public int DisplayOrder { get; init; } = 0;
 }
 
 public record UpdatePlanLimitsCommand
@@ -62,11 +58,6 @@ public class UpdatePlanCommandValidator : AbstractValidator<UpdatePlanCommand>
             .When(x => !string.IsNullOrEmpty(x.Description))
             .WithMessage("Description cannot exceed 500 characters.");
 
-        RuleFor(x => x.Price)
-            .GreaterThanOrEqualTo(0)
-            .When(x => x.Price.HasValue)
-            .WithMessage("Price must be a non-negative value.");
-
         RuleFor(x => x.Currency)
             .Length(3)
             .When(x => !string.IsNullOrEmpty(x.Currency))
@@ -77,9 +68,9 @@ public class UpdatePlanCommandValidator : AbstractValidator<UpdatePlanCommand>
             .When(x => x.BillingCycle.HasValue)
             .WithMessage("Invalid billing cycle.");
 
-        RuleForEach(x => x.Features)
-            .SetValidator(new UpdatePlanFeatureCommandValidator())
-            .When(x => x.Features != null && x.Features.Length > 0);
+        RuleForEach(x => x.Modules)
+            .SetValidator(new UpdatePlanModuleCommandValidator())
+            .When(x => x.Modules != null && x.Modules.Length > 0);
 
         RuleFor(x => x.Limits)
             .SetValidator(new UpdatePlanLimitsCommandValidator())
@@ -87,29 +78,17 @@ public class UpdatePlanCommandValidator : AbstractValidator<UpdatePlanCommand>
     }
 }
 
-public class UpdatePlanFeatureCommandValidator : AbstractValidator<UpdatePlanFeatureCommand>
+public class UpdatePlanModuleCommandValidator : AbstractValidator<UpdatePlanModuleCommand>
 {
-    public UpdatePlanFeatureCommandValidator()
+    public UpdatePlanModuleCommandValidator()
     {
-        RuleFor(x => x.Name)
-            .MaximumLength(100)
-            .When(x => !string.IsNullOrEmpty(x.Name))
-            .WithMessage("Feature name cannot exceed 100 characters.");
+        RuleFor(x => x.Id)
+            .NotEmpty()
+            .WithMessage("Module ID is required.");
 
-        RuleFor(x => x.Description)
-            .MaximumLength(500)
-            .When(x => !string.IsNullOrEmpty(x.Description))
-            .WithMessage("Feature description cannot exceed 500 characters.");
-
-        RuleFor(x => x.Limit)
+        RuleFor(x => x.DisplayOrder)
             .GreaterThanOrEqualTo(0)
-            .When(x => x.Limit.HasValue)
-            .WithMessage("Limit must be a non-negative value.");
-
-        RuleFor(x => x.Unit)
-            .MaximumLength(50)
-            .When(x => !string.IsNullOrEmpty(x.Unit))
-            .WithMessage("Unit cannot exceed 50 characters.");
+            .WithMessage("Display order must be a non-negative value.");
     }
 }
 
@@ -159,14 +138,14 @@ public class UpdatePlanLimitsCommandValidator : AbstractValidator<UpdatePlanLimi
     }
 }
 
-public class UpdatePlanCommandHandler(ISuperAdminService superAdminService, IMapper mapper) : IRequestHandler<UpdatePlanCommand, Result<PlanResponseDto>>
+public class UpdatePlanCommandHandler(IPlanService service, IMapper mapper) : IRequestHandler<UpdatePlanCommand, Result<PlanResponseDto>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly IPlanService _service = service;
     private readonly IMapper _mapper = mapper;
 
     public async Task<Result<PlanResponseDto>> Handle(UpdatePlanCommand request, CancellationToken cancellationToken)
     {
         var updateRequest = _mapper.Map<UpdatePlanRequest>(request);
-        return await _superAdminService.UpdatePlanAsync(request.PlanId, updateRequest);
+        return await _service.UpdatePlanAsync(request.PlanId, updateRequest);
     }
 }

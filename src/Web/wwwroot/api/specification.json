@@ -352,6 +352,868 @@
         ]
       }
     },
+    "/cp/licenses": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetLicenses",
+        "parameters": [
+          {
+            "name": "Query",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/LicenseStatusType"
+                }
+              ]
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/LicenseType"
+                }
+              ]
+            },
+            "x-position": 3
+          },
+          {
+            "name": "TenantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PlanId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Expired",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "ExpiresInDays",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 9
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 10
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 11
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_CreateLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetLicenseById",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_UpdateLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_DeleteLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/key/{licenseKey}": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetLicenseByKey",
+        "parameters": [
+          {
+            "name": "licenseKey",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/validate": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_ValidateLicense",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/validate-format": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_ValidateLicenseKeyFormat",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidateLicenseKeyFormatCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/generate-key": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GenerateLicenseKey",
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateLicenseKeyCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}/renew": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_RenewLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenewLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}/transfer": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_TransferLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransferLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}/suspend": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_SuspendLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}/revoke": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_RevokeLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RevokeLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/{licenseId}/activate": {
+      "post": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_ActivateLicense",
+        "parameters": [
+          {
+            "name": "licenseId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "command",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateLicenseCommand"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/analytics": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetLicenseAnalytics",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/usage": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetLicenseUsage",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/expiring/{days}": {
+      "get": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_GetExpiringLicenses",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
+    "/cp/licenses/bulk": {
+      "patch": {
+        "tags": [
+          "LicenseManagement"
+        ],
+        "operationId": "LicenseManagement_BulkUpdateLicenses",
+        "requestBody": {
+          "x-name": "updates",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BulkLicenseUpdateRequest"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT": [
+              "SuperAdmin"
+            ]
+          }
+        ]
+      }
+    },
     "/cp/modules": {
       "get": {
         "tags": [
@@ -625,11 +1487,14 @@
         ],
         "operationId": "ModuleManagement_BulkUpdateModules",
         "requestBody": {
-          "x-name": "command",
+          "x-name": "updates",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/BulkUpdateModulesCommand"
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BulkModuleUpdateRequest"
+                }
               }
             }
           },
@@ -721,33 +1586,13 @@
             "x-position": 3
           },
           {
-            "name": "PriceMin",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "decimal",
-              "nullable": true
-            },
-            "x-position": 4
-          },
-          {
-            "name": "PriceMax",
-            "in": "query",
-            "schema": {
-              "type": "number",
-              "format": "decimal",
-              "nullable": true
-            },
-            "x-position": 5
-          },
-          {
             "name": "Page",
             "in": "query",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 6
+            "x-position": 4
           },
           {
             "name": "Size",
@@ -756,7 +1601,7 @@
               "type": "integer",
               "format": "int32"
             },
-            "x-position": 7
+            "x-position": 5
           },
           {
             "name": "SortBy",
@@ -764,7 +1609,7 @@
             "schema": {
               "type": "string"
             },
-            "x-position": 8
+            "x-position": 6
           },
           {
             "name": "SortDescending",
@@ -772,7 +1617,7 @@
             "schema": {
               "type": "boolean"
             },
-            "x-position": 9
+            "x-position": 7
           }
         ],
         "responses": {
@@ -1260,7 +2105,7 @@
             "name": "Status",
             "in": "query",
             "schema": {
-              "type": "string",
+              "type": "boolean",
               "nullable": true
             },
             "x-position": 2
@@ -2839,6 +3684,748 @@
           }
         }
       },
+      "LicenseStatusType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Active",
+          "Expired",
+          "Suspended",
+          "Revoked",
+          "Trial"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "LicenseType": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Standard",
+          "Premium",
+          "Enterprise",
+          "Trial",
+          "Custom"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "CreateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/LicenseType"
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "maxValidations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hardwareId": {
+            "type": "string",
+            "nullable": true
+          },
+          "domainRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "ipRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "features": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/CreateLicenseFeatureCommand"
+            }
+          },
+          "limits": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CreateLicenseLimitsCommand"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          },
+          "customLicenseKey": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateLicenseFeatureCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreateLicenseLimitsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "concurrentSessions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customLimits": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "UpdateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "status": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LicenseStatus"
+              }
+            ]
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "maxValidations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hardwareId": {
+            "type": "string",
+            "nullable": true
+          },
+          "domainRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "ipRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "features": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UpdateLicenseFeatureCommand"
+            }
+          },
+          "limits": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdateLicenseLimitsCommand"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "LicenseStatus": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Trial",
+          "Active",
+          "Expired",
+          "Suspended",
+          "Cancelled"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "UpdateLicenseFeatureCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "UpdateLicenseLimitsCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "concurrentSessions": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customLimits": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "ValidateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseKey": {
+            "type": "string"
+          },
+          "hardwareId": {
+            "type": "string",
+            "nullable": true
+          },
+          "domain": {
+            "type": "string",
+            "nullable": true
+          },
+          "ipAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "clientVersion": {
+            "type": "string",
+            "nullable": true
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          }
+        }
+      },
+      "ValidateLicenseKeyFormatCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseKey": {
+            "type": "string"
+          },
+          "expectedFormat": {
+            "$ref": "#/components/schemas/LicenseKeyFormat"
+          },
+          "includeChecksum": {
+            "type": "boolean"
+          }
+        }
+      },
+      "LicenseKeyFormat": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "XXXX_XXXX_XXXX_XXXX",
+          "XXXX_XXXX_XXXX_XXXX_XXXX",
+          "XXXX_XXXX_XXXX_XXXX_XXXX_XXXX"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "GenerateLicenseKeyCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "format": {
+            "$ref": "#/components/schemas/LicenseKeyFormat"
+          },
+          "prefix": {
+            "type": "string",
+            "nullable": true
+          },
+          "suffix": {
+            "type": "string",
+            "nullable": true
+          },
+          "includeChecksum": {
+            "type": "boolean"
+          },
+          "customAlphabet": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RenewLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "newExpirationDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "extendFeatures": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/CreateLicenseFeatureRequest"
+            }
+          },
+          "extendLimits": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CreateLicenseLimitsRequest"
+              }
+            ]
+          }
+        }
+      },
+      "CreateLicenseFeatureRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "CreateLicenseLimitsRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "concurrentSessions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customLimits": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "TransferLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "newTenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "transferDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SuspendLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "RevokeLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivateLicenseCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "BulkLicenseUpdateRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "data": {
+            "$ref": "#/components/schemas/UpdateLicenseRequest"
+          }
+        }
+      },
+      "UpdateLicenseRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "status": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/LicenseStatusType"
+              }
+            ]
+          },
+          "expirationDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "maxValidations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "hardwareId": {
+            "type": "string",
+            "nullable": true
+          },
+          "domainRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "ipRestrictions": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "features": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/UpdateLicenseFeatureRequest"
+            }
+          },
+          "limits": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/UpdateLicenseLimitsRequest"
+              }
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "UpdateLicenseFeatureRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "UpdateLicenseLimitsRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "concurrentSessions": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "customLimits": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
       "CreateModuleCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -3079,18 +4666,6 @@
           }
         }
       },
-      "BulkUpdateModulesCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "updates": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BulkModuleUpdateRequest"
-            }
-          }
-        }
-      },
       "BulkModuleUpdateRequest": {
         "type": "object",
         "additionalProperties": false,
@@ -3227,10 +4802,6 @@
             "type": "string",
             "nullable": true
           },
-          "price": {
-            "type": "number",
-            "format": "decimal"
-          },
           "currency": {
             "type": "string"
           },
@@ -3243,45 +4814,15 @@
           "isPopular": {
             "type": "boolean"
           },
-          "features": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CreatePlanFeatureCommand"
-            }
-          },
           "limits": {
             "$ref": "#/components/schemas/CreatePlanLimitsCommand"
           },
-          "modules": {
+          "moduleIds": {
             "type": "array",
             "items": {
-              "type": "string"
+              "type": "string",
+              "format": "guid"
             }
-          }
-        }
-      },
-      "CreatePlanFeatureCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "included": {
-            "type": "boolean"
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -3354,11 +4895,6 @@
             "type": "string",
             "nullable": true
           },
-          "price": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
           "currency": {
             "type": "string",
             "nullable": true
@@ -3379,13 +4915,6 @@
             "type": "boolean",
             "nullable": true
           },
-          "features": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/UpdatePlanFeatureCommand"
-            }
-          },
           "limits": {
             "nullable": true,
             "oneOf": [
@@ -3398,35 +4927,8 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/UpdatePlanModuleCommand"
             }
-          }
-        }
-      },
-      "UpdatePlanFeatureCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "included": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -3479,6 +4981,23 @@
           }
         }
       },
+      "UpdatePlanModuleCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "isRequired": {
+            "type": "boolean"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
       "BulkUpdatePlansCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -3516,11 +5035,6 @@
             "type": "string",
             "nullable": true
           },
-          "price": {
-            "type": "number",
-            "format": "decimal",
-            "nullable": true
-          },
           "currency": {
             "type": "string",
             "nullable": true
@@ -3541,13 +5055,6 @@
             "type": "boolean",
             "nullable": true
           },
-          "features": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/UpdatePlanFeatureRequest"
-            }
-          },
           "limits": {
             "nullable": true,
             "oneOf": [
@@ -3560,35 +5067,8 @@
             "type": "array",
             "nullable": true,
             "items": {
-              "type": "string"
+              "$ref": "#/components/schemas/UpdatePlanModuleRequest"
             }
-          }
-        }
-      },
-      "UpdatePlanFeatureRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "included": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
           }
         }
       },
@@ -3638,6 +5118,23 @@
             "type": "number",
             "format": "decimal",
             "nullable": true
+          }
+        }
+      },
+      "UpdatePlanModuleRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "isRequired": {
+            "type": "boolean"
+          },
+          "displayOrder": {
+            "type": "integer",
+            "format": "int32"
           }
         }
       },
@@ -3695,31 +5192,13 @@
             "type": "string",
             "nullable": true
           },
-          "subscriptionPlan": {
-            "$ref": "#/components/schemas/SubscriptionPlan"
+          "planId": {
+            "type": "string",
+            "format": "guid"
           },
-          "modules": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxBranches": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxRooms": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxReservations": {
-            "type": "integer",
-            "format": "int32"
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
           },
           "address": {
             "type": "string",
@@ -3750,20 +5229,6 @@
             "nullable": true
           }
         }
-      },
-      "SubscriptionPlan": {
-        "type": "integer",
-        "description": "",
-        "x-enumNames": [
-          "Basic",
-          "Standard",
-          "Premium"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
       },
       "UpdateTenantCommand": {
         "type": "object",
@@ -3817,36 +5282,13 @@
             "type": "string",
             "nullable": true
           },
-          "subscriptionPlan": {
+          "planId": {
             "type": "string",
-            "nullable": true
+            "format": "guid"
           },
-          "enabledModules": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "type": "string"
-            }
-          },
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxBranches": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxRooms": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxReservations": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
+          "licenseId": {
+            "type": "string",
+            "format": "guid"
           }
         }
       },
@@ -3897,8 +5339,8 @@
         "description": "",
         "x-enumNames": [
           "Active",
-          "ReadOnly",
           "Suspended",
+          "Maintenance",
           "Locked"
         ],
         "enum": [

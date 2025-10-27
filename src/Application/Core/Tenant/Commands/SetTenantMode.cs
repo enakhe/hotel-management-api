@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
@@ -30,12 +31,12 @@ public class SetTenantModeCommandValidator : AbstractValidator<SetTenantModeComm
     }
 }
 
-public class SetTenantModeCommandHandler(ISuperAdminService superAdminService) : IRequestHandler<SetTenantModeCommand, Result<bool>>
+public class SetTenantModeCommandHandler(ITenantService service) : IRequestHandler<SetTenantModeCommand, Result<bool>>
 {
-    private readonly ISuperAdminService _superAdminService = superAdminService;
+    private readonly ITenantService _service = service;
 
     public async Task<Result<bool>> Handle(SetTenantModeCommand request, CancellationToken cancellationToken)
     {
-        return await _superAdminService.SetTenantModeAsync(request.TenantId, request.Mode, request.Reason);
+        return await _service.SetTenantModeAsync(request.TenantId, request.Mode, request.Reason);
     }
 }
