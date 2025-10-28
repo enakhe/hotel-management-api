@@ -3724,10 +3724,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "tenantId": {
-            "type": "string",
-            "format": "guid"
-          },
           "planId": {
             "type": "string",
             "format": "guid"
@@ -3762,21 +3758,6 @@
               "type": "string"
             }
           },
-          "features": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/CreateLicenseFeatureCommand"
-            }
-          },
-          "limits": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CreateLicenseLimitsCommand"
-              }
-            ]
-          },
           "metadata": {
             "type": "object",
             "nullable": true,
@@ -3785,77 +3766,6 @@
           "customLicenseKey": {
             "type": "string",
             "nullable": true
-          }
-        }
-      },
-      "CreateLicenseFeatureCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
-          },
-          "configuration": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
-          }
-        }
-      },
-      "CreateLicenseLimitsCommand": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxBranches": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxRooms": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxReservations": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxStorageGB": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "apiRateLimit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "concurrentSessions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "customLimits": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         }
       },
@@ -4121,92 +4031,6 @@
           },
           "reason": {
             "type": "string"
-          },
-          "extendFeatures": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/CreateLicenseFeatureRequest"
-            }
-          },
-          "extendLimits": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/CreateLicenseLimitsRequest"
-              }
-            ]
-          }
-        }
-      },
-      "CreateLicenseFeatureRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "enabled": {
-            "type": "boolean"
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
-          },
-          "configuration": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
-          }
-        }
-      },
-      "CreateLicenseLimitsRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxBranches": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxRooms": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxReservations": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "maxStorageGB": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "apiRateLimit": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "concurrentSessions": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "customLimits": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         }
       },
@@ -4323,106 +4147,10 @@
               "type": "string"
             }
           },
-          "features": {
-            "type": "array",
-            "nullable": true,
-            "items": {
-              "$ref": "#/components/schemas/UpdateLicenseFeatureRequest"
-            }
-          },
-          "limits": {
-            "nullable": true,
-            "oneOf": [
-              {
-                "$ref": "#/components/schemas/UpdateLicenseLimitsRequest"
-              }
-            ]
-          },
           "metadata": {
             "type": "object",
             "nullable": true,
             "additionalProperties": {}
-          }
-        }
-      },
-      "UpdateLicenseFeatureRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string",
-            "nullable": true
-          },
-          "description": {
-            "type": "string",
-            "nullable": true
-          },
-          "enabled": {
-            "type": "boolean",
-            "nullable": true
-          },
-          "limit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "unit": {
-            "type": "string",
-            "nullable": true
-          },
-          "configuration": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {}
-          }
-        }
-      },
-      "UpdateLicenseLimitsRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "maxUsers": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxBranches": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxRooms": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxReservations": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "maxStorageGB": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "apiRateLimit": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "concurrentSessions": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "customLimits": {
-            "type": "object",
-            "nullable": true,
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int32"
-            }
           }
         }
       },

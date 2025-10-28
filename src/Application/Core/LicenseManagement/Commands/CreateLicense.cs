@@ -7,7 +7,6 @@ namespace HotelManagement.Application.Core.LicenseManagement.Commands;
 
 public record CreateLicenseCommand : IRequest<Result<LicenseResponseDto>>
 {
-    public Guid TenantId { get; init; }
     public Guid PlanId { get; init; }
     public LicenseType Type { get; init; }
     public DateTime ExpirationDate { get; init; }
@@ -23,10 +22,6 @@ public class CreateLicenseCommandValidator : AbstractValidator<CreateLicenseComm
 {
     public CreateLicenseCommandValidator()
     {
-        RuleFor(x => x.TenantId)
-            .NotEmpty()
-            .WithMessage("Tenant ID is required.");
-
         RuleFor(x => x.PlanId)
             .NotEmpty()
             .WithMessage("Plan ID is required.");

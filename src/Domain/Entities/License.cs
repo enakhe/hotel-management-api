@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 
 namespace HotelManagement.Domain.Entities;
 
-public class License : BaseTenantEntity
+public class License : BaseEntity
 {
     public string LicenseKey { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;

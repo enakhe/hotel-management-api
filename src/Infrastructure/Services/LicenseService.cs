@@ -55,7 +55,6 @@ public class LicenseService : ILicenseService
             var license = new Domain.Entities.License
             {
                 Id = Guid.NewGuid(),
-                TenantId = request.TenantId,
                 PlanId = request.PlanId,
                 LicenseKey = licenseKey,
                 Type = request.Type,
@@ -72,9 +71,6 @@ public class LicenseService : ILicenseService
 
             _context.Licenses.Add(license);
             await _context.SaveChangesAsync();
-
-            // Get tenant name for response
-            var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.Id == request.TenantId);
 
             // Collect all plan features from modules
             var planFeatures = new List<ModuleFeatureResponseDto>();
@@ -151,9 +147,7 @@ public class LicenseService : ILicenseService
             {
                 Id = license.Id,
                 LicenseKey = license.LicenseKey,
-                TenantId = license.TenantId,
                 PlanId = license.PlanId,
-                TenantName = tenant?.Name,
                 PlanName = plan.Name,
                 Type = license.Type,
                 Status = license.Status,
@@ -965,9 +959,11 @@ public class LicenseService : ILicenseService
                     StorageGB = 0,
                     ApiCallsLast24h = 0
                 },
-                Limits = l.Plan.Limits != null ? new LicenseLimitsResponseDto
+                Limits = l.Plan.Limits != null ? new LimitsResponseDto
                 {
                     Id = l.Plan.Limits.Id,
+                    Name = l.Plan.Limits.Name,
+                    Description = l.Plan.Limits.Description,
                     MaxUsers = l.Plan.Limits.MaxUsers,
                     MaxBranches = l.Plan.Limits.MaxBranches,
                     MaxRooms = l.Plan.Limits.MaxRooms,
@@ -975,16 +971,14 @@ public class LicenseService : ILicenseService
                     MaxStorageGB = l.Plan.Limits.MaxStorageGB,
                     ApiRateLimit = l.Plan.Limits.ApiRateLimit,
                     ConcurrentSessions = l.Plan.Limits.ConcurrentSessions,
-                    CustomLimits = l.Plan.Limits.CustomLimits != null ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(l.Plan.Limits.CustomLimits) : null
-                } : null,
-                UtilizationPercentage = new LicenseUtilizationDto
-                {
-                    Users = 0, // Would calculate based on actual usage
-                    Branches = 0,
-                    Rooms = 0,
-                    Reservations = 0,
-                    Storage = 0
-                }
+                    CustomLimits = l.Plan.Limits.CustomLimits != null ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(l.Plan.Limits.CustomLimits) : null,
+                    IsDefault = l.Plan.Limits.IsDefault,
+                    IsActive = l.Plan.Limits.IsActive,
+                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
+                    CreatedBy = l.Plan.Limits.CreatedBy,
+                    LastModifiedBy = l.Plan.Limits.LastModifiedBy
+                } : null
             }).ToArray();
 
             return Result<LicenseUsageDto[]>.Success(usageData, 200);

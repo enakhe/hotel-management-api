@@ -5,7 +5,6 @@ namespace HotelManagement.Application.Common.DTOs;
 // Request DTOs
 public record CreateLicenseRequest
 {
-    public Guid TenantId { get; init; }
     public Guid PlanId { get; init; }
     public LicenseType Type { get; init; }
     public DateTime ExpirationDate { get; init; }
@@ -48,9 +47,7 @@ public record LicenseResponseDto
 {
     public Guid Id { get; init; }
     public string LicenseKey { get; init; } = string.Empty;
-    public Guid TenantId { get; init; }
     public Guid PlanId { get; init; }
-    public string? TenantName { get; init; }
     public string? PlanName { get; init; }
     public LicenseStatusType Status { get; init; }
     public LicenseType Type { get; init; }

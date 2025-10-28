@@ -1,4 +1,5 @@
 using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Core.LicenseManagement.Commands;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
 using HotelManagement.Application.Core.PlanManagement.Commands;
 using HotelManagement.Application.Core.Tenant.Commands;
@@ -137,6 +138,7 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<ModulePricing, ModulePricingResponseDto>();
 
         // License mappings
+        CreateMap<CreateLicenseCommand, CreateLicenseRequest>();
         CreateMap<CreateLicenseRequest, License>();
         CreateMap<License, CreateLicenseRequest>();
     }
