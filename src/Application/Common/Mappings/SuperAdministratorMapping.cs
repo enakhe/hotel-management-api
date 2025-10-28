@@ -135,5 +135,9 @@ public class SuperAdministratorMappingProfile : Profile
             .ForMember(dest => dest.Configuration, opt => opt.Ignore());
 
         CreateMap<ModulePricing, ModulePricingResponseDto>();
+
+        // License mappings
+        CreateMap<CreateLicenseRequest, License>();
+        CreateMap<License, CreateLicenseRequest>();
     }
 }

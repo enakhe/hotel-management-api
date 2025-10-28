@@ -9,8 +9,6 @@ public record RenewLicenseCommand : IRequest<Result<LicenseResponseDto>>
     public Guid LicenseId { get; init; }
     public DateTime NewExpirationDate { get; init; }
     public string Reason { get; init; } = string.Empty;
-    public CreateLicenseFeatureRequest[]? ExtendFeatures { get; init; }
-    public CreateLicenseLimitsRequest? ExtendLimits { get; init; }
 }
 
 public class RenewLicenseCommandValidator : AbstractValidator<RenewLicenseCommand>
@@ -43,26 +41,6 @@ public class RenewLicenseCommandHandler(ILicenseService service) : IRequestHandl
             LicenseId = request.LicenseId,
             NewExpirationDate = request.NewExpirationDate,
             Reason = request.Reason,
-            ExtendFeatures = [.. request.ExtendFeatures!.Select(x => new CreateLicenseFeatureRequest
-            {
-                Name = x.Name,
-                Description = x.Description,
-                Enabled = x.Enabled,
-                Limit = x.Limit,
-                Unit = x.Unit,
-                Configuration = x.Configuration
-            })],
-            ExtendLimits = new CreateLicenseLimitsRequest
-            {
-                MaxUsers = request.ExtendLimits!.MaxUsers,
-                MaxBranches = request.ExtendLimits!.MaxBranches,
-                MaxRooms = request.ExtendLimits!.MaxRooms,
-                MaxReservations = request.ExtendLimits!.MaxReservations,
-                MaxStorageGB = request.ExtendLimits!.MaxStorageGB,
-                ApiRateLimit = request.ExtendLimits!.ApiRateLimit,
-                ConcurrentSessions = request.ExtendLimits!.ConcurrentSessions,
-                CustomLimits = request.ExtendLimits!.CustomLimits
-            }
         };
 
         return await _service.RenewLicenseAsync(request.LicenseId, renewalRequest);

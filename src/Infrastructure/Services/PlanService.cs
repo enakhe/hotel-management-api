@@ -470,15 +470,23 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .AsNoTracking()
                 .ToListAsync();
 
-            var planUsage = plans.Select(plan => new PlanUsageDto
+            var planUsage = plans.Select(plan =>
             {
-                PlanId = plan.Id,
-                PlanName = plan.Name,
-                TenantCount = plan.Tenants.Count,
-                TotalRevenue = plan.PlanModules.Sum(m => m.Module?.Pricing?.Price ?? 0) * plan.Tenants.Count,
-                AverageTenantValue = plan.PlanModules.Sum(m => m.Module?.Pricing?.Price ?? 0) * plan.Tenants.Count / plan.Tenants.Count,
-                ChurnRate = 0.05m,
-                LastUpdated = DateTime.UtcNow
+                var tenantCount = plan.Tenants.Count;
+                var totalModulePrice = plan.PlanModules.Sum(m => m.Module?.Pricing?.Price ?? 0);
+                var totalRevenue = totalModulePrice * tenantCount;
+                var averageTenantValue = tenantCount > 0 ? totalRevenue / tenantCount : 0;
+
+                return new PlanUsageDto
+                {
+                    PlanId = plan.Id,
+                    PlanName = plan.Name,
+                    TenantCount = tenantCount,
+                    TotalRevenue = totalRevenue,
+                    AverageTenantValue = averageTenantValue,
+                    ChurnRate = 0.05m,
+                    LastUpdated = DateTime.UtcNow
+                };
             }).ToArray();
 
             return Result<PlanUsageDto[]>.Success(planUsage, 200);

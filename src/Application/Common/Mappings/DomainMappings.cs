@@ -127,7 +127,9 @@ public class LicenseMappingProfile : Profile
                 DeserializeStringArray(src.IpRestrictions)))
             .ForMember(dest => dest.Metadata, opt => opt.MapFrom(src =>
                 DeserializeMetadata(src.Metadata)))
-            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Plan.Limits));
+            .ForMember(dest => dest.PlanFeatures, opt => opt.MapFrom(src => src.Plan.PlanModules.Select(pm => pm.Module.Features)))
+            .ForMember(dest => dest.PlanModules, opt => opt.MapFrom(src => src.Plan.PlanModules.Select(pm => pm.Module.Pricing)))
+            .ForMember(dest => dest.PlanLimits, opt => opt.MapFrom(src => src.Plan.Limits));
 
         CreateMap<CreateLicenseRequest, License>()
             .ForMember(dest => dest.DomainRestrictions, opt => opt.MapFrom(src =>

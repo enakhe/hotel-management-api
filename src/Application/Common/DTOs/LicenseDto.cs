@@ -5,6 +5,7 @@ namespace HotelManagement.Application.Common.DTOs;
 // Request DTOs
 public record CreateLicenseRequest
 {
+    public Guid TenantId { get; init; }
     public Guid PlanId { get; init; }
     public LicenseType Type { get; init; }
     public DateTime ExpirationDate { get; init; }
@@ -12,32 +13,8 @@ public record CreateLicenseRequest
     public string? HardwareId { get; init; }
     public string[]? DomainRestrictions { get; init; }
     public string[]? IpRestrictions { get; init; }
-    public CreateLicenseFeatureRequest[]? Features { get; init; }
-    public CreateLicenseLimitsRequest? Limits { get; init; }
     public Dictionary<string, object>? Metadata { get; init; }
     public string? CustomLicenseKey { get; init; }
-}
-
-public record CreateLicenseFeatureRequest
-{
-    public string Name { get; init; } = string.Empty;
-    public string Description { get; init; } = string.Empty;
-    public bool Enabled { get; init; }
-    public int? Limit { get; init; }
-    public string? Unit { get; init; }
-    public Dictionary<string, object>? Configuration { get; init; }
-}
-
-public record CreateLicenseLimitsRequest
-{
-    public int MaxUsers { get; init; }
-    public int MaxBranches { get; init; }
-    public int MaxRooms { get; init; }
-    public int MaxReservations { get; init; }
-    public int MaxStorageGB { get; init; }
-    public int ApiRateLimit { get; init; }
-    public int ConcurrentSessions { get; init; }
-    public Dictionary<string, int>? CustomLimits { get; init; }
 }
 
 public record UpdateLicenseRequest
@@ -48,31 +25,7 @@ public record UpdateLicenseRequest
     public string? HardwareId { get; init; }
     public string[]? DomainRestrictions { get; init; }
     public string[]? IpRestrictions { get; init; }
-    public UpdateLicenseFeatureRequest[]? Features { get; init; }
-    public UpdateLicenseLimitsRequest? Limits { get; init; }
     public Dictionary<string, object>? Metadata { get; init; }
-}
-
-public record UpdateLicenseFeatureRequest
-{
-    public string? Name { get; init; }
-    public string? Description { get; init; }
-    public bool? Enabled { get; init; }
-    public int? Limit { get; init; }
-    public string? Unit { get; init; }
-    public Dictionary<string, object>? Configuration { get; init; }
-}
-
-public record UpdateLicenseLimitsRequest
-{
-    public int? MaxUsers { get; init; }
-    public int? MaxBranches { get; init; }
-    public int? MaxRooms { get; init; }
-    public int? MaxReservations { get; init; }
-    public int? MaxStorageGB { get; init; }
-    public int? ApiRateLimit { get; init; }
-    public int? ConcurrentSessions { get; init; }
-    public Dictionary<string, int>? CustomLimits { get; init; }
 }
 
 public record LicenseListRequest
@@ -109,48 +62,14 @@ public record LicenseResponseDto
     public string? HardwareId { get; init; }
     public string[]? DomainRestrictions { get; init; }
     public string[]? IpRestrictions { get; init; }
-    public LicenseFeatureResponseDto[] Features { get; init; } = Array.Empty<LicenseFeatureResponseDto>();
-    public LicenseLimitsResponseDto? Limits { get; init; }
+    public ModuleFeatureResponseDto[] PlanFeatures { get; init; } = Array.Empty<ModuleFeatureResponseDto>();
+    public ModulePricingResponseDto[] PlanModules { get; init; } = Array.Empty<ModulePricingResponseDto>();
+    public LimitsResponseDto? PlanLimits { get; init; }
     public Dictionary<string, object>? Metadata { get; init; }
     public DateTime Created { get; init; }
     public string CreatedBy { get; init; } = string.Empty;
     public DateTime LastModified { get; init; }
     public string? LastModifiedBy { get; init; }
-}
-
-public record LicenseFeatureResponseDto
-{
-    public Guid Id { get; init; }
-    public string Name { get; init; } = string.Empty;
-    public string Description { get; init; } = string.Empty;
-    public bool Enabled { get; init; }
-    public int? Limit { get; init; }
-    public string? Unit { get; init; }
-    public Dictionary<string, object>? Configuration { get; init; }
-}
-
-public record LicenseLimitsResponseDto
-{
-    public Guid Id { get; init; }
-    public int MaxUsers { get; init; }
-    public int MaxBranches { get; init; }
-    public int MaxRooms { get; init; }
-    public int MaxReservations { get; init; }
-    public int MaxStorageGB { get; init; }
-    public int ApiRateLimit { get; init; }
-    public int ConcurrentSessions { get; init; }
-    public Dictionary<string, int>? CustomLimits { get; init; }
-}
-
-// Validation DTOs
-public record LicenseValidationRequest
-{
-    public string LicenseKey { get; init; } = string.Empty;
-    public string? HardwareId { get; init; }
-    public string? Domain { get; init; }
-    public string? IpAddress { get; init; }
-    public string? ClientVersion { get; init; }
-    public Guid? TenantId { get; init; }
 }
 
 public record LicenseValidationResponse
@@ -159,8 +78,8 @@ public record LicenseValidationResponse
     public LicenseStatusType Status { get; init; }
     public DateTime ExpirationDate { get; init; }
     public int DaysUntilExpiration { get; init; }
-    public LicenseFeatureResponseDto[] Features { get; init; } = Array.Empty<LicenseFeatureResponseDto>();
-    public LicenseLimitsResponseDto? Limits { get; init; }
+    public ModuleFeatureResponseDto[] PlanFeatures { get; init; } = Array.Empty<ModuleFeatureResponseDto>();
+    public LimitsResponseDto? PlanLimits { get; init; }
     public LicenseRestrictionsResponse Restrictions { get; init; } = new();
     public Dictionary<string, object>? Metadata { get; init; }
     public string ValidationId { get; init; } = string.Empty;
@@ -174,14 +93,23 @@ public record LicenseRestrictionsResponse
     public string[]? IpRestrictions { get; init; }
 }
 
+// Validation DTOs
+public record LicenseValidationRequest
+{
+    public string LicenseKey { get; init; } = string.Empty;
+    public string? HardwareId { get; init; }
+    public string? Domain { get; init; }
+    public string? IpAddress { get; init; }
+    public string? ClientVersion { get; init; }
+    public Guid? TenantId { get; init; }
+}
+
 // Management DTOs
 public record LicenseRenewalRequest
 {
     public Guid LicenseId { get; init; }
     public DateTime NewExpirationDate { get; init; }
     public string Reason { get; init; } = string.Empty;
-    public CreateLicenseFeatureRequest[]? ExtendFeatures { get; init; }
-    public CreateLicenseLimitsRequest? ExtendLimits { get; init; }
 }
 
 public record LicenseTransferRequest
@@ -252,7 +180,7 @@ public record LicenseUsageDto
     public int? MaxValidations { get; init; }
     public DateTime? LastValidated { get; init; }
     public LicenseCurrentUsageDto CurrentUsage { get; init; } = new();
-    public LicenseLimitsResponseDto? Limits { get; init; }
+    public LimitsResponseDto? Limits { get; init; }
     public LicenseUtilizationDto UtilizationPercentage { get; init; } = new();
 }
 

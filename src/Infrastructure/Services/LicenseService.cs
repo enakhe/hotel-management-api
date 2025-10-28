@@ -31,6 +31,10 @@ public class LicenseService : ILicenseService
             var plan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .FirstOrDefaultAsync(p => p.Id == request.PlanId);
 
@@ -51,6 +55,7 @@ public class LicenseService : ILicenseService
             var license = new Domain.Entities.License
             {
                 Id = Guid.NewGuid(),
+                TenantId = request.TenantId,
                 PlanId = request.PlanId,
                 LicenseKey = licenseKey,
                 Type = request.Type,
@@ -68,12 +73,87 @@ public class LicenseService : ILicenseService
             _context.Licenses.Add(license);
             await _context.SaveChangesAsync();
 
+            // Get tenant name for response
+            var tenant = await _context.Tenants.FirstOrDefaultAsync(t => t.Id == request.TenantId);
+
+            // Collect all plan features from modules
+            var planFeatures = new List<ModuleFeatureResponseDto>();
+            var planModules = new List<ModulePricingResponseDto>();
+
+            foreach (var planModule in plan.PlanModules)
+            {
+                if (planModule.Module != null)
+                {
+                    // Add module features
+                    foreach (var feature in planModule.Module.Features)
+                    {
+                        var featureDto = new ModuleFeatureResponseDto
+                        {
+                            Id = feature.Id,
+                            Name = feature.Name,
+                            Description = feature.Description,
+                            IsEnabled = feature.IsEnabled,
+                            Configuration = !string.IsNullOrEmpty(feature.Configuration)
+                                ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(feature.Configuration)
+                                : null
+                        };
+                        planFeatures.Add(featureDto);
+                    }
+
+                    // Add module pricing
+                    if (planModule.Module.Pricing != null)
+                    {
+                        var pricingDto = new ModulePricingResponseDto
+                        {
+                            Id = planModule.Module.Pricing.Id,
+                            Type = planModule.Module.Pricing.Type,
+                            Price = planModule.Module.Pricing.Price,
+                            Currency = planModule.Module.Pricing.Currency,
+                            BillingCycle = planModule.Module.Pricing.BillingCycle,
+                            MinQuantity = planModule.Module.Pricing.MinQuantity,
+                            MaxQuantity = planModule.Module.Pricing.MaxQuantity
+                        };
+                        planModules.Add(pricingDto);
+                    }
+                }
+            }
+
+            // Map plan limits
+            var planLimits = plan.Limits != null ? new LimitsResponseDto
+            {
+                Id = plan.Limits.Id,
+                Name = plan.Limits.Name,
+                Description = plan.Limits.Description,
+                MaxUsers = plan.Limits.MaxUsers,
+                MaxBranches = plan.Limits.MaxBranches,
+                MaxRooms = plan.Limits.MaxRooms,
+                MaxReservations = plan.Limits.MaxReservations,
+                MaxStorageGB = plan.Limits.MaxStorageGB,
+                ApiRateLimit = plan.Limits.ApiRateLimit,
+                ConcurrentSessions = plan.Limits.ConcurrentSessions,
+                MaxGuests = plan.Limits.MaxGuests,
+                MaxBookings = plan.Limits.MaxBookings,
+                MaxReports = plan.Limits.MaxReports,
+                MaxIntegrations = plan.Limits.MaxIntegrations,
+                CustomLimits = !string.IsNullOrEmpty(plan.Limits.CustomLimits)
+                    ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(plan.Limits.CustomLimits)
+                    : null,
+                IsDefault = plan.Limits.IsDefault,
+                IsActive = plan.Limits.IsActive,
+                CreatedAt = DateTime.UtcNow, // Use current time as fallback
+                UpdatedAt = DateTime.UtcNow, // Use current time as fallback
+                CreatedBy = plan.Limits.CreatedBy,
+                LastModifiedBy = plan.Limits.LastModifiedBy
+            } : null;
+
             // Map to response DTO
             var response = new LicenseResponseDto
             {
                 Id = license.Id,
                 LicenseKey = license.LicenseKey,
+                TenantId = license.TenantId,
                 PlanId = license.PlanId,
+                TenantName = tenant?.Name,
                 PlanName = plan.Name,
                 Type = license.Type,
                 Status = license.Status,
@@ -83,9 +163,14 @@ public class LicenseService : ILicenseService
                 HardwareId = license.HardwareId,
                 DomainRestrictions = request.DomainRestrictions,
                 IpRestrictions = request.IpRestrictions,
+                PlanFeatures = planFeatures.ToArray(),
+                PlanModules = planModules.ToArray(),
+                PlanLimits = planLimits,
                 Metadata = request.Metadata,
-                IssuedDate = license.IssuedDate,
-                CreatedBy = license.CreatedBy
+                Created = license.IssuedDate,
+                CreatedBy = license.CreatedBy,
+                LastModified = license.IssuedDate,
+                LastModifiedBy = license.CreatedBy
             };
 
             return Result<LicenseResponseDto>.Success(response, 201);
@@ -701,14 +786,45 @@ public class LicenseService : ILicenseService
             // Get enabled features
             var enabledFeatures = license.Plan!.PlanModules
                 .SelectMany(pm => pm.Module.Features.Where(f => f.IsEnabled))
-                .Select(f => new LicenseFeatureResponseDto
+                .Select(f => new ModuleFeatureResponseDto
                 {
                     Id = f.Id,
                     Name = f.Name,
                     Description = f.Description ?? string.Empty,
-                    Enabled = f.IsEnabled
+                    IsEnabled = f.IsEnabled,
+                    Configuration = !string.IsNullOrEmpty(f.Configuration)
+                        ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, object>>(f.Configuration)
+                        : null
                 })
                 .ToArray();
+
+            // Map plan limits
+            var planLimits = license.Plan.Limits != null ? new LimitsResponseDto
+            {
+                Id = license.Plan.Limits.Id,
+                Name = license.Plan.Limits.Name,
+                Description = license.Plan.Limits.Description,
+                MaxUsers = license.Plan.Limits.MaxUsers,
+                MaxBranches = license.Plan.Limits.MaxBranches,
+                MaxRooms = license.Plan.Limits.MaxRooms,
+                MaxReservations = license.Plan.Limits.MaxReservations,
+                MaxStorageGB = license.Plan.Limits.MaxStorageGB,
+                ApiRateLimit = license.Plan.Limits.ApiRateLimit,
+                ConcurrentSessions = license.Plan.Limits.ConcurrentSessions,
+                MaxGuests = license.Plan.Limits.MaxGuests,
+                MaxBookings = license.Plan.Limits.MaxBookings,
+                MaxReports = license.Plan.Limits.MaxReports,
+                MaxIntegrations = license.Plan.Limits.MaxIntegrations,
+                CustomLimits = license.Plan.Limits.CustomLimits != null
+                    ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(license.Plan.Limits.CustomLimits)
+                    : null,
+                IsDefault = license.Plan.Limits.IsDefault,
+                IsActive = license.Plan.Limits.IsActive,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                CreatedBy = license.Plan.Limits.CreatedBy,
+                LastModifiedBy = license.Plan.Limits.LastModifiedBy
+            } : null;
 
             var response = new LicenseValidationResponse
             {
@@ -716,19 +832,8 @@ public class LicenseService : ILicenseService
                 Status = license.Status,
                 ExpirationDate = license.ExpirationDate,
                 DaysUntilExpiration = (int)(license.ExpirationDate - DateTime.UtcNow).TotalDays,
-                Features = enabledFeatures,
-                Limits = license.Plan.Limits != null ? new LicenseLimitsResponseDto
-                {
-                    Id = license.Plan.Limits.Id,
-                    MaxUsers = license.Plan.Limits.MaxUsers,
-                    MaxBranches = license.Plan.Limits.MaxBranches,
-                    MaxRooms = license.Plan.Limits.MaxRooms,
-                    MaxReservations = license.Plan.Limits.MaxReservations,
-                    MaxStorageGB = license.Plan.Limits.MaxStorageGB,
-                    ApiRateLimit = license.Plan.Limits.ApiRateLimit,
-                    ConcurrentSessions = license.Plan.Limits.ConcurrentSessions,
-                    CustomLimits = license.Plan.Limits.CustomLimits != null ? System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, int>>(license.Plan.Limits.CustomLimits) : null
-                } : null,
+                PlanFeatures = enabledFeatures,
+                PlanLimits = planLimits,
                 Restrictions = new LicenseRestrictionsResponse
                 {
                     HardwareId = license.HardwareId,
