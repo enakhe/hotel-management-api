@@ -1,6 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
+using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Web.Middlewares;
 

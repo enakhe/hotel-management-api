@@ -1,15 +1,9 @@
-using System.ComponentModel.DataAnnotations;
-using Azure.Core;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Models;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Core.Tenant.Commands;
 using HotelManagement.Application.Core.Tenant.Queries;
-using HotelManagement.Application.Tenant.Queries.GetTenants;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace HotelManagement.Web.Controllers.SuperAdmin;
 

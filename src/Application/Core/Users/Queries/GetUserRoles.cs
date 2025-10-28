@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Application.Core.Users.Queries;
 

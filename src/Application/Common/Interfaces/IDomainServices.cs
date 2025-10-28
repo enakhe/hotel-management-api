@@ -1,10 +1,9 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Common.Services.LicenseKey;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.Interfaces.Services;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Plan management service interface
@@ -89,7 +88,7 @@ public interface ILicenseService
 /// </summary>
 public interface ILicenseKeyService
 {
-    Task<Result<string>> GenerateLicenseKeyAsync(HotelManagement.Application.Common.Services.LicenseKey.LicenseKeyGenerationOptions options);
+    Task<Result<string>> GenerateLicenseKeyAsync(Services.LicenseKey.LicenseKeyGenerationOptions options);
     Task<Result<LicenseKeyValidationResult>> ValidateLicenseKeyFormatAsync(string key, LicenseKeyFormat format, bool includeChecksum = true);
     Task<Result<bool>> IsLicenseKeyUniqueAsync(string key);
     Task<Result<string>> MaskLicenseKeyForDisplayAsync(string key);

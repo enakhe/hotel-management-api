@@ -1,6 +1,6 @@
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Plan response DTO for API responses

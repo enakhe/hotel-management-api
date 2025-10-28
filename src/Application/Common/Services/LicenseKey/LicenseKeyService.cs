@@ -1,4 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Enums;
 

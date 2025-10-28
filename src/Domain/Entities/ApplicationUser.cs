@@ -1,8 +1,7 @@
-﻿using HotelManagement.Domain.Entities.Configuration;
-using Microsoft.AspNetCore.Identity;
-using HotelManagement.Domain.Common;
+﻿using Microsoft.AspNetCore.Identity;
 
-namespace HotelManagement.Domain.Entities.Data;
+namespace HotelManagement.Domain.Entities;
+
 public class ApplicationUser : IdentityUser<Guid>
 {
     public Guid? TenantId { get; set; }

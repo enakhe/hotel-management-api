@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Domain.Entities.SuperAdmin;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents a module in the hotel management system

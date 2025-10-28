@@ -4,6 +4,7 @@ using HotelManagement.Application.Common.Exceptions;
 using NUnit.Framework;
 
 namespace HotelManagement.Application.UnitTests.Common.Exceptions;
+
 public class ValidationExceptionTests
 {
     [Test]

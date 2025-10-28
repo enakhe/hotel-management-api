@@ -1,9 +1,6 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using FluentValidation;
-using MediatR;
-using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.PlanManagement.Commands;
 
@@ -51,7 +48,7 @@ public class BulkUpdatePlansCommandHandler(IPlanService service) : IRequestHandl
 
     public async Task<Result<bool>> Handle(BulkUpdatePlansCommand request, CancellationToken cancellationToken)
     {
-        var updates = request.Updates.Select(u => new HotelManagement.Application.Common.Interfaces.SuperAdmin.BulkPlanUpdateRequest { Id = u.Id, Data = u.Data }).ToArray();
+        var updates = request.Updates.Select(u => new HotelManagement.Application.Common.Interfaces.BulkPlanUpdateRequest { Id = u.Id, Data = u.Data }).ToArray();
         return await _service.BulkUpdatePlansAsync(updates);
     }
 }

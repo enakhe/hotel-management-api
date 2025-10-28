@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
+﻿using AutoMapper;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +27,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             if (existingPlan != null)
                 return Result<PlanResponseDto>.Failure($"Plan with name '{request.Name}' already exists", 400);
 
-            var plan = _mapper.Map<Domain.Entities.SuperAdmin.Plan>(request);
+            var plan = _mapper.Map<Plan>(request);
             plan.Id = Guid.NewGuid();
             plan.CreatedAt = DateTime.UtcNow;
             plan.UpdatedAt = DateTime.UtcNow;
@@ -42,7 +36,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             _context.Plans.Add(plan);
 
             // Create plan limits
-            var limits = _mapper.Map<Domain.Entities.Configuration.Limits>(request.Limits);
+            var limits = _mapper.Map<Limits>(request.Limits);
             limits.Id = Guid.NewGuid();
             limits.CreatedBy = "SuperAdmin";
             _context.Limits.Add(limits);
@@ -60,7 +54,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                     return Result<PlanResponseDto>.Failure($"Module with ID '{moduleId}' not found", 400);
                 }
 
-                var planModule = new Domain.Entities.SuperAdmin.PlanModule
+                var planModule = new Domain.Entities.PlanModule
                 {
                     Id = Guid.NewGuid(),
                     PlanId = plan.Id,
@@ -268,7 +262,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                         return Result<PlanResponseDto>.Failure($"Module with ID '{module.Id}' not found", 400);
                     }
 
-                    var planModule = new Domain.Entities.SuperAdmin.PlanModule
+                    var planModule = new Domain.Entities.PlanModule
                     {
                         Id = Guid.NewGuid(),
                         PlanId = plan.Id,
@@ -294,7 +288,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 else
                 {
                     // Create new limits
-                    var limits = _mapper.Map<Domain.Entities.Configuration.Limits>(request.Limits);
+                    var limits = _mapper.Map<Limits>(request.Limits);
                     limits.Id = Guid.NewGuid();
                     limits.CreatedBy = "SuperAdmin";
                     _context.Limits.Add(limits);
@@ -559,7 +553,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                                 continue;
                             }
 
-                            var planModule = new Domain.Entities.SuperAdmin.PlanModule
+                            var planModule = new Domain.Entities.PlanModule
                             {
                                 Id = Guid.NewGuid(),
                                 PlanId = plan.Id,
@@ -586,7 +580,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                         else
                         {
                             // Create new limits
-                            var limits = _mapper.Map<Domain.Entities.Configuration.Limits>(update.Data.Limits);
+                            var limits = _mapper.Map<Limits>(update.Data.Limits);
                             limits.Id = Guid.NewGuid();
                             limits.CreatedBy = "SuperAdmin";
                             _context.Limits.Add(limits);
@@ -647,7 +641,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 return Result<bool>.Failure("Module is already assigned to this plan", 400);
 
             // Create new PlanModule relationship
-            var planModule = new Domain.Entities.SuperAdmin.PlanModule
+            var planModule = new Domain.Entities.PlanModule
             {
                 Id = Guid.NewGuid(),
                 PlanId = planId,

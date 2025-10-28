@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 
 namespace HotelManagement.Web.Infrastructure;
+
 public static class MethodInfoExtensions
 {
     public static bool IsAnonymous(this MethodInfo method)

@@ -1,12 +1,9 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Core.Role.Commands;
 using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Administrator;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.Data;
 
 namespace HotelManagement.Application.Common.Mappings;
+
 public class AdministratorMappingProfile : Profile
 {
     public AdministratorMappingProfile()

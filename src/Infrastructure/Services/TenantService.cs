@@ -1,12 +1,9 @@
 using System.Text.Json;
 using AutoMapper;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.DTOs.Tenant;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Constants;
-using HotelManagement.Domain.Entities.Configuration;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Enums;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;

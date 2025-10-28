@@ -1,4 +1,3 @@
-using HotelManagement.Domain.Common;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace HotelManagement.Domain.Common;

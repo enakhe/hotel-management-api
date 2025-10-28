@@ -1,4 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

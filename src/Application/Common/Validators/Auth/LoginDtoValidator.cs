@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Core.Auth.Commands;
 
 namespace HotelManagement.Application.Common.Validators.Auth;
+
 public class LoginDtoValidator : AbstractValidator<LoginCommand>
 {
     public LoginDtoValidator()

@@ -1,4 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Domain.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;

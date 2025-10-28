@@ -1,10 +1,10 @@
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelManagement.Infrastructure.Identity;
+
 public class IdentityService
 {
     private readonly UserManager<ApplicationUser> _userManager;

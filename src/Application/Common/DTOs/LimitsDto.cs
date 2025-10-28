@@ -1,7 +1,4 @@
-using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Enums;
-
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Limits response DTO

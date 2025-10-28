@@ -1,6 +1,6 @@
 ﻿using HotelManagement.Application.Common.DTOs.Role;
-using HotelManagement.Domain.Entities.Data;
-using HotelManagement.Infrastructure.Services.Administrator;
+using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -8,6 +8,7 @@ using Moq;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Role;
+
 public class CreateRoleTests
 {
     private readonly Mock<RoleManager<ApplicationRole>> _roleManagerMock;

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Application.Common.DTOs.Auth;
+namespace HotelManagement.Application.Common.DTOs;
+
 public class ResetPasswordConfirmDto
 {
     [Required]

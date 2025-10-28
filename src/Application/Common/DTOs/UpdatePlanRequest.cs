@@ -1,7 +1,6 @@
-using HotelManagement.Domain.Entities.SuperAdmin;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Request DTO for updating a plan

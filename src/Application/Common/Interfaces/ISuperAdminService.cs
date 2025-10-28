@@ -1,10 +1,7 @@
-using HotelManagement.Application.Common.DTOs.Generic;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Models;
 
-namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Refactored SuperAdmin service interface
@@ -34,7 +31,7 @@ public interface ISuperAdminService
     Task<Result<BulkOperationResponse>> BulkUpdateTenantsAsync(BulkTenantUpdateRequest[] updates);
     Task<Result<BulkOperationResponse>> BulkUpdatePlansAsync(BulkPlanUpdateRequest[] updates);
     Task<Result<BulkOperationResponse>> BulkUpdateModulesAsync(BulkModuleUpdateRequest[] updates);
-    Task<Result<BulkOperationResponse>> BulkUpdateLicensesAsync(Application.Common.DTOs.SuperAdmin.BulkLicenseUpdateRequest[] updates);
+    Task<Result<BulkOperationResponse>> BulkUpdateLicensesAsync(BulkLicenseUpdateRequest[] updates);
 }
 
 /// <summary>

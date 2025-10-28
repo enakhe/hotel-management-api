@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Respawn;
 
 namespace HotelManagement.Application.FunctionalTests;
+
 public class SqlTestDatabase : ITestDatabase
 {
     private readonly string _connectionString = null!;

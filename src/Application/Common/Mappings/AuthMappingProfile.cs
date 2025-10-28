@@ -1,8 +1,9 @@
-﻿using HotelManagement.Application.Common.DTOs.Auth;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Core.Auth.Commands;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 
 namespace HotelManagement.Application.Common.Mappings;
+
 public class AuthMappingProfile : Profile
 {
     public AuthMappingProfile()

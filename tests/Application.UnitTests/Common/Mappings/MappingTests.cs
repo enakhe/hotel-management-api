@@ -5,6 +5,7 @@ using HotelManagement.Application.Common.Interfaces;
 using NUnit.Framework;
 
 namespace HotelManagement.Application.UnitTests.Common.Mappings;
+
 public class MappingTests
 {
     private readonly IConfigurationProvider _configuration;

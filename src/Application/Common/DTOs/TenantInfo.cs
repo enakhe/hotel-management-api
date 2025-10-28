@@ -1,4 +1,4 @@
-namespace HotelManagement.Application.Common.DTOs.Tenant;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Basic tenant information

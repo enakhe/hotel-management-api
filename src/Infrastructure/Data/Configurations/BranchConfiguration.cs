@@ -1,8 +1,9 @@
-﻿using HotelManagement.Domain.Entities.Configuration;
+﻿using HotelManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HotelManagement.Infrastructure.Data.Configurations;
+
 internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
 {
     public void Configure(EntityTypeBuilder<Branch> builder)

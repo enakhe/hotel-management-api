@@ -1,6 +1,4 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;

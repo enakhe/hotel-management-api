@@ -1,6 +1,7 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs;
 
-namespace HotelManagement.Application.Common.Interfaces.Administrator;
+namespace HotelManagement.Application.Common.Interfaces;
+
 public interface IUserService
 {
     Task<Guid> CreateUserAsync(CreateUserDto dto);

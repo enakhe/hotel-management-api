@@ -1,6 +1,5 @@
-﻿using HotelManagement.Domain.Entities.Data;
+﻿namespace HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Domain.Entities.Administrator;
 public class RolePermission
 {
     public Guid ApplicationRoleId { get; set; }

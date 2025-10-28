@@ -1,7 +1,6 @@
-using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Common;
 
-namespace HotelManagement.Application.Common.DTOs.Generic;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Generic create request DTO

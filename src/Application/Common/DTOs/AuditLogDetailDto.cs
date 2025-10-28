@@ -1,4 +1,5 @@
-﻿namespace HotelManagement.Application.Common.DTOs.Administrator;
+﻿namespace HotelManagement.Application.Common.DTOs;
+
 public class AuditLogDetailDto
 {
     public string? PropertyName { get; set; }

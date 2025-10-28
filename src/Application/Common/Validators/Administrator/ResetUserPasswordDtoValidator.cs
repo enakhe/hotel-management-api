@@ -1,6 +1,7 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs;
 
 namespace HotelManagement.Application.Common.Validators.Administrator;
+
 public class ResetUserPasswordDtoValidator : AbstractValidator<ResetPasswordDto>
 {
     public ResetUserPasswordDtoValidator()

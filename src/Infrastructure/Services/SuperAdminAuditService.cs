@@ -1,6 +1,5 @@
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.SuperAdmin;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -33,7 +32,7 @@ public class SuperAdminAuditService : ISuperAdminAuditService
     {
         try
         {
-            var auditLog = new SuperAdminAuditLogEntity
+            var auditLog = new Domain.Entities.SuperAdminAuditLogEntity
             {
                 Id = Guid.NewGuid(),
                 SuperAdminId = Guid.NewGuid(), // This should come from context

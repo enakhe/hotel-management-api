@@ -1,5 +1,5 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Enums;
 using HotelManagement.Infrastructure.Data;
@@ -48,7 +48,7 @@ public class LicenseService : ILicenseService
                 return Result<LicenseResponseDto>.Failure("License key already exists", 400);
 
             // Create license entity
-            var license = new Domain.Entities.SuperAdmin.License
+            var license = new Domain.Entities.License
             {
                 Id = Guid.NewGuid(),
                 PlanId = request.PlanId,

@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using HotelManagement.Domain.Enums;
-using HotelManagement.Domain.Entities.Configuration;
 
-namespace HotelManagement.Domain.Entities.SuperAdmin;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents a subscription plan for the hotel management system

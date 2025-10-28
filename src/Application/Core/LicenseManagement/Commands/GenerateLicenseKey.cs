@@ -1,10 +1,6 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Enums;
-using FluentValidation;
-using MediatR;
 using HotelManagement.Application.Common.Services.LicenseKey;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Application.Core.LicenseManagement.Commands;
 

@@ -1,4 +1,5 @@
-﻿namespace HotelManagement.Application.Common.DTOs.Administrator;
+﻿namespace HotelManagement.Application.Common.DTOs;
+
 public class BranchDto
 {
     public Guid Id { get; set; }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Request to export tenant data

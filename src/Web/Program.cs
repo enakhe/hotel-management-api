@@ -6,7 +6,6 @@ using HotelManagement.Infrastructure.Data;
 using HotelManagement.ServiceDefaults;
 using HotelManagement.Web;
 using HotelManagement.Web.Middlewares;
-using HotelManagement.Web.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -78,7 +77,7 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    //await app.InitialiseDatabaseAsync();
+    await app.InitialiseDatabaseAsync();
 }
 else
 {

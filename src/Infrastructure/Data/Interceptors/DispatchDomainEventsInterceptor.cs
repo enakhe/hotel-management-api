@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace HotelManagement.Infrastructure.Data.Interceptors;
+
 public class DispatchDomainEventsInterceptor : SaveChangesInterceptor
 {
     private readonly IMediator _mediator;

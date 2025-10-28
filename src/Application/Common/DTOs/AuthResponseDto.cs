@@ -1,4 +1,5 @@
-﻿namespace HotelManagement.Application.Common.DTOs.Auth;
+﻿namespace HotelManagement.Application.Common.DTOs;
+
 public class AuthResponseDto
 {
     public string? AccessToken { get; set; }

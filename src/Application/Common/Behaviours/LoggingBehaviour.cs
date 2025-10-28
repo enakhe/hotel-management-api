@@ -1,9 +1,9 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Auth;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Application.Common.Behaviours;
+
 public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
     private readonly ILogger _logger;

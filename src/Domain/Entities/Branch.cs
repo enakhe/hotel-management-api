@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Domain.Entities.Data;
-using HotelManagement.Domain.Common;
 
-namespace HotelManagement.Domain.Entities.Configuration;
+namespace HotelManagement.Domain.Entities;
+
 public class Branch : ITenantEntity
 {
     public Guid Id { get; set; }

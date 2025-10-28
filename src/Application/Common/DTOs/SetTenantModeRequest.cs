@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Request to set tenant mode

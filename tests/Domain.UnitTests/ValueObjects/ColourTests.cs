@@ -4,6 +4,7 @@ using HotelManagement.Domain.ValueObjects;
 using NUnit.Framework;
 
 namespace HotelManagement.Domain.UnitTests.ValueObjects;
+
 public class ColourTests
 {
     [Test]

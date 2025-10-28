@@ -1,12 +1,12 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Behaviours;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Mappings;
 using HotelManagement.Application.Common.Services;
 using Microsoft.Extensions.DependencyInjection;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Application;
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)

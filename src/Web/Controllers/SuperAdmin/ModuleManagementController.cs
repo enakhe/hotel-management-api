@@ -1,7 +1,6 @@
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
 using HotelManagement.Application.Core.ModuleManagement.Queries;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

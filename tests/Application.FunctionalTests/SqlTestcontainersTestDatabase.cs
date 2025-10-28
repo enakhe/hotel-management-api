@@ -7,6 +7,7 @@ using Respawn;
 using Testcontainers.MsSql;
 
 namespace HotelManagement.Application.FunctionalTests;
+
 public class SqlTestcontainersTestDatabase : ITestDatabase
 {
     private const string DefaultDatabase = "HotelManagementTestDb";

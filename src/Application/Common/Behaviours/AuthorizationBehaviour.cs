@@ -1,10 +1,10 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Auth;
 using HotelManagement.Application.Common.Security;
 
 namespace HotelManagement.Application.Common.Behaviours;
+
 public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly IUser _user;

@@ -1,4 +1,4 @@
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Request DTO for listing plans with filtering and pagination

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 
 namespace HotelManagement.Infrastructure.Identity;
+
 public static class IdentityResultExtensions
 {
     public static Result<object?> ToApplicationResult(this IdentityResult result)

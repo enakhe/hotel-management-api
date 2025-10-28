@@ -1,9 +1,10 @@
-﻿using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Domain.Entities.Data;
+﻿using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Repository;
+
 public class UserRepository(ApplicationDbContext context) : IUserRepository
 {
     private readonly ApplicationDbContext _context = context;

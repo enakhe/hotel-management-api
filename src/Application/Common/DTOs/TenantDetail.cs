@@ -1,7 +1,6 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Domain.Entities.SuperAdmin;
+using HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Detailed tenant information
@@ -23,7 +22,7 @@ public record TenantDetail
     public string? Industry { get; init; }
     public bool IsActive { get; init; }
     public Plan? Plan { get; init; }
-    public Domain.Entities.SuperAdmin.License? License { get; init; }
+    public License? License { get; init; }
     public DateTime CreatedAt { get; init; }
     public DateTime? LastActivity { get; init; }
     public TenantUsage? Usage { get; init; }

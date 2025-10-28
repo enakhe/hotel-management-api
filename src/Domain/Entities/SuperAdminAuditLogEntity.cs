@@ -1,4 +1,4 @@
-namespace HotelManagement.Domain.Entities.SuperAdmin;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// SuperAdmin audit log entity for database storage

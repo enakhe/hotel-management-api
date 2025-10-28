@@ -1,4 +1,4 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Security;
 using HotelManagement.Application.Core.Users.Commands;
 using HotelManagement.Application.Core.Users.Queries;

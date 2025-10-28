@@ -1,6 +1,5 @@
-using HotelManagement.Application.Common.DTOs.License;
-using HotelManagement.Application.Common.Interfaces.License;
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

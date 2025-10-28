@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
-using HotelManagement.Application.Common.DTOs.Administrator;
+using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace HotelManagement.Infrastructure.Services.Administrator;
+namespace HotelManagement.Infrastructure.Services;
+
 public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;

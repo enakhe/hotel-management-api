@@ -1,9 +1,9 @@
 ﻿using System.Diagnostics;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Auth;
 using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Application.Common.Behaviours;
+
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;

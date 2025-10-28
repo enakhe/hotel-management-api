@@ -1,6 +1,4 @@
-using HotelManagement.Domain.Common;
-
-namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Provides access to the current SuperAdmin context for control plane operations

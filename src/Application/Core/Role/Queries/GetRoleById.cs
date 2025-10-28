@@ -1,7 +1,6 @@
-﻿using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Exceptions;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Administrator;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Role.Queries;
@@ -29,8 +28,8 @@ public class GetRoleByIdQueryHandler(IRoleService roleService) : IRequestHandler
     {
         var result = await _roleService.GetRoleByIdAsync(request.Id);
 
-        return !result.Succeeded 
-            ? throw new ConflictException(string.Join("; ", result.Errors)) 
+        return !result.Succeeded
+            ? throw new ConflictException(string.Join("; ", result.Errors))
             : result;
     }
 }

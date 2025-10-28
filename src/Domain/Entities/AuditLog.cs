@@ -1,6 +1,5 @@
-﻿using HotelManagement.Domain.Entities.Data;
+﻿namespace HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Domain.Entities;
 public class AuditLog
 {
     public Guid Id { get; set; }

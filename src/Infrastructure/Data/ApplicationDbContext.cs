@@ -1,18 +1,13 @@
 ﻿using System.Reflection;
 using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Domain.Entities;
-using HotelManagement.Domain.Entities.Administrator;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.Data;
-using HotelManagement.Domain.Entities.Hotel;
-using HotelManagement.Domain.Entities.SuperAdmin;
 using HotelManagement.Infrastructure.Data.Configurations;
-using HotelManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Data;
+
 public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options), IApplicationDbContext
 {
     public DbSet<Tenant> Tenants { get; set; }
@@ -29,12 +24,12 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<SuperAdminAuditLogEntity> SuperAdminAuditLogs { get; set; }
 
     // Plan Management
-    public DbSet<Domain.Entities.SuperAdmin.Plan> Plans { get; set; }
+    public DbSet<Plan> Plans { get; set; }
 
     // Module entities
-    public DbSet<Domain.Entities.SuperAdmin.Module> Modules { get; set; }
-    public DbSet<Domain.Entities.SuperAdmin.ModuleFeature> ModuleFeatures { get; set; }
-    public DbSet<Domain.Entities.SuperAdmin.ModulePricing> ModulePricing { get; set; }
+    public DbSet<Domain.Entities.Module> Modules { get; set; }
+    public DbSet<ModuleFeature> ModuleFeatures { get; set; }
+    public DbSet<ModulePricing> ModulePricing { get; set; }
 
     public DbSet<License> Licenses { get; set; }
     public DbSet<Limits> Limits { get; set; }
@@ -61,6 +56,8 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
         // Plan Management Configurations
         builder.ApplyConfiguration(new PlanConfiguration());
+        builder.ApplyConfiguration(new LicenseConfiguration());
+        builder.ApplyConfiguration(new LimitsConfiguration());
 
         ConfigureTenantQueryFilters(builder);
     }

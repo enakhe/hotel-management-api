@@ -1,6 +1,6 @@
-using HotelManagement.Application.Common.DTOs.License;
+using HotelManagement.Application.Common.DTOs;
 
-namespace HotelManagement.Application.Common.Interfaces.License;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Service for managing tenant licensing and feature entitlements

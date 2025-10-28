@@ -1,16 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json;
-using System.Threading.Tasks;
+﻿using System.Text.Json;
 using AutoMapper;
-using HotelManagement.Application.Common.DTOs.Generic;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.SuperAdmin;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -34,7 +27,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
             if (existingModule != null)
                 return Result<ModuleResponseDto>.Failure($"Module with name '{request.Name}' already exists", 400);
 
-            var module = _mapper.Map<Domain.Entities.SuperAdmin.Module>(request);
+            var module = _mapper.Map<Module>(request);
             module.Id = Guid.NewGuid();
             module.CreatedAt = DateTime.UtcNow;
             module.UpdatedAt = DateTime.UtcNow;
@@ -52,7 +45,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
             // Create module features
             foreach (var featureRequest in request.Features)
             {
-                var feature = _mapper.Map<Domain.Entities.SuperAdmin.ModuleFeature>(featureRequest);
+                var feature = _mapper.Map<ModuleFeature>(featureRequest);
                 feature.Id = Guid.NewGuid();
                 feature.ModuleId = module.Id;
                 feature.Module = module;
@@ -67,7 +60,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
             }
 
             // Create module pricing
-            var pricing = _mapper.Map<Domain.Entities.SuperAdmin.ModulePricing>(request.Pricing);
+            var pricing = _mapper.Map<ModulePricing>(request.Pricing);
             pricing.Id = Guid.NewGuid();
             pricing.ModuleId = module.Id;
             pricing.Module = module;
@@ -329,7 +322,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                 // Add new features
                 foreach (var featureRequest in request.Features)
                 {
-                    var feature = _mapper.Map<Domain.Entities.SuperAdmin.ModuleFeature>(featureRequest);
+                    var feature = _mapper.Map<ModuleFeature>(featureRequest);
                     feature.Id = Guid.NewGuid();
                     feature.ModuleId = module.Id;
                     feature.Module = module;
@@ -355,7 +348,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                 else
                 {
                     // Create new pricing
-                    var pricing = _mapper.Map<Domain.Entities.SuperAdmin.ModulePricing>(request.Pricing);
+                    var pricing = _mapper.Map<ModulePricing>(request.Pricing);
                     pricing.Id = Guid.NewGuid();
                     pricing.ModuleId = module.Id;
                     pricing.Module = module;
@@ -611,7 +604,7 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                 ModuleId = module.Id,
                 PlanId = plan.Id
             };
-            
+
             _context.PlanModules.Add(planModule);
 
             await _context.SaveChangesAsync();

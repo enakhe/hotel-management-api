@@ -1,4 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
+using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Application.Common.Services;
 

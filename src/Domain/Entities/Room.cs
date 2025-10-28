@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using HotelManagement.Domain.Common;
 
-namespace HotelManagement.Domain.Entities.Hotel;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents a room in a hotel

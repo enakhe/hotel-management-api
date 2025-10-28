@@ -1,7 +1,8 @@
-﻿using HotelManagement.Application.Common.DTOs.Auth;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Models;
 
-namespace HotelManagement.Application.Common.Interfaces.Auth;
+namespace HotelManagement.Application.Common.Interfaces;
+
 public interface IAuthService
 {
     Task<string?> GetUserNameAsync(string userId);

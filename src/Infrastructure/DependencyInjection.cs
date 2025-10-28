@@ -3,14 +3,6 @@ using System.Text;
 using FluentValidation;
 using HotelManagement.Application.Common.Behaviours;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Common.Interfaces.License;
-using HotelManagement.Application.Common.Interfaces.Services;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
-using HotelManagement.Application.Common.Mappings;
-using HotelManagement.Application.Common.Services.LicenseKey;
 using HotelManagement.Application.Common.Validators.Administrator;
 using HotelManagement.Application.Common.Validators.Auth;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
@@ -18,17 +10,15 @@ using HotelManagement.Application.Core.ModuleManagement.Queries;
 using HotelManagement.Application.Core.PlanManagement.Commands;
 using HotelManagement.Application.Core.PlanManagement.Queries;
 using HotelManagement.Application.Core.Tenant.Commands;
-using HotelManagement.Application.Tenant.Queries.GetTenants;
+using HotelManagement.Application.Core.Tenant.Queries;
 using HotelManagement.Domain.Constants;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data;
 using HotelManagement.Infrastructure.Data.Interceptors;
 using HotelManagement.Infrastructure.Data.Services;
 using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
 using HotelManagement.Infrastructure.Services;
-using HotelManagement.Infrastructure.Services.Administrator;
-using HotelManagement.Infrastructure.Services.Auth;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -41,6 +31,7 @@ using Microsoft.IdentityModel.Tokens;
 using StackExchange.Redis;
 
 namespace HotelManagement.Infrastructure;
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)

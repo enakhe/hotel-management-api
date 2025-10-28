@@ -1,7 +1,7 @@
-using HotelManagement.Domain.Enums;
 using HotelManagement.Application.Common.Services.LicenseKey;
+using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Infrastructure.Services.LicenseKey;
+namespace HotelManagement.Infrastructure.Services;
 
 /// <summary>
 /// Utility service for license key operations

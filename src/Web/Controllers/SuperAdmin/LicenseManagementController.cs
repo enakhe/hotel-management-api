@@ -1,8 +1,7 @@
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Core.LicenseManagement.Commands;
 using HotelManagement.Application.Core.LicenseManagement.Queries;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Models;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -250,7 +249,7 @@ public class LicenseManagementController(
     /// <param name="updates">Bulk update requests</param>
     /// <returns>Bulk update result</returns>
     [HttpPatch("bulk")]
-    public async Task<ActionResult> BulkUpdateLicenses([FromBody] HotelManagement.Application.Common.DTOs.SuperAdmin.BulkLicenseUpdateRequest[] updates)
+    public async Task<ActionResult> BulkUpdateLicenses([FromBody] BulkLicenseUpdateRequest[] updates)
     {
         var response = await _superAdminService.BulkUpdateLicensesAsync(updates);
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);

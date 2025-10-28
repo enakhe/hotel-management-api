@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using HotelManagement.Domain.Common;
 
-namespace HotelManagement.Domain.Entities.Configuration;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents features/modules available to a tenant

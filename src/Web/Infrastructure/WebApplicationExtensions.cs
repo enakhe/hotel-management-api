@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 
 namespace HotelManagement.Web.Infrastructure;
+
 public static class WebApplicationExtensions
 {
     public static RouteGroupBuilder MapGroup(this WebApplication app, EndpointGroupBase group)

@@ -1,4 +1,4 @@
-﻿using HotelManagement.Application.Common.DTOs.Administrator;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Core.Branches.Commands;
 using HotelManagement.Application.Core.Branches.Queries;
 using MediatR;

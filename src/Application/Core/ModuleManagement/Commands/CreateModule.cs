@@ -1,10 +1,7 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Domain.Enums;
-using FluentValidation;
-using MediatR;
-using AutoMapper;
 
 namespace HotelManagement.Application.Core.ModuleManagement.Commands;
 

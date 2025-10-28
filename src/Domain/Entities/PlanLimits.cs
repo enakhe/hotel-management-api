@@ -1,8 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
-using HotelManagement.Domain.Enums;
+﻿using System.Text.Json.Serialization;
 
-namespace HotelManagement.Domain.Entities.SuperAdmin;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents the resource limits and constraints for a subscription plan

@@ -1,8 +1,5 @@
-using HotelManagement.Application.Common.Interfaces.License;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using FluentValidation;
-using MediatR;
-using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.LicenseManagement.Commands;
 

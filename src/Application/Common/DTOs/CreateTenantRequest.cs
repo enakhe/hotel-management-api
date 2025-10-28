@@ -1,6 +1,4 @@
-using HotelManagement.Domain.Enums;
-
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Create tenant request

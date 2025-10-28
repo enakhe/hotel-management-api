@@ -1,8 +1,6 @@
-﻿using HotelManagement.Application.Common.Interfaces;
+﻿using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 
 namespace HotelManagement.Application.Core.Tenant.Queries;
 

@@ -1,7 +1,5 @@
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using FluentValidation;
-using MediatR;
 
 namespace HotelManagement.Application.Core.ModuleManagement.Commands;
 

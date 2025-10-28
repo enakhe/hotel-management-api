@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HotelManagement.Infrastructure.Data.Configurations;
+
 internal class AuditLogDetailConfiguration : IEntityTypeConfiguration<AuditLogDetail>
 {
     public void Configure(EntityTypeBuilder<AuditLogDetail> builder)

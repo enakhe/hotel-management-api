@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Domain.Entities.Data;
-using HotelManagement.Infrastructure.Services.Auth;
+using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +14,7 @@ using Shouldly;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Auth;
+
 public class LoginTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;

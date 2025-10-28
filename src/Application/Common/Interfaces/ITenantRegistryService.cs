@@ -1,8 +1,7 @@
-using HotelManagement.Application.Common.DTOs.Tenant;
-using HotelManagement.Domain.Entities.Configuration;
+using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.Interfaces.Tenant;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Service for managing the tenant registry and tenant-specific configurations

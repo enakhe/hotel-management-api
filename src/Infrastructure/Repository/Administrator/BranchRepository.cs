@@ -1,9 +1,10 @@
-﻿using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Domain.Entities.Configuration;
+﻿using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Repository.Administrator;
+
 public class BranchRepository(ApplicationDbContext context) : IBranchRepository
 {
     private readonly ApplicationDbContext _context = context;

@@ -1,7 +1,6 @@
-using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.DTOs.Tenant;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Tenant registry information

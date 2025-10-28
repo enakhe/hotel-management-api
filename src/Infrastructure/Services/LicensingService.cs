@@ -1,6 +1,5 @@
-using HotelManagement.Application.Common.DTOs.License;
-using HotelManagement.Application.Common.Interfaces.License;
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 using HotelManagement.Application.Common.Services.LicenseKey;
 using HotelManagement.Domain.Enums;
@@ -155,7 +154,7 @@ public class LicensingService : ILicensingService, ILicenseKeyService
         }
     }
 
-    public Task<Result<string>> GenerateLicenseKeyAsync(LicenseKeyGenerationOptions options)
+    public Task<Result<string>> GenerateLicenseKeyAsync(Application.Common.Services.LicenseKey.LicenseKeyGenerationOptions options)
     {
         try
         {

@@ -1,8 +1,9 @@
-﻿using HotelManagement.Domain.Entities.Data;
+﻿using HotelManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace HotelManagement.Infrastructure.Data.Configurations;
+
 public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
 {
     public void Configure(EntityTypeBuilder<ApplicationUser> builder)

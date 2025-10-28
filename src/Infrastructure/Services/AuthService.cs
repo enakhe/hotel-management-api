@@ -2,21 +2,19 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
-using Azure.Core;
-using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 
-namespace HotelManagement.Infrastructure.Services.Auth;
+namespace HotelManagement.Infrastructure.Services;
+
 public class AuthService(
     UserManager<ApplicationUser> userManager,
     SignInManager<ApplicationUser> signInManager,

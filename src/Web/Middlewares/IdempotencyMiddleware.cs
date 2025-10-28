@@ -1,6 +1,5 @@
-using Microsoft.Extensions.Caching.Distributed;
-using Microsoft.Extensions.DependencyInjection;
 using System.Text;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace HotelManagement.Web.Middlewares;
 

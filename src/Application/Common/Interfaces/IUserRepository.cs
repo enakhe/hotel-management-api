@@ -1,6 +1,7 @@
-﻿using HotelManagement.Domain.Entities.Data;
+﻿using HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Application.Common.Interfaces.Administrator;
+namespace HotelManagement.Application.Common.Interfaces;
+
 public interface IUserRepository
 {
     Task<ApplicationUser?> GetByIdAsync(Guid userId);

@@ -1,6 +1,7 @@
 ﻿using ValidationException = HotelManagement.Application.Common.Exceptions.ValidationException;
 
 namespace HotelManagement.Application.Common.Behaviours;
+
 public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
      where TRequest : notnull
 {

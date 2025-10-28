@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HotelManagement.Application.Common.DTOs.Role;
+namespace HotelManagement.Application.Common.DTOs;
+
 public class CreateRoleDto
 {
     [Required, MaxLength(50)]

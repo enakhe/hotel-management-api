@@ -1,6 +1,6 @@
 using HotelManagement.Application.Common.Models;
 
-namespace HotelManagement.Application.Common.Interfaces.SuperAdmin;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Service for auditing SuperAdmin actions

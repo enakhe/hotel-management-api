@@ -1,7 +1,5 @@
-using AutoMapper;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.SuperAdmin;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Domain.Entities;
 
 namespace HotelManagement.Application.Common.Mappings;
 
@@ -90,10 +88,10 @@ public class TenantMappingProfile : Profile
 {
     public TenantMappingProfile()
     {
-        CreateMap<Domain.Entities.Configuration.Tenant, TenantResponseDto>()
+        CreateMap<Tenant, TenantResponseDto>()
             .ForMember(dest => dest.Plan, opt => opt.MapFrom(src => src.Plan));
 
-        CreateMap<CreateTenantRequest, Domain.Entities.Configuration.Tenant>()
+        CreateMap<CreateTenantRequest, Tenant>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Created, opt => opt.MapFrom(src => DateTimeOffset.UtcNow))
             .ForMember(dest => dest.LastModified, opt => opt.MapFrom(src => DateTimeOffset.UtcNow))
@@ -103,7 +101,7 @@ public class TenantMappingProfile : Profile
             .ForMember(dest => dest.License, opt => opt.Ignore())
             .ForMember(dest => dest.Branches, opt => opt.Ignore());
 
-        CreateMap<UpdateTenantRequest, Domain.Entities.Configuration.Tenant>()
+        CreateMap<UpdateTenantRequest, Tenant>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Created, opt => opt.Ignore())
             .ForMember(dest => dest.LastModified, opt => opt.MapFrom(src => DateTimeOffset.UtcNow))

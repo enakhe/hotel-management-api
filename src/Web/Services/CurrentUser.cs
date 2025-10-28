@@ -3,6 +3,7 @@
 using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Web.Services;
+
 public class CurrentUser : IUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;

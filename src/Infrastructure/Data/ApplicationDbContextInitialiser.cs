@@ -1,6 +1,5 @@
 ﻿using HotelManagement.Domain.Constants;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Domain.Enums;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Infrastructure.Data;
+
 public static class InitialiserExtensions
 {
     public static async Task InitialiseDatabaseAsync(this WebApplication app)
@@ -66,6 +66,86 @@ public class ApplicationDbContextInitialiser
 
     public async Task TrySeedAsync()
     {
+        // Default limits for the plan
+        var defaultLimits = new Limits
+        {
+            Name = "Unlimited Plan Limits",
+            Description = "Default limits for the main tenant plan",
+            MaxUsers = -1, // unlimited
+            MaxBranches = -1,
+            MaxRooms = -1,
+            MaxReservations = -1,
+            MaxStorageGB = -1,
+            ApiRateLimit = -1,
+            ConcurrentSessions = -1,
+            MaxGuests = -1,
+            MaxBookings = -1,
+            MaxReports = -1,
+            MaxIntegrations = -1,
+            IsDefault = true,
+            IsActive = true,
+            CreatedBy = "System"
+        };
+
+        if (!_context.Limits.Any(l => l.Name == defaultLimits.Name))
+        {
+            _context.Limits.Add(defaultLimits);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            defaultLimits = _context.Limits.First(l => l.Name == defaultLimits.Name);
+        }
+
+        // Default plan
+        var defaultPlan = new Plan
+        {
+            Name = "Enterprise Plan",
+            Description = "Default enterprise plan for main tenant",
+            Currency = "NGN",
+            BillingCycle = BillingCycle.Lifetime,
+            IsActive = true,
+            IsPopular = true,
+            LimitsId = defaultLimits.Id,
+            CreatedBy = "System"
+        };
+
+        if (!_context.Plans.Any(p => p.Name == defaultPlan.Name))
+        {
+            _context.Plans.Add(defaultPlan);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            defaultPlan = _context.Plans.First(p => p.Name == defaultPlan.Name);
+        }
+
+        // Default license
+        var defaultLicense = new License
+        {
+            LicenseKey = "ESMART-ENTERPRISE-2024-UNLIMITED",
+            Name = "Esmart Enterprise License",
+            PlanId = defaultPlan.Id,
+            Status = LicenseStatusType.Active,
+            Type = LicenseType.Enterprise,
+            IssuedDate = DateTime.UtcNow,
+            ExpirationDate = DateTime.UtcNow.AddYears(10), // 10 years from now
+            LastValidated = DateTime.UtcNow, // Set to issued date for new license
+            ValidationCount = 0,
+            MaxValidations = -1, // unlimited validations
+            CreatedBy = "System"
+        };
+
+        if (!_context.Licenses.Any(l => l.LicenseKey == defaultLicense.LicenseKey))
+        {
+            _context.Licenses.Add(defaultLicense);
+            await _context.SaveChangesAsync();
+        }
+        else
+        {
+            defaultLicense = _context.Licenses.First(l => l.LicenseKey == defaultLicense.LicenseKey);
+        }
+
         // Default tenant
         var defaultTenant = new Tenant
         {
@@ -81,7 +161,9 @@ public class ApplicationDbContextInitialiser
             LanguageCode = "en",
             Industry = "Technology",
             Country = "Nigeria",
-            Region = "Lagos"
+            Region = "Lagos",
+            PlanId = defaultPlan.Id,
+            LicenseId = defaultLicense.Id
         };
 
         if (!_context.Tenants.Any(t => t.Identifier == defaultTenant.Identifier))

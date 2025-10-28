@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Auth.Commands;

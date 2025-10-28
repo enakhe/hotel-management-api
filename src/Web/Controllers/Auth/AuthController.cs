@@ -36,7 +36,7 @@ public class AuthController(ISender mediator) : ControllerBase
 
     [HttpPost("refresh-token")]
     public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenCommand command)
-    { 
+    {
         var response = await _mediator.Send(command);
 
         return !response.Succeeded ? StatusCode(response.StatusCode, response) : (ActionResult)Ok(response);

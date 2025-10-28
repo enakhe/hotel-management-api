@@ -1,12 +1,8 @@
-﻿using HotelManagement.Application.Common.Interfaces;
+﻿using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Application.Common.DTOs.Tenant;
-using HotelManagement.Domain.Common;
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 
-namespace HotelManagement.Application.Tenant.Queries.GetTenants;
+namespace HotelManagement.Application.Core.Tenant.Queries;
 
 public record GetTenantsQuery : IRequest<Result<PaginatedResult<TenantSummary>>>
 {
@@ -26,7 +22,7 @@ public class GetTenantsQueryValidator : AbstractValidator<GetTenantsQuery>
 {
     public GetTenantsQueryValidator()
     {
-        
+
     }
 }
 

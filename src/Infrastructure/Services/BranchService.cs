@@ -1,11 +1,12 @@
 ﻿using AutoMapper;
 using FluentValidation;
-using HotelManagement.Application.Common.DTOs.Administrator;
-using HotelManagement.Application.Common.Interfaces.Administrator;
-using HotelManagement.Domain.Entities.Configuration;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 
 namespace HotelManagement.Infrastructure.Services;
+
 public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepository branchRepository, IUserRepository userRepository, IValidator<CreateBranchDto> _branchValidator, IMapper mapper) : IBranchService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;

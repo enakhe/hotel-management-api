@@ -1,8 +1,6 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using FluentValidation;
-using MediatR;
-using HotelManagement.Application.Common.Interfaces.Services;
 
 namespace HotelManagement.Application.Core.ModuleManagement.Queries;
 

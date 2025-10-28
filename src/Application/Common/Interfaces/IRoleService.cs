@@ -1,7 +1,8 @@
-﻿using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Models;
 
-namespace HotelManagement.Application.Common.Interfaces.Administrator;
+namespace HotelManagement.Application.Common.Interfaces;
+
 public interface IRoleService
 {
     Task<Result<RoleDto>> CreateRoleAsync(CreateRoleDto dto);

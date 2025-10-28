@@ -1,11 +1,10 @@
-using HotelManagement.Application.Common.DTOs.Tenant;
-using HotelManagement.Application.Common.Interfaces.Tenant;
-using HotelManagement.Domain.Entities.Configuration;
+using System.Text.Json;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Domain.Enums;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Text.Json;
 
 namespace HotelManagement.Infrastructure.Services;
 

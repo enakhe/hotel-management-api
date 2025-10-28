@@ -1,10 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using HotelManagement.Domain.Common;
-using HotelManagement.Domain.Enums;
-using HotelManagement.Domain.Entities.SuperAdmin;
 
-namespace HotelManagement.Domain.Entities.Configuration;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents a tenant (hotel) in the multi-tenant system - serves as the Tenant Registry

@@ -1,6 +1,6 @@
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 // Request DTOs
 public record CreateLicenseRequest

@@ -1,6 +1,7 @@
-﻿using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 
 namespace HotelManagement.Application.Common.Validators.Administrator;
+
 public class CreateRoleDtoValidator : AbstractValidator<CreateRoleDto>
 {
     public CreateRoleDtoValidator()

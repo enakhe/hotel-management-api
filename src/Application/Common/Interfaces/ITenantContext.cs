@@ -1,6 +1,4 @@
-using HotelManagement.Domain.Common;
-
-namespace HotelManagement.Application.Common.Interfaces.Tenant;
+namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
 /// Provides access to the current tenant context for the request

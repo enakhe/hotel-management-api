@@ -1,4 +1,5 @@
 ﻿namespace HotelManagement.Domain.Entities;
+
 public class AuditLogDetail
 {
     public Guid Id { get; set; }

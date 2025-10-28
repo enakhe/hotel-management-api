@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace HotelManagement.Domain.Entities.SuperAdmin;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Represents a feature that can be included in a subscription plan

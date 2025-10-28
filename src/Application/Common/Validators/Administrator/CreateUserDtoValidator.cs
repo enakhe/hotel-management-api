@@ -1,6 +1,7 @@
 ﻿using HotelManagement.Application.Core.Users.Commands;
 
 namespace HotelManagement.Application.Common.Validators.Administrator;
+
 public class CreateUserDtoValidator : AbstractValidator<CreateUserCommand>
 {
     public CreateUserDtoValidator()

@@ -1,5 +1,4 @@
-﻿using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Core.Auth.Commands;
+﻿using HotelManagement.Application.Core.Auth.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

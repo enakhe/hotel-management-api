@@ -1,9 +1,9 @@
 ﻿using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Auth;
 using Moq;
 using NUnit.Framework;
 
 namespace HotelManagement.Application.UnitTests.Common.Behaviours;
+
 public class RequestLoggerTests
 {
     private Mock<IUser> _user = null!;

@@ -1,6 +1,5 @@
-using HotelManagement.Application.Common.Interfaces.Tenant;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Domain.Common;
-using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

@@ -1,7 +1,6 @@
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.SuperAdmin;
+using HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Application.Common.DTOs.SuperAdmin;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Tenant summary for list views
@@ -13,7 +12,7 @@ public record TenantSummary
     public string Identifier { get; init; } = string.Empty;
     public bool IsActive { get; init; }
     public Plan? Plan { get; init; }
-    public Domain.Entities.SuperAdmin.License? License { get; init; }
+    public License? License { get; init; }
     public string? Country { get; init; }
     public string? Region { get; init; }
     public DateTime CreatedAt { get; init; }

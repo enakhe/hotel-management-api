@@ -1,12 +1,13 @@
 ﻿using AutoMapper;
 using FluentAssertions;
-using HotelManagement.Application.Common.DTOs.Auth;
-using HotelManagement.Application.Common.Interfaces.Auth;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Core.Auth.Commands;
 using Moq;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Auth;
+
 public class RegisterTests
 {
     private readonly Mock<IAuthService> _authServiceMock;

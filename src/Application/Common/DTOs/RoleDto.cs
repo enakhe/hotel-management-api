@@ -1,4 +1,5 @@
-﻿namespace HotelManagement.Application.Common.DTOs.Role;
+﻿namespace HotelManagement.Application.Common.DTOs;
+
 public class RoleDto
 {
     public Guid Id { get; set; }

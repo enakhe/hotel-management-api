@@ -1,7 +1,6 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Services;
+using HotelManagement.Application.Common.DTOs;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.Configuration;
 using HotelManagement.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -22,7 +21,7 @@ public class LimitsService(
     {
         try
         {
-            var limits = new Limits
+            var limits = new Domain.Entities.Limits
             {
                 Name = request.Name,
                 Description = request.Description,

@@ -1,4 +1,4 @@
-using HotelManagement.Domain.Entities.SuperAdmin;
+using HotelManagement.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

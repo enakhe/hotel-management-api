@@ -3,8 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Domain.Entities.Data;
-using HotelManagement.Infrastructure.Services.Auth;
+using HotelManagement.Domain.Entities;
+using HotelManagement.Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -18,6 +18,7 @@ using Shouldly;
 using Xunit;
 
 namespace HotelManagement.Application.UnitTests.Core.Auth;
+
 public class RefreshTokenTests
 {
     private readonly Mock<UserManager<ApplicationUser>> _userManagerMock;

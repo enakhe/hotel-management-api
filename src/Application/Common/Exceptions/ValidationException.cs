@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 
 namespace HotelManagement.Application.Common.Exceptions;
+
 public class ValidationException : Exception
 {
     public ValidationException()

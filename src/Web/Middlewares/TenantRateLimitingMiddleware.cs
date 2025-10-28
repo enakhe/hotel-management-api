@@ -1,5 +1,5 @@
-using HotelManagement.Application.Common.Interfaces.Tenant;
 using System.Collections.Concurrent;
+using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Web.Middlewares;
 

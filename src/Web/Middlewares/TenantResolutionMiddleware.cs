@@ -1,5 +1,4 @@
-using HotelManagement.Application.Common.Interfaces.Tenant;
-using Microsoft.AspNetCore.Http;
+using HotelManagement.Application.Common.Interfaces;
 
 namespace HotelManagement.Web.Middlewares;
 

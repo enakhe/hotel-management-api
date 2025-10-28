@@ -1,11 +1,12 @@
-﻿using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.Data;
+using HotelManagement.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 
-namespace HotelManagement.Infrastructure.Services.Administrator;
+namespace HotelManagement.Infrastructure.Services;
+
 public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager) : IRoleService
 {
     private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
@@ -47,9 +48,9 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
         var result = await _userManager.AddToRoleAsync(user, dto.RoleName);
 
-        return !result.Succeeded ? 
-            Result.Failure(result.Errors.Select(e => e.Description), 400) : 
-            Result.Success(statusCode:204);
+        return !result.Succeeded ?
+            Result.Failure(result.Errors.Select(e => e.Description), 400) :
+            Result.Success(statusCode: 204);
     }
 
     public async Task<Result<List<RoleDto>>> GetAllRolesAsync()
@@ -81,7 +82,7 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
         var role = await _roleManager.FindByIdAsync(roleId.ToString())
             ?? throw new Application.Common.Exceptions.NotFoundException($"Role not found.");
 
-        var roleDto =  new RoleDto
+        var roleDto = new RoleDto
         {
             Id = role.Id,
             Name = role.Name!,
@@ -106,8 +107,8 @@ public class RoleService(RoleManager<ApplicationRole> roleManager, UserManager<A
 
         var result = await _roleManager.UpdateAsync(role);
 
-        return !result.Succeeded 
-            ? Result.Failure(result.Errors.Select(e => e.Description), 400) 
+        return !result.Succeeded
+            ? Result.Failure(result.Errors.Select(e => e.Description), 400)
             : Result.Success(statusCode: 204);
     }
 

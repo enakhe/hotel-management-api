@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using HotelManagement.Domain.Entities.SuperAdmin;
 
-namespace HotelManagement.Domain.Entities.Configuration;
+namespace HotelManagement.Domain.Entities;
 
 /// <summary>
 /// Centralized limits configuration entity

@@ -1,6 +1,6 @@
-﻿using HotelManagement.Application.Common.DTOs.Role;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Exceptions;
-using HotelManagement.Application.Common.Interfaces.Administrator;
+using HotelManagement.Application.Common.Interfaces;
 using HotelManagement.Application.Common.Models;
 
 namespace HotelManagement.Application.Core.Role.Commands;

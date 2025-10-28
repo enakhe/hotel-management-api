@@ -1,6 +1,7 @@
-﻿using HotelManagement.Domain.Entities.Configuration;
+﻿using HotelManagement.Domain.Entities;
 
-namespace HotelManagement.Application.Common.Interfaces.Administrator;
+namespace HotelManagement.Application.Common.Interfaces;
+
 public interface IBranchRepository
 {
     Task AddAsync(Branch branch);

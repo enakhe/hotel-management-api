@@ -1,4 +1,4 @@
-namespace HotelManagement.Application.Common.DTOs.License;
+namespace HotelManagement.Application.Common.DTOs;
 
 /// <summary>
 /// Tenant settings for frontend consumption

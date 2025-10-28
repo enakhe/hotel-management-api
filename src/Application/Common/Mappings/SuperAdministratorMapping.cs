@@ -1,12 +1,8 @@
-using HotelManagement.Application.Common.DTOs.SuperAdmin;
-using HotelManagement.Application.Core.Tenant.Commands;
-using HotelManagement.Application.Core.PlanManagement.Commands;
-using HotelManagement.Domain.Entities.Configuration;
-using HotelManagement.Domain.Entities.SuperAdmin;
-using HotelManagement.Domain.Enums;
-using System.Text.Json;
+using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
-using AutoMapper;
+using HotelManagement.Application.Core.PlanManagement.Commands;
+using HotelManagement.Application.Core.Tenant.Commands;
+using HotelManagement.Domain.Entities;
 
 namespace HotelManagement.Application.Common.Mappings;
 
@@ -14,11 +10,11 @@ public class SuperAdministratorMappingProfile : Profile
 {
     public SuperAdministratorMappingProfile()
     {
-        CreateMap<CreateTenantRequest, Domain.Entities.Configuration.Tenant>();
-        CreateMap<Domain.Entities.Configuration.Tenant, CreateTenantRequest>();
+        CreateMap<CreateTenantRequest, Tenant>();
+        CreateMap<Tenant, CreateTenantRequest>();
 
-        CreateMap<UpdateTenantRequest, Domain.Entities.Configuration.Tenant>();
-        CreateMap<Domain.Entities.Configuration.Tenant, UpdateTenantRequest>();
+        CreateMap<UpdateTenantRequest, Tenant>();
+        CreateMap<Tenant, UpdateTenantRequest>();
 
         // Map from CreateTenantCommand to CreateTenantRequest
         CreateMap<CreateTenantCommand, CreateTenantRequest>()
@@ -28,12 +24,12 @@ public class SuperAdministratorMappingProfile : Profile
             .ForMember(dest => dest.TimeZone, opt => opt.MapFrom(src => src.TimeZone ?? "WAT"))
             .ForMember(dest => dest.CurrencyCode, opt => opt.MapFrom(src => src.CurrencyCode ?? "NGN"));
 
-        CreateMap<Domain.Entities.Configuration.Tenant, TenantSummary>();
+        CreateMap<Tenant, TenantSummary>();
 
-        CreateMap<Domain.Entities.Configuration.Tenant, TenantDetail>();
+        CreateMap<Tenant, TenantDetail>();
 
         // Plan mappings
-        CreateMap<CreatePlanRequest, Domain.Entities.SuperAdmin.Plan>()
+        CreateMap<CreatePlanRequest, Plan>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -51,17 +47,17 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<CreatePlanLimitsCommand, CreatePlanLimitsRequest>();
 
         // Additional mappings for service layer
-        CreateMap<CreatePlanLimitsRequest, Domain.Entities.Configuration.Limits>()
+        CreateMap<CreatePlanLimitsRequest, Limits>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Plans, opt => opt.Ignore())
             .ForMember(dest => dest.TenantOverrides, opt => opt.Ignore());
 
         // Plan response mappings
-        CreateMap<Domain.Entities.SuperAdmin.Plan, PlanResponseDto>()
+        CreateMap<Plan, PlanResponseDto>()
             .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.PlanModules.Select(pm => pm.Module)))
             .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits));
 
-        CreateMap<Domain.Entities.Configuration.Limits, LimitsResponseDto>();
+        CreateMap<Limits, LimitsResponseDto>();
 
         // Update plan mappings
         CreateMap<UpdatePlanCommand, UpdatePlanRequest>()
@@ -71,13 +67,13 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<UpdatePlanLimitsCommand, UpdatePlanLimitsRequest>();
 
         // Additional mappings for service layer
-        CreateMap<UpdatePlanLimitsRequest, Domain.Entities.Configuration.Limits>()
+        CreateMap<UpdatePlanLimitsRequest, Limits>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.Plans, opt => opt.Ignore())
             .ForMember(dest => dest.TenantOverrides, opt => opt.Ignore());
 
         // Module mappings
-        CreateMap<CreateModuleRequest, Domain.Entities.SuperAdmin.Module>()
+        CreateMap<CreateModuleRequest, Module>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
             .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
@@ -97,13 +93,13 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<CreateModulePricingCommand, CreateModulePricingRequest>();
 
         // Additional mappings for service layer
-        CreateMap<CreateModuleFeatureRequest, Domain.Entities.SuperAdmin.ModuleFeature>()
+        CreateMap<CreateModuleFeatureRequest, ModuleFeature>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
             .ForMember(dest => dest.Module, opt => opt.Ignore())
             .ForMember(dest => dest.Configuration, opt => opt.Ignore());
 
-        CreateMap<CreateModulePricingRequest, Domain.Entities.SuperAdmin.ModulePricing>()
+        CreateMap<CreateModulePricingRequest, ModulePricing>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
             .ForMember(dest => dest.Module, opt => opt.Ignore());
@@ -118,26 +114,26 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<UpdateModulePricingCommand, UpdateModulePricingRequest>();
 
         // Additional mappings for service layer
-        CreateMap<UpdateModuleFeatureRequest, Domain.Entities.SuperAdmin.ModuleFeature>()
+        CreateMap<UpdateModuleFeatureRequest, ModuleFeature>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
             .ForMember(dest => dest.Module, opt => opt.Ignore())
             .ForMember(dest => dest.Configuration, opt => opt.Ignore());
 
-        CreateMap<UpdateModulePricingRequest, Domain.Entities.SuperAdmin.ModulePricing>()
+        CreateMap<UpdateModulePricingRequest, ModulePricing>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())
             .ForMember(dest => dest.ModuleId, opt => opt.Ignore())
             .ForMember(dest => dest.Module, opt => opt.Ignore());
 
         // Module response mappings
-        CreateMap<Domain.Entities.SuperAdmin.Module, ModuleResponseDto>()
+        CreateMap<Module, ModuleResponseDto>()
             .ForMember(dest => dest.Dependencies, opt => opt.Ignore())
             .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.Features))
             .ForMember(dest => dest.Pricing, opt => opt.MapFrom(src => src.Pricing));
 
-        CreateMap<Domain.Entities.SuperAdmin.ModuleFeature, ModuleFeatureResponseDto>()
+        CreateMap<ModuleFeature, ModuleFeatureResponseDto>()
             .ForMember(dest => dest.Configuration, opt => opt.Ignore());
 
-        CreateMap<Domain.Entities.SuperAdmin.ModulePricing, ModulePricingResponseDto>();
+        CreateMap<ModulePricing, ModulePricingResponseDto>();
     }
 }

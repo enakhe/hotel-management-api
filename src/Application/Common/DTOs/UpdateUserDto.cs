@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using HotelManagement.Domain.Enums;
 
-namespace HotelManagement.Application.Common.DTOs.Administrator;
+namespace HotelManagement.Application.Common.DTOs;
+
 public class UpdateUserDto
 {
     [Required]

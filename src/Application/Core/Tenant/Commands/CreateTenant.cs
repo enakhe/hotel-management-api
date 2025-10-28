@@ -1,11 +1,6 @@
-﻿using HotelManagement.Application.Common.DTOs.SuperAdmin;
+﻿using HotelManagement.Application.Common.DTOs;
 using HotelManagement.Application.Common.Interfaces;
-using HotelManagement.Application.Common.Interfaces.Auth;
-using HotelManagement.Application.Common.Interfaces.Services;
-using HotelManagement.Application.Common.Interfaces.SuperAdmin;
-using HotelManagement.Application.Common.Interfaces.Tenant;
 using HotelManagement.Application.Common.Models;
-using HotelManagement.Domain.Entities.Configuration;
 
 namespace HotelManagement.Application.Core.Tenant.Commands;
 

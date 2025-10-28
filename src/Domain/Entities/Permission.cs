@@ -1,4 +1,5 @@
-﻿namespace HotelManagement.Domain.Entities.Administrator;
+﻿namespace HotelManagement.Domain.Entities;
+
 public class Permission
 {
     public Guid Id { get; set; }
