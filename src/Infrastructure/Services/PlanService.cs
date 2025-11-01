@@ -78,7 +78,16 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 $"Created plan '{request.Name}' with {request.ModuleIds.Length} modules",
                 System.Text.Json.JsonSerializer.Serialize(request));
 
-            var planResponse = _mapper.Map<PlanResponseDto>(plan);
+            // Reload the plan with all includes for proper mapping
+            var createdPlan = await _context.Plans
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
+                .Include(p => p.Limits)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == plan.Id);
+
+            var planResponse = _mapper.Map<PlanResponseDto>(createdPlan);
 
             return Result<PlanResponseDto>.Success(planResponse, 201);
         }
@@ -96,6 +105,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var query = _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .AsNoTracking();
 
@@ -117,18 +127,6 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 {
                     query = query.Where(p => p.BillingCycle == billingCycle);
                 }
-            }
-
-            if (request.PriceMin.HasValue)
-            {
-                // Price filtering removed - plan price is now calculated from modules
-                // This would require a subquery to calculate total module prices
-            }
-
-            if (request.PriceMax.HasValue)
-            {
-                // Price filtering removed - plan price is now calculated from modules
-                // This would require a subquery to calculate total module prices
             }
 
             // Apply sorting
@@ -183,6 +181,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var plan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -208,6 +207,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var plan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .FirstOrDefaultAsync(p => p.Id == planId);
 
@@ -310,6 +310,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var updatedPlan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -398,6 +399,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var updatedPlan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -444,6 +446,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var updatedPlan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Features)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);

@@ -12,7 +12,7 @@ public record CreateModuleCommand : IRequest<Result<ModuleResponseDto>>
     public required string Category { get; init; }
     public bool IsActive { get; init; } = true;
     public bool IsCore { get; init; } = false;
-    public string[] Dependencies { get; init; } = Array.Empty<string>();
+    public string[] Dependencies { get; init; } = [];
     public required CreateModuleFeatureCommand[] Features { get; init; }
     public required CreateModulePricingCommand Pricing { get; init; }
 }

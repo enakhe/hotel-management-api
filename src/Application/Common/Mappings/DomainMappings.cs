@@ -54,7 +54,19 @@ public class PlanMappingProfile : Profile
     public PlanMappingProfile()
     {
         CreateMap<Plan, PlanResponseDto>()
-            .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.PlanModules.Select(pm => pm.Module)))
+            .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.PlanModules.Select(pm => pm.Module.Name).ToArray()))
+            .ForMember(dest => dest.Features, opt => opt.MapFrom(src => src.PlanModules
+                .SelectMany(pm => pm.Module.Features)
+                .Select(f => new PlanFeatureResponseDto
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    Description = f.Description,
+                    Included = f.IsEnabled,
+                    Limit = null,
+                    Unit = null
+                })
+                .ToArray()))
             .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits));
 
         CreateMap<CreatePlanRequest, Plan>()

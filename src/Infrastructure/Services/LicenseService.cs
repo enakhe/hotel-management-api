@@ -66,6 +66,8 @@ public class LicenseService : ILicenseService
                 IpRestrictions = request.IpRestrictions != null ? string.Join(",", request.IpRestrictions) : null,
                 Metadata = request.Metadata != null ? System.Text.Json.JsonSerializer.Serialize(request.Metadata) : null,
                 IssuedDate = DateTime.UtcNow,
+                LastValidated = DateTime.UtcNow,
+                LastModifiedBy = "SuperAdmin",
                 CreatedBy = "SuperAdmin"
             };
 

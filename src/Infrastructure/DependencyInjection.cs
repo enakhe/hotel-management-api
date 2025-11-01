@@ -141,6 +141,7 @@ public static class DependencyInjection
         // Register SuperAdmin services
         services.AddScoped<ISuperAdminService, SuperAdminService>();
         services.AddScoped<ISuperAdminAuditService, SuperAdminAuditService>();
+        services.AddScoped<ITenantAdminService, TenantAdminService>();
 
         services.AddAuthorizationBuilder()
             .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));

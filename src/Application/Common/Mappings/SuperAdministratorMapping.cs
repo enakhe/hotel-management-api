@@ -3,6 +3,7 @@ using HotelManagement.Application.Core.LicenseManagement.Commands;
 using HotelManagement.Application.Core.ModuleManagement.Commands;
 using HotelManagement.Application.Core.PlanManagement.Commands;
 using HotelManagement.Application.Core.Tenant.Commands;
+using HotelManagement.Application.Core.TenantAdminManagement.Commands;
 using HotelManagement.Domain.Entities;
 
 namespace HotelManagement.Application.Common.Mappings;
@@ -141,5 +142,63 @@ public class SuperAdministratorMappingProfile : Profile
         CreateMap<CreateLicenseCommand, CreateLicenseRequest>();
         CreateMap<CreateLicenseRequest, License>();
         CreateMap<License, CreateLicenseRequest>();
+
+        // Tenant Admin mappings
+        CreateMap<CreateTenantAdminDto, ApplicationUser>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())
+            .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())
+            .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.TwoFactorEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.AccessFailedCount, opt => opt.Ignore())
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.MiddleName} {src.LastName}"))
+            .ForMember(dest => dest.ProfilePicture, opt => opt.Ignore())
+            .ForMember(dest => dest.Gender, opt => opt.Ignore())
+            .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.LastUpdatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.BranchId, opt => opt.Ignore())
+            .ForMember(dest => dest.Branch, opt => opt.Ignore())
+            .ForMember(dest => dest.Tenant, opt => opt.Ignore())
+            .ForMember(dest => dest.AuditLogs, opt => opt.Ignore());
+
+        CreateMap<UpdateTenantAdminDto, ApplicationUser>()
+            .ForMember(dest => dest.Id, opt => opt.Ignore())
+            .ForMember(dest => dest.UserName, opt => opt.Ignore())
+            .ForMember(dest => dest.NormalizedUserName, opt => opt.Ignore())
+            .ForMember(dest => dest.Email, opt => opt.Ignore())
+            .ForMember(dest => dest.NormalizedEmail, opt => opt.Ignore())
+            .ForMember(dest => dest.EmailConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.PasswordHash, opt => opt.Ignore())
+            .ForMember(dest => dest.SecurityStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.ConcurrencyStamp, opt => opt.Ignore())
+            .ForMember(dest => dest.PhoneNumberConfirmed, opt => opt.Ignore())
+            .ForMember(dest => dest.TwoFactorEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnd, opt => opt.Ignore())
+            .ForMember(dest => dest.LockoutEnabled, opt => opt.Ignore())
+            .ForMember(dest => dest.AccessFailedCount, opt => opt.Ignore())
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => $"{src.FirstName} {src.MiddleName} {src.LastName}"))
+            .ForMember(dest => dest.ProfilePicture, opt => opt.Ignore())
+            .ForMember(dest => dest.Gender, opt => opt.Ignore())
+            .ForMember(dest => dest.IsActive, opt => opt.Ignore())
+            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.LastUpdatedAt, opt => opt.Ignore())
+            .ForMember(dest => dest.TenantId, opt => opt.Ignore())
+            .ForMember(dest => dest.BranchId, opt => opt.Ignore())
+            .ForMember(dest => dest.Branch, opt => opt.Ignore())
+            .ForMember(dest => dest.Tenant, opt => opt.Ignore())
+            .ForMember(dest => dest.AuditLogs, opt => opt.Ignore());
+
+        // Command to DTO mappings for Tenant Admin
+        CreateMap<CreateTenantAdminCommand, CreateTenantAdminDto>();
+        CreateMap<UpdateTenantAdminCommand, UpdateTenantAdminDto>();
+        CreateMap<ResetTenantAdminPasswordCommand, ResetTenantAdminPasswordDto>();
     }
 }
