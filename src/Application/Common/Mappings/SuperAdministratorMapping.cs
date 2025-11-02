@@ -57,7 +57,8 @@ public class SuperAdministratorMappingProfile : Profile
         // Plan response mappings
         CreateMap<Plan, PlanResponseDto>()
             .ForMember(dest => dest.Modules, opt => opt.MapFrom(src => src.PlanModules.Select(pm => pm.Module)))
-            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits));
+            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PlanModules.Sum(pm => pm.Module.Pricing != null && pm.Module.Pricing.Price != null ? pm.Module.Pricing.Price.Value : 0)));
 
         CreateMap<Limits, LimitsResponseDto>();
 

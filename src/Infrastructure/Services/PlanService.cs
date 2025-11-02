@@ -38,7 +38,10 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             // Create plan limits
             var limits = _mapper.Map<Limits>(request.Limits);
             limits.Id = Guid.NewGuid();
+            limits.Name = $"{request.Name} Limits";
+            limits.Description = $"Resource limits for {request.Name} plan";
             limits.CreatedBy = "SuperAdmin";
+            limits.IsActive = true;
             _context.Limits.Add(limits);
 
             // Link limits to plan
@@ -83,6 +86,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == plan.Id);
@@ -106,6 +112,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking();
 
@@ -182,6 +191,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -226,7 +238,16 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             // Update basic plan properties
             if (!string.IsNullOrEmpty(request.Name))
+            {
                 plan.Name = request.Name;
+
+                // Update associated Limits name if it exists
+                if (plan.Limits != null)
+                {
+                    plan.Limits.Name = $"{request.Name} Limits";
+                    plan.Limits.Description = $"Resource limits for {request.Name} plan";
+                }
+            }
 
             if (request.Description != null)
                 plan.Description = request.Description;
@@ -290,7 +311,10 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                     // Create new limits
                     var limits = _mapper.Map<Limits>(request.Limits);
                     limits.Id = Guid.NewGuid();
+                    limits.Name = $"{plan.Name} Limits";
+                    limits.Description = $"Resource limits for {plan.Name} plan";
                     limits.CreatedBy = "SuperAdmin";
+                    limits.IsActive = true;
                     _context.Limits.Add(limits);
                     plan.LimitsId = limits.Id;
                 }
@@ -311,6 +335,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -400,6 +427,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -447,6 +477,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
                         .ThenInclude(m => m.Features)
+                .Include(p => p.PlanModules)
+                    .ThenInclude(pm => pm.Module)
+                        .ThenInclude(m => m.Pricing)
                 .Include(p => p.Limits)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == planId);
@@ -508,6 +541,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             var planIds = updates.Select(u => u.Id).ToList();
             var plans = await _context.Plans
                 .Include(p => p.PlanModules)
+                .Include(p => p.Limits)
                 .Where(p => planIds.Contains(p.Id))
                 .ToListAsync();
 
@@ -527,7 +561,16 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 {
                     // Update plan properties
                     if (!string.IsNullOrEmpty(update.Data.Name))
+                    {
                         plan.Name = update.Data.Name;
+
+                        // Update associated Limits name if it exists
+                        if (plan.Limits != null)
+                        {
+                            plan.Limits.Name = $"{update.Data.Name} Limits";
+                            plan.Limits.Description = $"Resource limits for {update.Data.Name} plan";
+                        }
+                    }
 
                     if (update.Data.Description != null)
                         plan.Description = update.Data.Description;
@@ -593,7 +636,10 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                             // Create new limits
                             var limits = _mapper.Map<Limits>(update.Data.Limits);
                             limits.Id = Guid.NewGuid();
+                            limits.Name = $"{plan.Name} Limits";
+                            limits.Description = $"Resource limits for {plan.Name} plan";
                             limits.CreatedBy = "SuperAdmin";
+                            limits.IsActive = true;
                             _context.Limits.Add(limits);
                             plan.LimitsId = limits.Id;
                         }

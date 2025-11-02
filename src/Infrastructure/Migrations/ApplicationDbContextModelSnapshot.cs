@@ -751,6 +751,352 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.ToTable("PlanModules", (string)null);
                 });
 
+            modelBuilder.Entity("HotelManagement.Domain.Entities.Report", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Category")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("DownloadUrl")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("ExpiresAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FilePath")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<long?>("FileSize")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Filters")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("GeneratedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("GeneratedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<long?>("GenerationDurationMs")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("Parameters")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("RecordCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ReportScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GeneratedAt");
+
+                    b.HasIndex("GeneratedBy");
+
+                    b.HasIndex("ReportScheduleId");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("Type");
+
+                    b.HasIndex("GeneratedBy", "GeneratedAt");
+
+                    b.HasIndex("Status", "GeneratedAt");
+
+                    b.ToTable("Reports");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportExecution", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<long?>("DurationMs")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("ErrorMessage")
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<Guid?>("InitiatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("IsScheduled")
+                        .HasColumnType("bit");
+
+                    b.Property<int?>("RecordCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("ReportId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ReportScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StackTrace")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("StartedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("InitiatedBy");
+
+                    b.HasIndex("IsScheduled");
+
+                    b.HasIndex("ReportId");
+
+                    b.HasIndex("ReportScheduleId");
+
+                    b.HasIndex("StartedAt");
+
+                    b.HasIndex("Status");
+
+                    b.HasIndex("ReportScheduleId", "StartedAt");
+
+                    b.HasIndex("Status", "StartedAt");
+
+                    b.ToTable("ReportExecutions");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CronExpression")
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<string>("EmailRecipients")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Filters")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Format")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastRunAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<DateTime?>("NextRunAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Parameters")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ReportType")
+                        .HasColumnType("int");
+
+                    b.Property<Guid?>("TenantId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("TimeZone")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasDefaultValue("UTC");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("NextRunAt");
+
+                    b.HasIndex("TenantId");
+
+                    b.HasIndex("IsActive", "NextRunAt");
+
+                    b.ToTable("ReportSchedules");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportSubscription", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime?>("LastSentAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ReportScheduleId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SentCount")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("SuperAdminId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("UnsubscribeToken")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("ReportScheduleId");
+
+                    b.HasIndex("SuperAdminId");
+
+                    b.HasIndex("UnsubscribeToken")
+                        .IsUnique();
+
+                    b.HasIndex("SuperAdminId", "ReportScheduleId")
+                        .IsUnique();
+
+                    b.ToTable("ReportSubscriptions");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportTemplate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomFields")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsPublic")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ReportType")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TemplateConfig")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("UsageCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedBy");
+
+                    b.HasIndex("IsActive");
+
+                    b.HasIndex("IsPublic");
+
+                    b.HasIndex("ReportType");
+
+                    b.HasIndex("IsActive", "IsPublic");
+
+                    b.ToTable("ReportTemplates");
+                });
+
             modelBuilder.Entity("HotelManagement.Domain.Entities.Reservation", b =>
                 {
                     b.Property<Guid>("Id")
@@ -1401,6 +1747,44 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.Navigation("Plan");
                 });
 
+            modelBuilder.Entity("HotelManagement.Domain.Entities.Report", b =>
+                {
+                    b.HasOne("HotelManagement.Domain.Entities.ReportSchedule", "ReportSchedule")
+                        .WithMany("Reports")
+                        .HasForeignKey("ReportScheduleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("ReportSchedule");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportExecution", b =>
+                {
+                    b.HasOne("HotelManagement.Domain.Entities.Report", "Report")
+                        .WithMany("Executions")
+                        .HasForeignKey("ReportId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("HotelManagement.Domain.Entities.ReportSchedule", "ReportSchedule")
+                        .WithMany("Executions")
+                        .HasForeignKey("ReportScheduleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Report");
+
+                    b.Navigation("ReportSchedule");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportSubscription", b =>
+                {
+                    b.HasOne("HotelManagement.Domain.Entities.ReportSchedule", "ReportSchedule")
+                        .WithMany("Subscriptions")
+                        .HasForeignKey("ReportScheduleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ReportSchedule");
+                });
+
             modelBuilder.Entity("HotelManagement.Domain.Entities.Reservation", b =>
                 {
                     b.HasOne("HotelManagement.Domain.Entities.Room", "Room")
@@ -1558,6 +1942,20 @@ namespace HotelManagement.Infrastructure.Migrations
                     b.Navigation("PlanModules");
 
                     b.Navigation("Tenants");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.Report", b =>
+                {
+                    b.Navigation("Executions");
+                });
+
+            modelBuilder.Entity("HotelManagement.Domain.Entities.ReportSchedule", b =>
+                {
+                    b.Navigation("Executions");
+
+                    b.Navigation("Reports");
+
+                    b.Navigation("Subscriptions");
                 });
 
             modelBuilder.Entity("HotelManagement.Domain.Entities.Room", b =>

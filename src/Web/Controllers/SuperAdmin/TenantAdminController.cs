@@ -157,7 +157,7 @@ public class TenantAdminController : ControllerBase
         if (!result.Succeeded)
             return StatusCode(result.StatusCode, result);
 
-        return Ok(new { Message = "Password reset successfully" });
+        return Ok(result);
     }
 
     /// <summary>

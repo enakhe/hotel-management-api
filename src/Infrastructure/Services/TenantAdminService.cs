@@ -16,36 +16,25 @@ namespace HotelManagement.Infrastructure.Services;
 /// <summary>
 /// Service for managing Tenant Administrator accounts via SuperAdmin control plane
 /// </summary>
-public class TenantAdminService : ITenantAdminService
+public class TenantAdminService(
+    UserManager<ApplicationUser> userManager,
+    RoleManager<ApplicationRole> roleManager,
+    ApplicationDbContext context,
+    ISuperAdminAuditService auditService,
+    IMapper mapper,
+    ILogger<TenantAdminService> logger) : ITenantAdminService
 {
-    private readonly UserManager<ApplicationUser> _userManager;
-    private readonly RoleManager<ApplicationRole> _roleManager;
-    private readonly ApplicationDbContext _context;
-    private readonly ISuperAdminAuditService _auditService;
-    private readonly IMapper _mapper;
-    private readonly ILogger<TenantAdminService> _logger;
-
-    public TenantAdminService(
-        UserManager<ApplicationUser> userManager,
-        RoleManager<ApplicationRole> roleManager,
-        ApplicationDbContext context,
-        ISuperAdminAuditService auditService,
-        IMapper mapper,
-        ILogger<TenantAdminService> logger)
-    {
-        _userManager = userManager;
-        _roleManager = roleManager;
-        _context = context;
-        _auditService = auditService;
-        _mapper = mapper;
-        _logger = logger;
-    }
+    private readonly UserManager<ApplicationUser> _userManager = userManager;
+    private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
+    private readonly ApplicationDbContext _context = context;
+    private readonly ISuperAdminAuditService _auditService = auditService;
+    private readonly IMapper _mapper = mapper;
+    private readonly ILogger<TenantAdminService> _logger = logger;
 
     public async Task<Result<TenantAdminDto>> CreateTenantAdminAsync(CreateTenantAdminDto dto)
     {
         try
         {
-            // 1. Validate tenant exists and is active
             var tenant = await _context.Tenants
                 .FirstOrDefaultAsync(t => t.Id == dto.TenantId);
 
@@ -55,20 +44,16 @@ public class TenantAdminService : ITenantAdminService
             if (!tenant.IsActive)
                 return Result<TenantAdminDto>.Failure("Tenant is not active", 400);
 
-            // 2. Check tenant doesn't already have an admin
             var hasAdmin = await ValidateOneTenantAdminAsync(dto.TenantId);
             if (!hasAdmin)
                 return Result<TenantAdminDto>.Failure("Tenant already has an administrator", 400);
 
-            // 3. Check email doesn't already exist (global uniqueness)
             var emailExists = await _userManager.Users.AnyAsync(u => u.Email == dto.Email);
             if (emailExists)
                 return Result<TenantAdminDto>.Failure($"Email '{dto.Email}' is already in use", 400);
 
-            // 4. Get or create branch for the tenant
             var branch = await GetOrCreateHeadquartersBranchAsync(tenant);
 
-            // 5. Create ApplicationUser
             var user = new ApplicationUser
             {
                 Id = Guid.NewGuid(),
@@ -96,7 +81,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<TenantAdminDto>.Failure(errors, 400);
             }
 
-            // 6. Assign "Administrator" role automatically
             var adminRole = await _roleManager.FindByNameAsync(Roles.Administrator);
             if (adminRole != null)
             {
@@ -115,7 +99,6 @@ public class TenantAdminService : ITenantAdminService
                 await _userManager.AddToRoleAsync(user, Roles.Administrator);
             }
 
-            // 7. Log audit entry
             await _auditService.LogActionAsync(
                 "CreateTenantAdmin",
                 "TenantAdmin",
@@ -126,7 +109,6 @@ public class TenantAdminService : ITenantAdminService
 
             _logger.LogInformation("Created tenant admin {Email} for tenant {TenantId}", dto.Email, dto.TenantId);
 
-            // Return created tenant admin
             return await GetTenantAdminByIdAsync(user.Id);
         }
         catch (Exception ex)
@@ -144,12 +126,10 @@ public class TenantAdminService : ITenantAdminService
             if (user == null)
                 return Result<TenantAdminDto>.Failure("Tenant admin not found", 404);
 
-            // Verify user is actually a tenant admin
             var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Administrator);
             if (!isAdmin)
                 return Result<TenantAdminDto>.Failure("User is not a tenant administrator", 400);
 
-            // Update user details
             user.FirstName = dto.FirstName;
             user.MiddleName = dto.MiddleName;
             user.LastName = dto.LastName;
@@ -164,7 +144,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<TenantAdminDto>.Failure(errors, 400);
             }
 
-            // Log audit entry
             await _auditService.LogActionAsync(
                 "UpdateTenantAdmin",
                 "TenantAdmin",
@@ -236,7 +215,6 @@ public class TenantAdminService : ITenantAdminService
     {
         try
         {
-            // Get all users with Administrator role
             var adminRoleId = await _context.Roles
                 .Where(r => r.Name == Roles.Administrator)
                 .Select(r => r.Id)
@@ -257,7 +235,6 @@ public class TenantAdminService : ITenantAdminService
                 .Include(u => u.Branch)
                 .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId));
 
-            // Apply filters
             if (tenantId.HasValue)
                 query = query.Where(u => u.TenantId == tenantId.Value);
 
@@ -377,12 +354,10 @@ public class TenantAdminService : ITenantAdminService
             if (user == null)
                 return Result<bool>.Failure("Tenant admin not found", 404);
 
-            // Verify user is actually a tenant admin
             var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Administrator);
             if (!isAdmin)
                 return Result<bool>.Failure("User is not a tenant administrator", 400);
 
-            // Remove current password and set new one
             var token = await _userManager.GeneratePasswordResetTokenAsync(user);
             var result = await _userManager.ResetPasswordAsync(user, token, dto.NewPassword);
 
@@ -392,7 +367,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<bool>.Failure(errors, 400);
             }
 
-            // Log audit entry
             await _auditService.LogActionAsync(
                 "ResetTenantAdminPassword",
                 "TenantAdmin",
@@ -420,7 +394,6 @@ public class TenantAdminService : ITenantAdminService
             if (user == null)
                 return Result<bool>.Failure("Tenant admin not found", 404);
 
-            // Verify user is actually a tenant admin
             var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Administrator);
             if (!isAdmin)
                 return Result<bool>.Failure("User is not a tenant administrator", 400);
@@ -435,7 +408,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<bool>.Failure(errors, 400);
             }
 
-            // Log audit entry
             await _auditService.LogActionAsync(
                 "ActivateTenantAdmin",
                 "TenantAdmin",
@@ -463,7 +435,6 @@ public class TenantAdminService : ITenantAdminService
             if (user == null)
                 return Result<bool>.Failure("Tenant admin not found", 404);
 
-            // Verify user is actually a tenant admin
             var isAdmin = await _userManager.IsInRoleAsync(user, Roles.Administrator);
             if (!isAdmin)
                 return Result<bool>.Failure("User is not a tenant administrator", 400);
@@ -478,7 +449,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<bool>.Failure(errors, 400);
             }
 
-            // Log audit entry
             await _auditService.LogActionAsync(
                 "DeactivateTenantAdmin",
                 "TenantAdmin",
@@ -511,7 +481,6 @@ public class TenantAdminService : ITenantAdminService
             if (!isAdmin)
                 return Result<bool>.Failure("User is not a tenant administrator", 400);
 
-            // Check if tenant is active and this is the only admin
             if (user.TenantId.HasValue)
             {
                 var tenant = await _context.Tenants.FindAsync(user.TenantId.Value);
@@ -534,7 +503,6 @@ public class TenantAdminService : ITenantAdminService
                 return Result<bool>.Failure(errors, 400);
             }
 
-            // Log audit entry
             await _auditService.LogActionAsync(
                 "DeleteTenantAdmin",
                 "TenantAdmin",
@@ -564,14 +532,14 @@ public class TenantAdminService : ITenantAdminService
                 .FirstOrDefaultAsync();
 
             if (adminRoleId == Guid.Empty)
-                return true; // No admin role means no admins
+                return true;
 
             var adminCount = await _userManager.Users
                 .Where(u => u.TenantId == tenantId && 
                            _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId))
                 .CountAsync();
 
-            return adminCount == 0; // Returns true if no admin exists (valid to create one)
+            return adminCount == 0;
         }
         catch (Exception ex)
         {
@@ -585,7 +553,6 @@ public class TenantAdminService : ITenantAdminService
     /// </summary>
     private async Task<Branch> GetOrCreateHeadquartersBranchAsync(Tenant tenant)
     {
-        // Check if tenant has any active branches
         var existingBranch = await _context.Branches
             .Where(b => b.TenantId == tenant.Id && b.IsActive)
             .FirstOrDefaultAsync();
@@ -597,7 +564,6 @@ public class TenantAdminService : ITenantAdminService
             return existingBranch;
         }
 
-        // Check if there's already a "Headquarters" branch (even if inactive)
         var hqBranch = await _context.Branches
             .Where(b => b.TenantId == tenant.Id && b.Name == "Headquarters")
             .FirstOrDefaultAsync();
@@ -612,7 +578,6 @@ public class TenantAdminService : ITenantAdminService
             return hqBranch;
         }
 
-        // Create new "Headquarters" branch
         var newBranch = new Branch
         {
             Id = Guid.NewGuid(),

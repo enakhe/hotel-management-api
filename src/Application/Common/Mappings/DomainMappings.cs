@@ -67,7 +67,8 @@ public class PlanMappingProfile : Profile
                     Unit = null
                 })
                 .ToArray()))
-            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits));
+            .ForMember(dest => dest.Limits, opt => opt.MapFrom(src => src.Limits))
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.PlanModules.Sum(pm => pm.Module.Pricing != null && pm.Module.Pricing.Price != null ? pm.Module.Pricing.Price.Value : 0)));
 
         CreateMap<CreatePlanRequest, Plan>()
             .ForMember(dest => dest.Id, opt => opt.Ignore())

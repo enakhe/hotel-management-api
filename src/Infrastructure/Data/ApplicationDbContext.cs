@@ -35,6 +35,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Limits> Limits { get; set; }
     public DbSet<PlanModule> PlanModules { get; set; }
 
+    // Report Management
+    public DbSet<Report> Reports { get; set; }
+    public DbSet<ReportSchedule> ReportSchedules { get; set; }
+    public DbSet<ReportSubscription> ReportSubscriptions { get; set; }
+    public DbSet<ReportTemplate> ReportTemplates { get; set; }
+    public DbSet<ReportExecution> ReportExecutions { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
@@ -58,6 +65,13 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
         builder.ApplyConfiguration(new PlanConfiguration());
         builder.ApplyConfiguration(new LicenseConfiguration());
         builder.ApplyConfiguration(new LimitsConfiguration());
+
+        // Report Management Configurations
+        builder.ApplyConfiguration(new ReportConfiguration());
+        builder.ApplyConfiguration(new ReportScheduleConfiguration());
+        builder.ApplyConfiguration(new ReportSubscriptionConfiguration());
+        builder.ApplyConfiguration(new ReportTemplateConfiguration());
+        builder.ApplyConfiguration(new ReportExecutionConfiguration());
 
         ConfigureTenantQueryFilters(builder);
     }

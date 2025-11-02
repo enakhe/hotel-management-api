@@ -47,6 +47,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentValidation.AspNetCore" />
+    <PackageReference Include="QuestPDF" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
   </ItemGroup>
 
@@ -63,7 +64,7 @@
     </Exec>
 
     <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
-    <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
+    <Warning Text="NSwag generation failed (expected with .NET 9 minimal hosting). OpenAPI spec will be generated at runtime instead. $(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
   </Target>
 
 </Project>

@@ -1,3 +1,4 @@
+using Hangfire;
 using Hellang.Middleware.ProblemDetails;
 using HotelManagement.Application;
 using HotelManagement.Application.Common.Exceptions;
@@ -36,6 +37,26 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSuperAdminAuthentication(builder.Configuration);
 builder.Services.AddSuperAdminAuthorization();
+
+// Configure Hangfire for background job processing
+builder.Services.AddHangfire(configuration => configuration
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UseSqlServerStorage(builder.Configuration.GetConnectionString("sql"), new Hangfire.SqlServer.SqlServerStorageOptions
+    {
+        CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+        SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+        QueuePollInterval = TimeSpan.Zero,
+        UseRecommendedIsolationLevel = true,
+        DisableGlobalLocks = true
+    }));
+
+// Add Hangfire Server
+builder.Services.AddHangfireServer(options =>
+{
+    options.WorkerCount = builder.Configuration.GetValue<int>("Hangfire:WorkerCount", 5);
+});
 
 builder.Services.AddProblemDetails(options =>
 {
@@ -106,6 +127,10 @@ app.UseMiddleware<IdempotencyMiddleware>();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseHangfireDashboard("/hangfire", new DashboardOptions
+{
+    Authorization = new[] { new HangfireAuthorizationFilter() }
+});
 app.UseMiddleware<AuthorizationFailureMiddleware>();
 
 app.UseAntiforgery();

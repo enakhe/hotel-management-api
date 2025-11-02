@@ -19,6 +19,9 @@ using HotelManagement.Infrastructure.Data.Services;
 using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
 using HotelManagement.Infrastructure.Services;
+using HotelManagement.Infrastructure.Services.Reports;
+using HotelManagement.Infrastructure.Services.Reports.Exporters;
+using HotelManagement.Infrastructure.Services.Reports.Generators;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -120,6 +123,32 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IBranchRepository, BranchRepository>();
 
+        // Core Report Services
+        services.AddScoped<IReportService, ReportService>();
+        services.AddScoped<IReportGeneratorService, ReportGeneratorService>();
+        services.AddScoped<IReportExportService, ReportExportService>();
+        services.AddScoped<IReportSchedulerService, ReportSchedulerService>();
+        services.AddScoped<IReportSubscriptionService, ReportSubscriptionService>();
+        services.AddScoped<IReportTemplateService, ReportTemplateService>();
+
+        // Infrastructure Services
+        services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IBackgroundJobService, BackgroundJobService>();
+
+        // Report Data Generators
+        services.AddScoped<SystemOverviewReportGenerator>();
+        services.AddScoped<FinancialReportGenerator>();
+        services.AddScoped<TenantUsageReportGenerator>();
+        services.AddScoped<AuditReportGenerator>();
+        services.AddScoped<AnalyticsReportGenerator>();
+
+        // Report Exporters
+        services.AddScoped<PdfReportExporter>();
+        services.AddScoped<ExcelReportExporter>();
+        services.AddScoped<CsvReportExporter>();
+        services.AddScoped<JsonReportExporter>();
+        services.AddScoped<HtmlReportExporter>();
+
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<IRoleService, RoleService>();
@@ -180,6 +209,13 @@ public static class DependencyInjection
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+        // Configure EPPlus license for non-commercial use (EPPlus 8+)
+        // Note: EPPlus 8+ requires license configuration. This can be done through:
+        // 1. appsettings.json configuration section
+        // 2. Environment variable: EPPlus__ExcelPackage__LicenseContext=NonCommercial
+        // 3. Code-based configuration (if API allows)
+        // For now, this will be configured through app settings or environment variables
 
         return services;
     }

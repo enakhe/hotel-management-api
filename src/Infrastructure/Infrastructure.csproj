@@ -12,6 +12,11 @@
     <PackageReference Include="Aspire.StackExchange.Redis.DistributedCaching" />
     <PackageReference Include="Aspire.StackExchange.Redis.OutputCaching" />
     <PackageReference Include="Azure.Identity" />
+    <PackageReference Include="CsvHelper" />
+    <PackageReference Include="DocumentFormat.OpenXml" />
+    <PackageReference Include="EPPlus" />
+    <PackageReference Include="Hangfire" />
+    <PackageReference Include="MailKit" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
@@ -21,6 +26,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="QuestPDF" />
   </ItemGroup>
 
   <ItemGroup>

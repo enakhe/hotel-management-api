@@ -11,11 +11,11 @@ public enum LicenseStatusType
 
 public enum LicenseType
 {
-    Standard,
-    Premium,
-    Enterprise,
-    Trial,
-    Custom
+    Standard = 0,
+    Premium = 1,
+    Enterprise = 2,
+    Trial = 3,
+    Custom = 4
 }
 
 public enum LicenseKeyFormat
