@@ -81,7 +81,9 @@ public class TenantResolutionMiddleware
             "/api/swagger",
             "/error",
             "/",
-            "/cp" // Skip all SuperAdmin control panel routes
+            "/hangfire",
+            "/hubs/notifications",
+            "/cp"
         };
 
         return skipPaths.Any(skipPath => path.StartsWithSegments(skipPath, StringComparison.OrdinalIgnoreCase));

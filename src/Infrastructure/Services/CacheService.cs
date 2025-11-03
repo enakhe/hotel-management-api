@@ -181,23 +181,42 @@ public class CacheService : ICacheService
 /// </summary>
 public static class CacheKeys
 {
+    // Tenant-related keys
     public static string TenantConfig(Guid tenantId) => $"tenant:{tenantId}:config";
-
     public static string TenantPermissions(Guid tenantId) => $"tenant:{tenantId}:permissions";
-
-    public static string UserPermissions(Guid userId) => $"user:{userId}:permissions";
-
-    public static string UserRoles(Guid userId) => $"user:{userId}:roles";
-
+    public static string TenantStats(Guid tenantId) => $"tenant:{tenantId}:stats";
     public static string TenantBranches(Guid tenantId) => $"tenant:{tenantId}:branches";
-
-    public static string TenantUsers(Guid tenantId, int page, int pageSize) =>
+    public static string TenantUsers(Guid tenantId, int page, int pageSize) => 
         $"tenant:{tenantId}:users:page_{page}_{pageSize}";
-
+    public static string TenantRooms(Guid tenantId, Guid branchId) => 
+        $"tenant:{tenantId}:branch:{branchId}:rooms";
+    
+    // User-related keys
+    public static string User(Guid userId) => $"user:{userId}";
+    public static string UserPermissions(Guid userId) => $"user:{userId}:permissions";
+    public static string UserRoles(Guid userId) => $"user:{userId}:roles";
+    public static string UserProfile(Guid userId) => $"user:{userId}:profile";
+    
+    // Entity keys
+    public static string Branch(Guid branchId) => $"branch:{branchId}";
+    public static string Room(Guid roomId) => $"room:{roomId}";
+    public static string Reservation(Guid reservationId) => $"reservation:{reservationId}";
+    
+    // Plan and Module keys (global/system-wide)
     public static string Plan(Guid planId) => $"plan:{planId}";
-
+    public static string AllPlans() => "plans:all";
     public static string Module(Guid moduleId) => $"module:{moduleId}";
-
     public static string AllModules() => "modules:all";
+    
+    // Dashboard keys
+    public static string DashboardData(Guid tenantId, string userId) => 
+        $"tenant:{tenantId}:user:{userId}:dashboard";
+    
+    // Availability/booking keys
+    public static string AvailableRooms(Guid branchId, DateTime date) => 
+        $"branch:{branchId}:available_rooms:{date:yyyyMMdd}";
+    
+    public static string RoomAvailability(Guid roomId, DateTime startDate, DateTime endDate) => 
+        $"room:{roomId}:availability:{startDate:yyyyMMdd}_{endDate:yyyyMMdd}";
 }
 

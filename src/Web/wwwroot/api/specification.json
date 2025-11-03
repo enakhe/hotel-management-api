@@ -3,7 +3,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "HotelManagement API",
-    "version": "1.0.0"
+    "description": "Multi-tenant Hotel Management System API",
+    "version": "v1.0"
   },
   "paths": {
     "/api/v1/tenant-settings/settings": {
@@ -11,10 +12,31 @@
         "tags": [
           "TenantSettings"
         ],
+        "summary": "Gets tenant settings including enabled features",
         "operationId": "TenantSettings_GetTenantSettings",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Tenant settings",
             "content": {
               "application/json": {
                 "schema": {
@@ -36,21 +58,41 @@
         "tags": [
           "TenantSettings"
         ],
+        "summary": "Checks if a specific feature is enabled for the current tenant",
         "operationId": "TenantSettings_IsFeatureEnabled",
         "parameters": [
           {
             "name": "featureName",
             "in": "path",
             "required": true,
+            "description": "The feature name to check",
             "schema": {
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "True if the feature is enabled",
             "content": {
               "application/json": {
                 "schema": {
@@ -72,10 +114,31 @@
         "tags": [
           "TenantSettings"
         ],
+        "summary": "Gets all enabled features for the current tenant",
         "operationId": "TenantSettings_GetEnabledFeatures",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of enabled feature names",
             "content": {
               "application/json": {
                 "schema": {
@@ -100,10 +163,31 @@
         "tags": [
           "TenantSettings"
         ],
+        "summary": "Checks if the current tenant's license is valid",
         "operationId": "TenantSettings_IsLicenseValid",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "True if the license is valid",
             "content": {
               "application/json": {
                 "schema": {
@@ -126,6 +210,26 @@
           "Sync"
         ],
         "operationId": "Sync_Sync",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": ""
@@ -138,12 +242,14 @@
         "tags": [
           "Audit"
         ],
+        "summary": "Get audit logs for a specific SuperAdmin",
         "operationId": "Audit_GetSuperAdminAuditLogs",
         "parameters": [
           {
             "name": "superAdminId",
             "in": "path",
             "required": true,
+            "description": "SuperAdmin ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -187,11 +293,29 @@
               "nullable": true
             },
             "x-position": 5
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated audit logs",
             "content": {
               "application/json": {
                 "schema": {
@@ -215,12 +339,14 @@
         "tags": [
           "Audit"
         ],
+        "summary": "Get audit logs for a specific tenant",
         "operationId": "Audit_GetTenantAuditLogs",
         "parameters": [
           {
             "name": "tenantId",
             "in": "path",
             "required": true,
+            "description": "Tenant ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -244,11 +370,29 @@
               "format": "int32"
             },
             "x-position": 3
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated audit logs",
             "content": {
               "application/json": {
                 "schema": {
@@ -272,6 +416,7 @@
         "tags": [
           "Audit"
         ],
+        "summary": "Get audit logs for all SuperAdmin actions",
         "operationId": "Audit_GetAllAuditLogs",
         "parameters": [
           {
@@ -329,11 +474,29 @@
               "nullable": true
             },
             "x-position": 6
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 8
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated audit logs",
             "content": {
               "application/json": {
                 "schema": {
@@ -357,6 +520,7 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get list of licenses with filtering and pagination",
         "operationId": "LicenseManagement_GetLicenses",
         "parameters": [
           {
@@ -466,11 +630,29 @@
               "type": "boolean"
             },
             "x-position": 11
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 12
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 13
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of licenses",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -493,9 +675,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Create a new license",
         "operationId": "LicenseManagement_CreateLicense",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "License creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -508,7 +712,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -533,22 +737,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get a specific license by ID",
         "operationId": "LicenseManagement_GetLicenseById",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "License details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -571,21 +795,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Update an existing license",
         "operationId": "LicenseManagement_UpdateLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "License update request",
           "content": {
             "application/json": {
               "schema": {
@@ -598,7 +843,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Updated license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -621,22 +866,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Delete a license",
         "operationId": "LicenseManagement_DeleteLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Deletion result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -661,21 +926,41 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get a specific license by license key",
         "operationId": "LicenseManagement_GetLicenseByKey",
         "parameters": [
           {
             "name": "licenseKey",
             "in": "path",
             "required": true,
+            "description": "License key",
             "schema": {
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "License details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -700,9 +985,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Validate a license key",
         "operationId": "LicenseManagement_ValidateLicense",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "License validation request",
           "content": {
             "application/json": {
               "schema": {
@@ -715,7 +1022,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Validation result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -740,9 +1047,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Validate license key format",
         "operationId": "LicenseManagement_ValidateLicenseKeyFormat",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Format validation request",
           "content": {
             "application/json": {
               "schema": {
@@ -755,7 +1084,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Format validation result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -780,9 +1109,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Generate a license key",
         "operationId": "LicenseManagement_GenerateLicenseKey",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Key generation request",
           "content": {
             "application/json": {
               "schema": {
@@ -795,7 +1146,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Generated license key",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -820,21 +1171,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Renew a license",
         "operationId": "LicenseManagement_RenewLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Renewal request",
           "content": {
             "application/json": {
               "schema": {
@@ -847,7 +1219,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Renewed license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -872,21 +1244,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Transfer a license to another tenant",
         "operationId": "LicenseManagement_TransferLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Transfer request",
           "content": {
             "application/json": {
               "schema": {
@@ -899,7 +1292,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Transferred license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -924,21 +1317,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Suspend a license",
         "operationId": "LicenseManagement_SuspendLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Suspension request",
           "content": {
             "application/json": {
               "schema": {
@@ -951,7 +1365,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Suspended license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -976,21 +1390,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Revoke a license",
         "operationId": "LicenseManagement_RevokeLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Revocation request",
           "content": {
             "application/json": {
               "schema": {
@@ -1003,7 +1438,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Revoked license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1028,21 +1463,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Activate a license",
         "operationId": "LicenseManagement_ActivateLicense",
         "parameters": [
           {
             "name": "licenseId",
             "in": "path",
             "required": true,
+            "description": "License ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Activation request",
           "content": {
             "application/json": {
               "schema": {
@@ -1055,7 +1511,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Activated license result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1080,10 +1536,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get license analytics",
         "operationId": "LicenseManagement_GetLicenseAnalytics",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "License analytics data",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1108,10 +1585,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get license usage data",
         "operationId": "LicenseManagement_GetLicenseUsage",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "License usage data",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1136,22 +1634,42 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Get licenses expiring within specified days",
         "operationId": "LicenseManagement_GetExpiringLicenses",
         "parameters": [
           {
             "name": "days",
             "in": "path",
             "required": true,
+            "description": "Number of days",
             "schema": {
               "type": "integer",
               "format": "int32"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Expiring licenses",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1176,9 +1694,31 @@
         "tags": [
           "LicenseManagement"
         ],
+        "summary": "Bulk update multiple licenses",
         "operationId": "LicenseManagement_BulkUpdateLicenses",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "updates",
+          "description": "Bulk update requests",
           "content": {
             "application/json": {
               "schema": {
@@ -1194,7 +1734,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Bulk update result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1219,6 +1759,7 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Get list of modules with filtering and pagination",
         "operationId": "ModuleManagement_GetModules",
         "parameters": [
           {
@@ -1290,11 +1831,29 @@
               "type": "boolean"
             },
             "x-position": 8
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 10
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of modules",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1317,9 +1876,31 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Create a new module",
         "operationId": "ModuleManagement_CreateModule",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Module creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -1332,7 +1913,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created module result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1357,22 +1938,42 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Get a specific module by ID",
         "operationId": "ModuleManagement_GetModuleById",
         "parameters": [
           {
             "name": "moduleId",
             "in": "path",
             "required": true,
+            "description": "Module ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Module details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1395,21 +1996,42 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Update an existing module",
         "operationId": "ModuleManagement_UpdateModule",
         "parameters": [
           {
             "name": "moduleId",
             "in": "path",
             "required": true,
+            "description": "Module ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Module update request",
           "content": {
             "application/json": {
               "schema": {
@@ -1422,7 +2044,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Updated module result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1445,22 +2067,42 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Delete a module",
         "operationId": "ModuleManagement_DeleteModule",
         "parameters": [
           {
             "name": "moduleId",
             "in": "path",
             "required": true,
+            "description": "Module ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Deletion result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1485,9 +2127,31 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Bulk update multiple modules",
         "operationId": "ModuleManagement_BulkUpdateModules",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "updates",
+          "description": "Bulk update requests",
           "content": {
             "application/json": {
               "schema": {
@@ -1503,7 +2167,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Bulk update result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1528,10 +2192,31 @@
         "tags": [
           "ModuleManagement"
         ],
+        "summary": "Get module usage analytics",
         "operationId": "ModuleManagement_GetModuleUsage",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Module usage analytics",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1556,6 +2241,7 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Get list of plans with filtering and pagination",
         "operationId": "PlanManagement_GetPlans",
         "parameters": [
           {
@@ -1618,11 +2304,29 @@
               "type": "boolean"
             },
             "x-position": 7
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 9
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of plans",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1645,9 +2349,31 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Create a new subscription plan",
         "operationId": "PlanManagement_CreatePlan",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Plan creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -1660,7 +2386,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created plan result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1685,22 +2411,42 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Get a specific plan by ID",
         "operationId": "PlanManagement_GetPlanById",
         "parameters": [
           {
             "name": "planId",
             "in": "path",
             "required": true,
+            "description": "Plan ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Plan details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1723,21 +2469,42 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Update an existing plan",
         "operationId": "PlanManagement_UpdatePlan",
         "parameters": [
           {
             "name": "planId",
             "in": "path",
             "required": true,
+            "description": "Plan ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Plan update request",
           "content": {
             "application/json": {
               "schema": {
@@ -1750,7 +2517,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Updated plan result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1773,22 +2540,42 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Delete a plan",
         "operationId": "PlanManagement_DeletePlan",
         "parameters": [
           {
             "name": "planId",
             "in": "path",
             "required": true,
+            "description": "Plan ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Deletion result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1813,12 +2600,14 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Assign a module to a plan",
         "operationId": "PlanManagement_AssignModuleToPlan",
         "parameters": [
           {
             "name": "planId",
             "in": "path",
             "required": true,
+            "description": "Plan ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -1829,16 +2618,35 @@
             "name": "moduleId",
             "in": "path",
             "required": true,
+            "description": "Module ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 2
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Assignment result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1861,12 +2669,14 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Remove a module from a plan",
         "operationId": "PlanManagement_RemoveModuleFromPlan",
         "parameters": [
           {
             "name": "planId",
             "in": "path",
             "required": true,
+            "description": "Plan ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -1877,16 +2687,35 @@
             "name": "moduleId",
             "in": "path",
             "required": true,
+            "description": "Module ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 2
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Removal result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1911,9 +2740,31 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Bulk update multiple plans",
         "operationId": "PlanManagement_BulkUpdatePlans",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Bulk update request",
           "content": {
             "application/json": {
               "schema": {
@@ -1926,7 +2777,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Bulk update result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1951,10 +2802,31 @@
         "tags": [
           "PlanManagement"
         ],
+        "summary": "Get plan usage analytics",
         "operationId": "PlanManagement_GetPlanUsage",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Plan usage analytics",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -1979,6 +2851,7 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get list of reports with filtering and pagination",
         "operationId": "ReportManagement_GetReports",
         "parameters": [
           {
@@ -2103,11 +2976,29 @@
               "type": "boolean"
             },
             "x-position": 12
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 13
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 14
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of reports",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2130,9 +3021,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Generate a new report",
         "operationId": "ReportManagement_GenerateReport",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Report generation request",
           "content": {
             "application/json": {
               "schema": {
@@ -2145,7 +3058,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Generated report details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2170,22 +3083,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get specific report by ID",
         "operationId": "ReportManagement_GetReport",
         "parameters": [
           {
             "name": "reportId",
             "in": "path",
             "required": true,
+            "description": "Report ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Report details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2208,22 +3141,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Delete a report",
         "operationId": "ReportManagement_DeleteReport",
         "parameters": [
           {
             "name": "reportId",
             "in": "path",
             "required": true,
+            "description": "Report ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Delete result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2248,22 +3201,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Download a generated report",
         "operationId": "ReportManagement_DownloadReport",
         "parameters": [
           {
             "name": "reportId",
             "in": "path",
             "required": true,
+            "description": "Report ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Report file",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2288,10 +3261,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get available report types",
         "operationId": "ReportManagement_GetReportTypes",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of report types with metadata",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2316,6 +3310,7 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get report generation history",
         "operationId": "ReportManagement_GetReportHistory",
         "parameters": [
           {
@@ -2413,11 +3408,29 @@
               "type": "boolean"
             },
             "x-position": 10
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 12
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of report executions",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2442,10 +3455,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get report analytics",
         "operationId": "ReportManagement_GetReportAnalytics",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Report system analytics",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2470,6 +3504,7 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get list of report schedules with filtering and pagination",
         "operationId": "ReportManagement_GetReportSchedules",
         "parameters": [
           {
@@ -2557,11 +3592,29 @@
               "type": "boolean"
             },
             "x-position": 9
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 11
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of schedules",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2584,9 +3637,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Create a new report schedule",
         "operationId": "ReportManagement_CreateReportSchedule",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Schedule creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -2599,7 +3674,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created schedule details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2624,22 +3699,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get specific schedule by ID",
         "operationId": "ReportManagement_GetReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Schedule details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2662,21 +3757,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Update an existing report schedule",
         "operationId": "ReportManagement_UpdateReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Schedule update request",
           "content": {
             "application/json": {
               "schema": {
@@ -2689,7 +3805,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Updated schedule details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2712,22 +3828,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Delete a report schedule",
         "operationId": "ReportManagement_DeleteReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Delete result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2752,22 +3888,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Pause a report schedule",
         "operationId": "ReportManagement_PauseReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2792,22 +3948,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Resume a paused report schedule",
         "operationId": "ReportManagement_ResumeReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2832,22 +4008,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Execute a report schedule immediately",
         "operationId": "ReportManagement_ExecuteReportSchedule",
         "parameters": [
           {
             "name": "scheduleId",
             "in": "path",
             "required": true,
+            "description": "Schedule ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2872,6 +4068,7 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get list of report subscriptions",
         "operationId": "ReportManagement_GetReportSubscriptions",
         "parameters": [
           {
@@ -2902,11 +4099,29 @@
               "nullable": true
             },
             "x-position": 3
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of subscriptions",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2929,9 +4144,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Create a new report subscription",
         "operationId": "ReportManagement_CreateReportSubscription",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Subscription creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -2944,7 +4181,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created subscription details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -2969,22 +4206,42 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Delete a report subscription",
         "operationId": "ReportManagement_DeleteReportSubscription",
         "parameters": [
           {
             "name": "subscriptionId",
             "in": "path",
             "required": true,
+            "description": "Subscription ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Delete result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3009,6 +4266,7 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Get list of report templates",
         "operationId": "ReportManagement_GetReportTemplates",
         "parameters": [
           {
@@ -3051,11 +4309,29 @@
               "nullable": true
             },
             "x-position": 4
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "List of templates",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3078,9 +4354,31 @@
         "tags": [
           "ReportManagement"
         ],
+        "summary": "Create a new report template",
         "operationId": "ReportManagement_CreateReportTemplate",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Template creation request",
           "content": {
             "application/json": {
               "schema": {
@@ -3093,7 +4391,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created template details",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3119,6 +4417,26 @@
           "SuperAdmin"
         ],
         "operationId": "SuperAdmin_Login",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3152,6 +4470,26 @@
           "SuperAdmin"
         ],
         "operationId": "SuperAdmin_RefreshToken",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3191,9 +4529,31 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Create a new Tenant Administrator",
         "operationId": "TenantAdmin_CreateTenantAdmin",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
+          "description": "Tenant admin creation details",
           "content": {
             "application/json": {
               "schema": {
@@ -3206,10 +4566,10 @@
         },
         "responses": {
           "201": {
-            "description": ""
+            "description": "Tenant admin created successfully"
           },
           "400": {
-            "description": "",
+            "description": "Invalid request or validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3219,7 +4579,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3241,6 +4601,7 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Get all Tenant Administrators with pagination and filtering",
         "operationId": "TenantAdmin_GetTenantAdmins",
         "parameters": [
           {
@@ -3288,11 +4649,29 @@
               "nullable": true
             },
             "x-position": 5
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 7
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "List retrieved successfully"
           }
         },
         "security": [
@@ -3309,25 +4688,45 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Get a Tenant Administrator by ID",
         "operationId": "TenantAdmin_GetTenantAdminById",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin found"
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3349,21 +4748,42 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Update a Tenant Administrator's profile",
         "operationId": "TenantAdmin_UpdateTenantAdmin",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Update details",
           "content": {
             "application/json": {
               "schema": {
@@ -3376,10 +4796,10 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin updated successfully"
           },
           "400": {
-            "description": "",
+            "description": "Invalid request or validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3389,7 +4809,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3411,25 +4831,45 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Delete a Tenant Administrator",
         "operationId": "TenantAdmin_DeleteTenantAdmin",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin deleted successfully"
           },
           "400": {
-            "description": "",
+            "description": "Cannot delete (validation error)",
             "content": {
               "application/json": {
                 "schema": {
@@ -3439,7 +4879,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3463,25 +4903,45 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Get the Administrator for a specific tenant",
         "operationId": "TenantAdmin_GetTenantAdminByTenantId",
         "parameters": [
           {
             "name": "tenantId",
             "in": "path",
             "required": true,
+            "description": "Tenant ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin found"
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3505,21 +4965,42 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Reset a Tenant Administrator's password",
         "operationId": "TenantAdmin_ResetPassword",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
           "x-name": "command",
+          "description": "Password reset details",
           "content": {
             "application/json": {
               "schema": {
@@ -3532,10 +5013,10 @@
         },
         "responses": {
           "200": {
-            "description": ""
+            "description": "Password reset successfully"
           },
           "400": {
-            "description": "",
+            "description": "Invalid request or validation error",
             "content": {
               "application/json": {
                 "schema": {
@@ -3545,7 +5026,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3569,25 +5050,45 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Activate a Tenant Administrator account",
         "operationId": "TenantAdmin_ActivateTenantAdmin",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin activated successfully"
           },
           "400": {
-            "description": "",
+            "description": "Invalid request",
             "content": {
               "application/json": {
                 "schema": {
@@ -3597,7 +5098,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3621,25 +5122,45 @@
         "tags": [
           "TenantAdmin"
         ],
+        "summary": "Deactivate a Tenant Administrator account",
         "operationId": "TenantAdmin_DeactivateTenantAdmin",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "Tenant admin deactivated successfully"
           },
           "400": {
-            "description": "",
+            "description": "Invalid request",
             "content": {
               "application/json": {
                 "schema": {
@@ -3649,7 +5170,7 @@
             }
           },
           "404": {
-            "description": "",
+            "description": "Tenant admin not found",
             "content": {
               "application/json": {
                 "schema": {
@@ -3673,7 +5194,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Create a new tenant",
         "operationId": "TenantManagement_CreateTenant",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3688,7 +5230,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Created tenant result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3711,6 +5253,7 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Get list of tenants with filtering and pagination",
         "operationId": "TenantManagement_GetTenants",
         "parameters": [
           {
@@ -3803,11 +5346,29 @@
               "type": "boolean"
             },
             "x-position": 10
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 12
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Paginated list of tenants",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3832,22 +5393,42 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Get detailed information about a specific tenant",
         "operationId": "TenantManagement_GetTenant",
         "parameters": [
           {
             "name": "tenantId",
             "in": "path",
             "required": true,
+            "description": "Tenant ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Detailed tenant information",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3872,7 +5453,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Update tenant profile, branding, and contacts",
         "operationId": "TenantManagement_UpdateTenant",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3887,7 +5489,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Update result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3912,7 +5514,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Lock a tenant (blocks logins and API access)",
         "operationId": "TenantManagement_LockTenant",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3927,7 +5550,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Lock result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3952,7 +5575,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Unlock a tenant",
         "operationId": "TenantManagement_UnlockTenant",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -3967,7 +5611,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Unlock result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -3992,7 +5636,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Set tenant mode (Active, ReadOnly, Suspended, Locked)",
         "operationId": "TenantManagement_SetTenantMode",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4007,7 +5672,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Mode change result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4032,7 +5697,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Terminate a tenant (requires step-up authentication)",
         "operationId": "TenantManagement_TerminateTenant",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4047,7 +5733,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Termination result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4072,7 +5758,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Export tenant data",
         "operationId": "TenantManagement_ExportTenantData",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4087,7 +5794,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Export job result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4112,7 +5819,28 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Purge tenant data (requires step-up authentication and 2-man rule)",
         "operationId": "TenantManagement_PurgeTenantData",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4127,7 +5855,7 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Purge result",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4152,22 +5880,42 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Get tenant usage statistics",
         "operationId": "TenantManagement_GetTenantUsage",
         "parameters": [
           {
             "name": "tenantId",
             "in": "path",
             "required": true,
+            "description": "Tenant ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Usage statistics",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4192,22 +5940,42 @@
         "tags": [
           "TenantManagement"
         ],
+        "summary": "Get tenant health status",
         "operationId": "TenantManagement_GetTenantHealth",
         "parameters": [
           {
             "name": "tenantId",
             "in": "path",
             "required": true,
+            "description": "Tenant ID",
             "schema": {
               "type": "string",
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Health status",
             "content": {
               "application/octet-stream": {
                 "schema": {
@@ -4431,6 +6199,26 @@
           "Branch"
         ],
         "operationId": "Branch_CreateBranch",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "dto",
           "content": {
@@ -4469,6 +6257,26 @@
           "Branch"
         ],
         "operationId": "Branch_GetAllBranches",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -4507,6 +6315,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 4
           }
         ],
         "requestBody": {
@@ -4557,6 +6383,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4595,6 +6439,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4634,6 +6496,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4664,6 +6544,26 @@
           "Role"
         ],
         "operationId": "Role_CreateRole",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4697,6 +6597,26 @@
           "Role"
         ],
         "operationId": "Role_AssignRoleToUser",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4730,6 +6650,26 @@
           "Role"
         ],
         "operationId": "Role_GetAllRoles",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -4761,6 +6701,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4794,6 +6752,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4825,6 +6801,24 @@
               "format": "guid"
             },
             "x-position": 1
+          },
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
           }
         ],
         "responses": {
@@ -4848,6 +6842,26 @@
           "Role"
         ],
         "operationId": "Role_UpdateRole",
+        "parameters": [
+          {
+            "name": "X-Api-Version",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "api-version",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          }
+        ],
         "requestBody": {
           "x-name": "command",
           "content": {
@@ -4880,9 +6894,11 @@
         "tags": [
           "User"
         ],
+        "summary": "Creates a new user in the current tenant",
         "operationId": "User_CreateUser",
         "requestBody": {
           "x-name": "dto",
+          "description": "User creation data",
           "content": {
             "application/json": {
               "schema": {
@@ -4894,13 +6910,53 @@
           "x-position": 1
         },
         "responses": {
-          "200": {
-            "description": "",
+          "201": {
+            "description": "User created successfully",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
                   "type": "string",
-                  "format": "binary"
+                  "format": "guid"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request data",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - authentication required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - insufficient permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict - user already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -4911,9 +6967,11 @@
         "tags": [
           "User"
         ],
+        "summary": "Updates an existing user",
         "operationId": "User_UpdateUser",
         "requestBody": {
           "x-name": "dto",
+          "description": "User update data",
           "content": {
             "application/json": {
               "schema": {
@@ -4926,12 +6984,24 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Invalid request data",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -4942,10 +7012,11 @@
         "tags": [
           "User"
         ],
+        "summary": "Retrieves all users in the current tenant",
         "operationId": "User_GetAllUsers",
         "responses": {
           "200": {
-            "description": "",
+            "description": "Users retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -4965,12 +7036,14 @@
         "tags": [
           "User"
         ],
+        "summary": "Retrieves a user by ID",
         "operationId": "User_GetUserById",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -4980,11 +7053,21 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "User found",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UserDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -4995,12 +7078,15 @@
         "tags": [
           "User"
         ],
+        "summary": "Deletes a user",
+        "description": "This is a soft delete operation. The user record is marked as deleted but not removed from the database.",
         "operationId": "User_DeleteUser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID to delete",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -5010,12 +7096,14 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "User deleted successfully"
+          },
+          "404": {
+            "description": "User not found",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5028,12 +7116,15 @@
         "tags": [
           "User"
         ],
+        "summary": "Deactivates a user account",
+        "description": "Deactivated users cannot login but their data is preserved.\nUse this instead of delete for temporary account suspension.",
         "operationId": "User_DeactivateUser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -5043,12 +7134,14 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "User deactivated successfully"
+          },
+          "404": {
+            "description": "User not found",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5061,12 +7154,14 @@
         "tags": [
           "User"
         ],
+        "summary": "Activates a previously deactivated user account",
         "operationId": "User_ActivateUser",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -5076,12 +7171,14 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "User activated successfully"
+          },
+          "404": {
+            "description": "User not found",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5094,12 +7191,15 @@
         "tags": [
           "User"
         ],
+        "summary": "Assigns roles to a user",
+        "description": "This operation replaces all existing roles with the provided list.\nTo add a single role, include all existing roles plus the new one.",
         "operationId": "User_AssignRoles",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -5109,6 +7209,7 @@
         ],
         "requestBody": {
           "x-name": "roleIds",
+          "description": "List of role IDs to assign",
           "content": {
             "application/json": {
               "schema": {
@@ -5125,12 +7226,14 @@
         },
         "responses": {
           "200": {
-            "description": "",
+            "description": "Roles assigned successfully"
+          },
+          "404": {
+            "description": "User or role not found",
             "content": {
-              "application/octet-stream": {
+              "application/json": {
                 "schema": {
-                  "type": "string",
-                  "format": "binary"
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5141,12 +7244,14 @@
         "tags": [
           "User"
         ],
+        "summary": "Retrieves all roles assigned to a user",
         "operationId": "User_GetUserRoles",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "description": "User ID",
             "schema": {
               "type": "string",
               "format": "guid"
@@ -5156,7 +7261,7 @@
         ],
         "responses": {
           "200": {
-            "description": "",
+            "description": "Roles retrieved successfully",
             "content": {
               "application/json": {
                 "schema": {
@@ -5164,6 +7269,16 @@
                   "items": {
                     "type": "string"
                   }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
                 }
               }
             }
@@ -5176,6 +7291,7 @@
     "schemas": {
       "TenantSettings": {
         "type": "object",
+        "description": "Tenant settings for frontend consumption",
         "additionalProperties": false,
         "properties": {
           "tenantId": {
@@ -5221,6 +7337,7 @@
       },
       "PaginatedResultOfSuperAdminAuditLog": {
         "type": "object",
+        "description": "Paginated result wrapper",
         "additionalProperties": false,
         "properties": {
           "items": {
@@ -5255,6 +7372,7 @@
       },
       "SuperAdminAuditLog": {
         "type": "object",
+        "description": "SuperAdmin audit log entry",
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -5458,7 +7576,7 @@
       },
       "LicenseStatus": {
         "type": "integer",
-        "description": "",
+        "description": "License status enumeration",
         "x-enumNames": [
           "Trial",
           "Active",
@@ -5871,7 +7989,7 @@
       },
       "PricingType": {
         "type": "integer",
-        "description": "",
+        "description": "Types of pricing models for modules",
         "x-enumNames": [
           "Included",
           "Addon",
@@ -5887,7 +8005,7 @@
       },
       "BillingCycle": {
         "type": "integer",
-        "description": "",
+        "description": "Represents the billing cycle for subscription plans",
         "x-enumNames": [
           "Monthly",
           "Yearly",
@@ -6030,6 +8148,7 @@
       },
       "UpdateModuleRequest": {
         "type": "object",
+        "description": "Request DTO for updating a module",
         "additionalProperties": false,
         "properties": {
           "name": {
@@ -6078,6 +8197,7 @@
       },
       "UpdateModuleFeatureRequest": {
         "type": "object",
+        "description": "Request DTO for updating module features",
         "additionalProperties": false,
         "properties": {
           "name": {
@@ -6101,6 +8221,7 @@
       },
       "UpdateModulePricingRequest": {
         "type": "object",
+        "description": "Request DTO for updating module pricing",
         "additionalProperties": false,
         "properties": {
           "type": {
@@ -6214,7 +8335,7 @@
       },
       "SupportLevel": {
         "type": "integer",
-        "description": "",
+        "description": "Represents the support level provided with subscription plans",
         "x-enumNames": [
           "Basic",
           "Standard",
@@ -6374,6 +8495,7 @@
       },
       "UpdatePlanRequest": {
         "type": "object",
+        "description": "Request DTO for updating a plan",
         "additionalProperties": false,
         "properties": {
           "name": {
@@ -6423,6 +8545,7 @@
       },
       "UpdatePlanLimitsRequest": {
         "type": "object",
+        "description": "Request DTO for updating plan limits",
         "additionalProperties": false,
         "properties": {
           "maxUsers": {
@@ -6472,6 +8595,7 @@
       },
       "UpdatePlanModuleRequest": {
         "type": "object",
+        "description": "Request DTO for updating plan modules",
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -6489,7 +8613,7 @@
       },
       "ReportType": {
         "type": "integer",
-        "description": "",
+        "description": "Types of reports available in the system",
         "x-enumNames": [
           "SystemOverview",
           "Financial",
@@ -6509,7 +8633,7 @@
       },
       "ReportStatus": {
         "type": "integer",
-        "description": "",
+        "description": "Status of report generation",
         "x-enumNames": [
           "Pending",
           "Processing",
@@ -6527,7 +8651,7 @@
       },
       "ReportFormat": {
         "type": "integer",
-        "description": "",
+        "description": "Export formats supported for reports",
         "x-enumNames": [
           "PDF",
           "Excel",
@@ -6585,7 +8709,7 @@
       },
       "ReportCategory": {
         "type": "integer",
-        "description": "",
+        "description": "Report category for organization",
         "x-enumNames": [
           "Operations",
           "Financial",
@@ -6605,6 +8729,7 @@
       },
       "ReportParametersDto": {
         "type": "object",
+        "description": "DTO for report parameters",
         "additionalProperties": false,
         "properties": {
           "startDate": {
@@ -6728,7 +8853,7 @@
       },
       "ScheduleFrequency": {
         "type": "integer",
-        "description": "",
+        "description": "Frequency for scheduled reports",
         "x-enumNames": [
           "Daily",
           "Weekly",
@@ -6917,6 +9042,7 @@
       },
       "CreateTenantAdminCommand": {
         "type": "object",
+        "description": "Command to create a new Tenant Administrator",
         "additionalProperties": false,
         "properties": {
           "firstName": {
@@ -6946,6 +9072,7 @@
       },
       "UpdateTenantAdminCommand": {
         "type": "object",
+        "description": "Command to update a Tenant Administrator's profile",
         "additionalProperties": false,
         "properties": {
           "id": {
@@ -6969,6 +9096,7 @@
       },
       "ResetTenantAdminPasswordCommand": {
         "type": "object",
+        "description": "Command to reset a Tenant Administrator's password",
         "additionalProperties": false,
         "properties": {
           "userId": {
