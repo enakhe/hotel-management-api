@@ -14,5 +14,18 @@ internal class BranchConfiguration : IEntityTypeConfiguration<Branch>
         builder.Property(b => b.Email).HasMaxLength(100);
         builder.Property(b => b.TimeZone).HasMaxLength(50);
         builder.Property(b => b.CurrencyCode).HasMaxLength(10);
+
+        // Indexes for query optimization
+        builder.HasIndex(b => b.TenantId)
+            .HasDatabaseName("IX_Branches_TenantId");
+
+        builder.HasIndex(b => new { b.TenantId, b.IsActive })
+            .HasDatabaseName("IX_Branches_TenantId_IsActive");
+
+        builder.HasIndex(b => new { b.TenantId, b.Name })
+            .HasDatabaseName("IX_Branches_TenantId_Name");
+
+        builder.HasIndex(b => b.Email)
+            .HasDatabaseName("IX_Branches_Email");
     }
 }

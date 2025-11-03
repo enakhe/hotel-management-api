@@ -480,3 +480,26 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 .azure
+
+##
+## Application-specific
+##
+
+# User secrets (should never be in repo, but added for safety)
+secrets.json
+appsettings.*.secrets.json
+
+# Local environment overrides
+appsettings.Local.json
+*.local.json
+
+# Reports and generated files
+**/Reports/*.pdf
+**/Reports/*.xlsx
+**/Reports/*.csv
+**/Reports/*.html
+
+# Temp files
+*.tmp
+**/temp/
+**/tmp/

@@ -1,4 +1,5 @@
-﻿using HotelManagement.Application.Core.Auth.Commands;
+﻿using Asp.Versioning;
+using HotelManagement.Application.Core.Auth.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,7 +12,8 @@ namespace HotelManagement.Web.Controllers.Auth;
 /// <param name="mediator"></param>
 
 [ApiController]
-[Route("api/v1/auth")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/auth")]
 public class AuthController(ISender mediator) : ControllerBase
 {
     private readonly ISender _mediator = mediator;

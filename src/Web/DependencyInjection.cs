@@ -19,8 +19,33 @@ public static class DependencyInjection
         services.AddScoped<IUser, CurrentUser>();
 
         services.AddHttpContextAccessor();
+        
+        // Register notification service (SignalR-based)
+        services.AddScoped<INotificationService, Services.NotificationService>();
 
-        services.AddControllers();
+        services.AddControllers(options =>
+        {
+            // Set maximum request body size to 100MB (adjust as needed)
+            options.MaxModelBindingCollectionSize = 1024;
+        });
+
+        // Configure API Versioning
+        services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+            options.ApiVersionReader = Asp.Versioning.ApiVersionReader.Combine(
+                new Asp.Versioning.UrlSegmentApiVersionReader(),
+                new Asp.Versioning.HeaderApiVersionReader("X-Api-Version"),
+                new Asp.Versioning.QueryStringApiVersionReader("api-version"));
+        })
+        .AddMvc()
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
+        });
 
         services.AddExceptionHandler<CustomExceptionHandler>();
 
@@ -40,9 +65,25 @@ public static class DependencyInjection
 
         services.AddEndpointsApiExplorer();
 
+        // Add SignalR for real-time notifications
+        services.AddSignalR(options =>
+        {
+            options.EnableDetailedErrors = true;
+            options.KeepAliveInterval = TimeSpan.FromSeconds(15);
+            options.ClientTimeoutInterval = TimeSpan.FromSeconds(30);
+            options.HandshakeTimeout = TimeSpan.FromSeconds(15);
+        });
+        // Note: For multi-instance deployments, add Redis backplane:
+        // .AddStackExchangeRedis(configuration.GetConnectionString("cache"))
+
         services.AddOpenApiDocument((configure, sp) =>
         {
             configure.Title = "HotelManagement API";
+            configure.Version = "v1.0";
+            configure.Description = "Multi-tenant Hotel Management System API";
+
+            // Note: XML documentation will be automatically included from generated XML files
+            // NSwag automatically discovers XML documentation files in the output directory
 
             // Add JWT
             configure.AddSecurity("JWT", Enumerable.Empty<string>(), new OpenApiSecurityScheme

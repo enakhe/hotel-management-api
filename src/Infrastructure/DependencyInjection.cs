@@ -20,10 +20,13 @@ using HotelManagement.Infrastructure.Repository;
 using HotelManagement.Infrastructure.Repository.Administrator;
 using HotelManagement.Infrastructure.Services;
 using HotelManagement.Infrastructure.Services.Reports;
+using HotelManagement.Infrastructure.Resilience;
 using HotelManagement.Infrastructure.Services.Reports.Exporters;
 using HotelManagement.Infrastructure.Services.Reports.Generators;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Polly;
+using Polly.Extensions.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -152,6 +155,17 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IBranchService, BranchService>();
         services.AddScoped<IRoleService, RoleService>();
+        
+        // Register caching service
+        services.AddSingleton<ICacheService, CacheService>();
+
+        // Configure HTTP client factory
+        services.AddHttpClient("ResilientClient");
+        services.AddSingleton<ResilientHttpClientFactory>();
+        
+        // Note: To enable Polly resilience policies on HTTP clients, configure them manually:
+        // services.AddHttpClient("ResilientClient")
+        //     .AddPolicyHandler(...)  // Requires proper Polly configuration
 
         // Register tenant services
         services.AddScoped<ITenantService, TenantService>();
@@ -174,6 +188,25 @@ public static class DependencyInjection
 
         services.AddAuthorizationBuilder()
             .AddPolicy(Policies.CanPurge, policy => policy.RequireRole(Roles.Administrator));
+
+        // Add Health Checks
+        services.AddHealthChecks()
+            .AddCheck<HotelManagement.Infrastructure.HealthChecks.DatabaseHealthCheck>(
+                "database",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Unhealthy,
+                tags: new[] { "db", "sql", "ready" })
+            .AddCheck<HotelManagement.Infrastructure.HealthChecks.RedisHealthCheck>(
+                "redis",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded,
+                tags: new[] { "cache", "redis", "ready" })
+            .AddCheck<HotelManagement.Infrastructure.HealthChecks.HangfireHealthCheck>(
+                "hangfire",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded,
+                tags: new[] { "jobs", "hangfire", "ready" })
+            .AddCheck<HotelManagement.Infrastructure.HealthChecks.SystemResourcesHealthCheck>(
+                "system",
+                failureStatus: Microsoft.Extensions.Diagnostics.HealthChecks.HealthStatus.Degraded,
+                tags: new[] { "system", "resources" });
 
         services.AddValidatorsFromAssemblyContaining<LoginDtoValidator>();
         services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();

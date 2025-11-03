@@ -7,9 +7,22 @@ using HotelManagement.Infrastructure.Data;
 using HotelManagement.ServiceDefaults;
 using HotelManagement.Web;
 using HotelManagement.Web.Middlewares;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Server.IIS;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add Application Insights telemetry
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+    options.EnableAdaptiveSampling = true;
+    options.EnablePerformanceCounterCollectionModule = true;
+    options.EnableDependencyTrackingTelemetryModule = true;
+    options.EnableQuickPulseMetricStream = true;
+});
 
 builder.AddServiceDefaults();
 builder.AddRedisOutputCache("cache");
@@ -34,6 +47,24 @@ builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddWebServices();
 builder.Services.AddHttpContextAccessor();
+
+// Configure request size limits
+builder.Services.Configure<IISServerOptions>(options =>
+{
+    options.MaxRequestBodySize = 104857600; // 100MB
+});
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = 104857600; // 100MB
+});
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 104857600; // 100MB
+    options.ValueLengthLimit = int.MaxValue;
+    options.MultipartHeadersLengthLimit = int.MaxValue;
+});
 
 builder.Services.AddSuperAdminAuthentication(builder.Configuration);
 builder.Services.AddSuperAdminAuthorization();
@@ -84,7 +115,7 @@ builder.Services.AddProblemDetails(options =>
         Detail = ex.Message
     });
 
-    options.Map<BadHttpRequestException>(ex => new ProblemDetails
+    options.Map<Microsoft.AspNetCore.Http.BadHttpRequestException>(ex => new ProblemDetails
     {
         Title = "Bad Request",
         Status = StatusCodes.Status400BadRequest,
@@ -96,17 +127,29 @@ builder.Services.AddProblemDetails(options =>
 
 var app = builder.Build();
 
+// Apply database migrations
 if (app.Environment.IsDevelopment())
 {
-    //await app.InitialiseDatabaseAsync();
+    await DatabaseMigrationService.MigrateDatabaseAsync(app.Services, app.Environment);
 }
 else
 {
     app.UseHsts();
+
+    // In production, only check for pending migrations and warn
+    var dbInfo = await DatabaseMigrationService.GetDatabaseInfoAsync(app.Services);
+    if (dbInfo.HasPendingMigrations)
+    {
+        app.Logger.LogWarning(
+            "⚠️ Database has {Count} pending migration(s). Please apply migrations before deployment.",
+            dbInfo.PendingMigrations.Count);
+    }
 }
 
 
 app.UseExceptionHandler("/error");
+app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<SecurityHeadersMiddleware>();
 app.UseMiddleware<CorsMiddleware>();
 app.UseCors("AllowSpecificOrigins");
 app.UseHttpsRedirection();
@@ -138,6 +181,48 @@ app.UseAntiforgery();
 app.UseOutputCache();
 
 app.MapControllers();
+
+// SignalR hubs
+app.MapHub<HotelManagement.Web.Hubs.NotificationHub>("/hubs/notifications");
+
+// Health check endpoints
+app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => true,
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        var response = new
+        {
+            status = report.Status.ToString(),
+            checks = report.Entries.Select(e => new
+            {
+                name = e.Key,
+                status = e.Value.Status.ToString(),
+                description = e.Value.Description,
+                duration = e.Value.Duration.TotalMilliseconds,
+                data = e.Value.Data
+            }),
+            totalDuration = report.TotalDuration.TotalMilliseconds
+        };
+        await context.Response.WriteAsJsonAsync(response);
+    }
+});
+
+app.MapHealthChecks("/health/ready", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = check => check.Tags.Contains("ready"),
+    ResponseWriter = async (context, report) =>
+    {
+        context.Response.ContentType = "application/json";
+        await context.Response.WriteAsJsonAsync(new { status = report.Status.ToString() });
+    }
+});
+
+app.MapHealthChecks("/health/live", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions
+{
+    Predicate = _ => false // Just check if app is running
+});
 
 app.Run();
 

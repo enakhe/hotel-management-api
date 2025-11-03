@@ -3,6 +3,8 @@
   <PropertyGroup>
     <RootNamespace>HotelManagement.Infrastructure</RootNamespace>
     <AssemblyName>HotelManagement.Infrastructure</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -26,6 +28,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Polly" />
+    <PackageReference Include="Polly.Extensions.Http" />
     <PackageReference Include="QuestPDF" />
   </ItemGroup>
 

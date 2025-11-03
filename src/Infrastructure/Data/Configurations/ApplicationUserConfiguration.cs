@@ -16,5 +16,25 @@ public class ApplicationUserConfiguration : IEntityTypeConfiguration<Application
                .WithMany(b => b.Users)
                .HasForeignKey(u => u.BranchId)
                .OnDelete(DeleteBehavior.Restrict);
+
+        // Indexes for query optimization
+        builder.HasIndex(u => u.TenantId)
+            .HasDatabaseName("IX_AspNetUsers_TenantId");
+
+        builder.HasIndex(u => new { u.TenantId, u.IsActive })
+            .HasDatabaseName("IX_AspNetUsers_TenantId_IsActive");
+
+        builder.HasIndex(u => u.BranchId)
+            .HasDatabaseName("IX_AspNetUsers_BranchId");
+
+        builder.HasIndex(u => new { u.TenantId, u.BranchId, u.IsActive })
+            .HasDatabaseName("IX_AspNetUsers_TenantId_BranchId_IsActive");
+
+        builder.HasIndex(u => u.Email)
+            .IsUnique()
+            .HasDatabaseName("IX_AspNetUsers_Email");
+
+        builder.HasIndex(u => u.FullName)
+            .HasDatabaseName("IX_AspNetUsers_FullName");
     }
 }

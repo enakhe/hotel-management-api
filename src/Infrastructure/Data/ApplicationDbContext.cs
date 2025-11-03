@@ -1,5 +1,7 @@
-﻿using System.Reflection;
+﻿using System.Linq.Expressions;
+using System.Reflection;
 using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Common;
 using HotelManagement.Domain.Entities;
 using HotelManagement.Infrastructure.Data.Configurations;
 using Microsoft.AspNetCore.Identity;
@@ -8,8 +10,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>(options), IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid, IdentityUserClaim<Guid>, IdentityUserRole<Guid>, IdentityUserLogin<Guid>, IdentityRoleClaim<Guid>, IdentityUserToken<Guid>>, IApplicationDbContext
 {
+    private readonly ITenantContext? _tenantContext;
+    private readonly ISuperAdminContext? _superAdminContext;
+
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        ITenantContext? tenantContext = null,
+        ISuperAdminContext? superAdminContext = null) : base(options)
+    {
+        _tenantContext = tenantContext;
+        _superAdminContext = superAdminContext;
+    }
     public DbSet<Tenant> Tenants { get; set; }
 
     public DbSet<Permission> Permissions { get; set; }
@@ -78,7 +91,37 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 
     private void ConfigureTenantQueryFilters(ModelBuilder builder)
     {
-        // Note: We'll configure these filters dynamically based on the current tenant context
-        // This is done in the TenantQueryFilterService to avoid circular dependencies
+        // Apply query filters to all entities that implement ITenantEntity
+        // This ensures automatic tenant isolation at the database query level
+        // Filters are bypassed for SuperAdmin operations
+
+        foreach (var entityType in builder.Model.GetEntityTypes())
+        {
+            // Check if entity implements ITenantEntity interface
+            if (typeof(ITenantEntity).IsAssignableFrom(entityType.ClrType))
+            {
+                // Use reflection to call the generic SetQueryFilter method
+                var method = typeof(ApplicationDbContext)
+                    .GetMethod(nameof(SetTenantQueryFilter), BindingFlags.NonPublic | BindingFlags.Instance)?
+                    .MakeGenericMethod(entityType.ClrType);
+
+                method?.Invoke(this, new object[] { builder });
+            }
+        }
+    }
+
+    /// <summary>
+    /// Sets the tenant query filter for a specific entity type
+    /// </summary>
+    private void SetTenantQueryFilter<TEntity>(ModelBuilder builder) where TEntity : class, ITenantEntity
+    {
+        builder.Entity<TEntity>().HasQueryFilter(e =>
+            // Skip filter if SuperAdmin context is active
+            (_superAdminContext != null && _superAdminContext.IsSuperAdmin) ||
+            // Skip filter if no tenant is resolved
+            (_tenantContext == null || !_tenantContext.IsResolved) ||
+            // Apply filter: only show entities belonging to current tenant
+            e.TenantId == _tenantContext.TenantId!.Value
+        );
     }
 }

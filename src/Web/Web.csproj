@@ -3,6 +3,9 @@
   <PropertyGroup>
     <RootNamespace>HotelManagement.Web</RootNamespace>
     <AssemblyName>HotelManagement.Web</AssemblyName>
+    <UserSecretsId>041ce21b-6b32-4389-8e51-64d7fbb6e45e</UserSecretsId>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591;1572;1573</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -36,6 +39,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" />
+    <PackageReference Include="Microsoft.ApplicationInsights.SnapshotCollector" />
     <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
@@ -46,6 +51,8 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Asp.Versioning.Mvc" />
+    <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="QuestPDF" />
     <PackageReference Include="Swashbuckle.AspNetCore" />
