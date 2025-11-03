@@ -215,20 +215,21 @@ public class TenantAdminService(
     {
         try
         {
-            var adminRoleId = await _context.Roles
+            var adminRole = await _context.Roles
                 .Where(r => r.Name == Roles.Administrator)
-                .Select(r => r.Id)
                 .FirstOrDefaultAsync();
 
-            if (adminRoleId == Guid.Empty)
+            if (adminRole == null)
                 return Result<PaginatedResult<TenantAdminDto>>.Success(
-                    new PaginatedResult<TenantAdminDto> 
-                    { 
-                        Items = new List<TenantAdminDto>(), 
-                        TotalCount = 0, 
-                        Page = page, 
-                        Size = pageSize 
+                    new PaginatedResult<TenantAdminDto>
+                    {
+                        Items = new List<TenantAdminDto>(),
+                        TotalCount = 0,
+                        Page = page,
+                        Size = pageSize
                     }, 200);
+
+            var adminRoleId = adminRole.Id;
 
             var query = _userManager.Users
                 .Include(u => u.Tenant)
@@ -308,7 +309,7 @@ public class TenantAdminService(
             var user = await _userManager.Users
                 .Include(u => u.Tenant)
                 .Include(u => u.Branch)
-                .Where(u => u.TenantId == tenantId && 
+                .Where(u => u.TenantId == tenantId &&
                            _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId))
                 .FirstOrDefaultAsync();
 
@@ -490,7 +491,7 @@ public class TenantAdminService(
                     if (!hasOtherAdmin)
                     {
                         return Result<bool>.Failure(
-                            "Cannot delete the only administrator for an active tenant. Deactivate the tenant first or assign another admin.", 
+                            "Cannot delete the only administrator for an active tenant. Deactivate the tenant first or assign another admin.",
                             400);
                     }
                 }
@@ -535,7 +536,7 @@ public class TenantAdminService(
                 return true;
 
             var adminCount = await _userManager.Users
-                .Where(u => u.TenantId == tenantId && 
+                .Where(u => u.TenantId == tenantId &&
                            _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId))
                 .CountAsync();
 
@@ -559,7 +560,7 @@ public class TenantAdminService(
 
         if (existingBranch != null)
         {
-            _logger.LogInformation("Using existing branch {BranchId} for tenant {TenantId}", 
+            _logger.LogInformation("Using existing branch {BranchId} for tenant {TenantId}",
                 existingBranch.Id, tenant.Id);
             return existingBranch;
         }
@@ -573,7 +574,7 @@ public class TenantAdminService(
             hqBranch.IsActive = true;
             _context.Branches.Update(hqBranch);
             await _context.SaveChangesAsync();
-            _logger.LogInformation("Reactivated Headquarters branch {BranchId} for tenant {TenantId}", 
+            _logger.LogInformation("Reactivated Headquarters branch {BranchId} for tenant {TenantId}",
                 hqBranch.Id, tenant.Id);
             return hqBranch;
         }
@@ -595,7 +596,7 @@ public class TenantAdminService(
         _context.Branches.Add(newBranch);
         await _context.SaveChangesAsync();
 
-        _logger.LogInformation("Created Headquarters branch {BranchId} for tenant {TenantId}", 
+        _logger.LogInformation("Created Headquarters branch {BranchId} for tenant {TenantId}",
             newBranch.Id, tenant.Id);
 
         return newBranch;
