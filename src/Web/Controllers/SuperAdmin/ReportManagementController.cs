@@ -97,8 +97,8 @@ public class ReportManagementController : ControllerBase
 
             var report = reportResult.Data;
 
-            // Check if file exists
-            if (string.IsNullOrEmpty(report.DownloadUrl) || report.Status != Domain.Enums.ReportStatus.Completed)
+            // Check if report is ready
+            if (report.Status != Domain.Enums.ReportStatus.Completed)
             {
                 return BadRequest(new { message = "Report is not ready for download" });
             }
@@ -109,18 +109,25 @@ public class ReportManagementController : ControllerBase
                 return StatusCode(410, new { message = "Report download link has expired" });
             }
 
-            // In production, this would generate a signed URL to blob storage
-            // For now, we'll serve from local storage
-            var reportsPath = Path.Combine(Directory.GetCurrentDirectory(), "Reports");
-            var fileName = Path.GetFileName(report.DownloadUrl);
-            var filePath = Path.Combine(reportsPath, fileName ?? $"report_{reportId}");
+            // Get the report entity directly to access FilePath
+            var dbContext = HttpContext.RequestServices.GetRequiredService<IApplicationDbContext>();
+            var reportEntity = await dbContext.Reports.FindAsync(new object[] { reportId });
 
-            if (!System.IO.File.Exists(filePath))
+            if (reportEntity == null || string.IsNullOrEmpty(reportEntity.FilePath))
             {
                 return NotFound(new { message = "Report file not found" });
             }
 
-            var fileBytes = await System.IO.File.ReadAllBytesAsync(filePath);
+            // Check if file exists on disk
+            if (!System.IO.File.Exists(reportEntity.FilePath))
+            {
+                _logger.LogWarning("Report file not found on disk: {FilePath}", reportEntity.FilePath);
+                return NotFound(new { message = "Report file not found" });
+            }
+
+            // Read file and return
+            var fileBytes = await System.IO.File.ReadAllBytesAsync(reportEntity.FilePath);
+            var fileName = Path.GetFileName(reportEntity.FilePath);
             var mimeType = GetMimeType(report.Format);
 
             return File(fileBytes, mimeType, fileName);

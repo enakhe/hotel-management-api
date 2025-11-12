@@ -15,11 +15,13 @@ public class ApplicationDbContextSeed
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<ApplicationDbContextSeed> _logger;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ApplicationDbContextSeed(ApplicationDbContext context, ILogger<ApplicationDbContextSeed> logger)
+    public ApplicationDbContextSeed(ApplicationDbContext context, ILogger<ApplicationDbContextSeed> logger, UserManager<ApplicationUser> userManager)
     {
         _context = context;
         _logger = logger;
+        _userManager = userManager;
     }
 
     /// <summary>
@@ -34,6 +36,7 @@ public class ApplicationDbContextSeed
             await SeedRolesAsync();
             await SeedPermissionsAsync();
             await SeedModulesAsync();
+            await SeedSuperAdminAsync(_userManager, "superadmin@eitiltech.com", "SuperAdmin123!");
             // Note: Plan seeding requires manual setup due to complex relationships
             // await SeedPlansAsync();
 
@@ -230,8 +233,9 @@ public class ApplicationDbContextSeed
 
         foreach (var moduleData in modulesToSeed)
         {
+            // Check by Name since there's a unique index on the Name column
             var existingModule = await _context.Modules
-                .FirstOrDefaultAsync(m => m.Category == moduleData.Category);
+                .FirstOrDefaultAsync(m => m.Name == moduleData.Name);
 
             if (existingModule == null)
             {
@@ -422,6 +426,7 @@ public class ApplicationDbContextSeed
                 EmailConfirmed = true,
                 FirstName = "Super",
                 LastName = "Admin",
+                FullName = "Super Admin",
                 IsActive = true,
                 CreatedAt = DateTime.UtcNow
             };

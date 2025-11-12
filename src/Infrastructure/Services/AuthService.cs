@@ -236,7 +236,7 @@ public class AuthService(
         if (userRoles.Contains("SuperAdmin"))
         {
             authClaims.Add(new Claim("superadmin_id", user.Id.ToString()));
-            authClaims.Add(new Claim("mfa_verified", "true")); // Assuming SuperAdmin has MFA verified
+            authClaims.Add(new Claim("mfa_verified", "true"));
         }
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));

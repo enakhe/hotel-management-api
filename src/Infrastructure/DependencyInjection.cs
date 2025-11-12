@@ -138,6 +138,10 @@ public static class DependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IBackgroundJobService, BackgroundJobService>();
 
+        // Notification Services
+        services.AddScoped<ISmsService, Services.Notifications.TwilioSmsService>();
+        services.AddScoped<IPushNotificationService, Services.Notifications.FirebasePushNotificationService>();
+
         // Report Data Generators
         services.AddScoped<SystemOverviewReportGenerator>();
         services.AddScoped<FinancialReportGenerator>();
@@ -177,6 +181,12 @@ public static class DependencyInjection
         // Register domain services
         services.AddScoped<IPlanService, PlanService>();
         services.AddScoped<IModuleService, ModuleService>();
+
+        // Billing & Subscription Services
+        services.AddScoped<IPricingService, Services.Billing.PricingService>();
+        services.AddScoped<ISubscriptionService, Services.Billing.SubscriptionService>();
+        services.AddScoped<IInvoicingService, Services.Billing.InvoicingService>();
+        services.AddScoped<IUsageTrackingService, Services.Billing.UsageTrackingService>();
         services.AddScoped<ILicenseService, LicenseService>();
         services.AddScoped<ILicenseKeyService, Application.Common.Services.LicenseKey.LicenseKeyService>();
         services.AddScoped<ILimitsService, LimitsService>();
@@ -184,6 +194,11 @@ public static class DependencyInjection
         // Register SuperAdmin services
         services.AddScoped<ISuperAdminService, SuperAdminService>();
         services.AddScoped<ISuperAdminAuditService, SuperAdminAuditService>();
+
+        // Register Background Jobs
+        services.AddScoped<BackgroundJobs.BillingJobs>();
+        services.AddScoped<BackgroundJobs.NotificationJobs>();
+        services.AddScoped<BackgroundJobs.DunningJobs>();
         services.AddScoped<ITenantAdminService, TenantAdminService>();
 
         services.AddAuthorizationBuilder()

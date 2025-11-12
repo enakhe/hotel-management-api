@@ -1,3 +1,5 @@
+using HotelManagement.Domain.Entities;
+
 namespace HotelManagement.Application.Common.Interfaces;
 
 /// <summary>
@@ -29,17 +31,6 @@ public interface INotificationService
     /// Sends a system-wide notification to all connected users
     /// </summary>
     Task SendSystemNotificationAsync(string message, object? data = null, CancellationToken cancellationToken = default);
-}
-
-/// <summary>
-/// Notification types
-/// </summary>
-public enum NotificationType
-{
-    Info,
-    Success,
-    Warning,
-    Error
 }
 
 /// <summary>

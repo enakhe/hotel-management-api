@@ -14,12 +14,13 @@ namespace HotelManagement.Infrastructure.Services;
 /// <summary>
 /// Service for tenant-related operations and validation
 /// </summary>
-public class TenantService(ApplicationDbContext context, ILogger<TenantService> logger, IMapper mapper, ISuperAdminAuditService auditService) : ITenantService
+public class TenantService(ApplicationDbContext context, ILogger<TenantService> logger, IMapper mapper, ISuperAdminAuditService auditService, ICacheService cache) : ITenantService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<TenantService> _logger = logger;
     private readonly IMapper _mapper = mapper;
     private readonly ISuperAdminAuditService _auditService = auditService;
+    private readonly ICacheService _cache = cache;
 
     public async Task<bool> IsTenantValidAsync(Guid tenantId)
     {
@@ -62,6 +63,16 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
     {
         try
         {
+            // Try to get from cache (60 minutes for tenant config)
+            var cacheKey = CacheKeys.TenantConfig(tenantId);
+            var cached = await _cache.GetAsync<TenantInfo>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached tenant info for: {TenantId}", tenantId);
+                return cached;
+            }
+
             var tenant = await _context.Tenants
                 .AsNoTracking()
                 .FirstOrDefaultAsync(t => t.Id == tenantId);
@@ -69,7 +80,7 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
             if (tenant == null)
                 return null;
 
-            return new TenantInfo
+            var tenantInfo = new TenantInfo
             {
                 Id = tenant.Id,
                 Name = tenant.Name,
@@ -77,12 +88,26 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 IsActive = tenant.IsActive,
                 CreatedAt = tenant.Created.DateTime
             };
+
+            // Cache for 60 minutes
+            await _cache.SetAsync(cacheKey, tenantInfo, TimeSpan.FromMinutes(60));
+
+            return tenantInfo;
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error getting tenant info for {TenantId}", tenantId);
             return null;
         }
+    }
+
+    /// <summary>
+    /// Invalidates cache for a specific tenant
+    /// </summary>
+    private async Task InvalidateTenantCacheAsync(Guid tenantId)
+    {
+        await _cache.InvalidateTenantCacheAsync(tenantId);
+        _logger.LogDebug("Invalidated cache for tenant: {TenantId}", tenantId);
     }
 
 
@@ -115,6 +140,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
             _context.Tenants.Add(tenant);
             await _context.SaveChangesAsync();
 
+            // Invalidate tenant caches
+            await InvalidateTenantCacheAsync(tenant.Id);
+
             await _auditService.LogActionAsync(
                 "CreateTenant",
                 "Tenant",
@@ -122,9 +150,6 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 tenant.Id,
                 $"Created tenant '{request.Name}' with identifier '{request.Identifier}'",
                 JsonSerializer.Serialize(request));
-
-            // Note: User registration should be handled separately to avoid circular dependency
-            // The initial admin user should be created through the AuthService after tenant creation
 
             var tenantSummary = new TenantSummary
             {
@@ -155,8 +180,6 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
         try
         {
             var query = _context.Tenants
-                .Include(t => t.Plan)
-                .Include(t => t.License)
                 .AsNoTracking();
 
             // Apply filters
@@ -165,6 +188,16 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 query = query.Where(t => t.Name.Contains(request.Query) ||
                         t.Identifier.Contains(request.Query) ||
                         t.Email!.Contains(request.Query));
+            }
+
+            if (request.Status.HasValue)
+            {
+                query = query.Where(t => t.IsActive == request.Status.Value);
+            }
+
+            if (!string.IsNullOrEmpty(request.Plan) && Guid.TryParse(request.Plan, out var planId))
+            {
+                query = query.Where(t => t.PlanId == planId);
             }
 
             if (!string.IsNullOrEmpty(request.Region))
@@ -200,6 +233,18 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 .Select(t => t.Id)
                 .ToListAsync();
 
+            // Return early if no tenants found
+            if (!pagedTenantIds.Any())
+            {
+                return Result<PaginatedResult<TenantSummary>>.Success(new PaginatedResult<TenantSummary>
+                {
+                    Items = new List<TenantSummary>(),
+                    TotalCount = 0,
+                    Page = request.Page,
+                    Size = request.Size
+                }, 200);
+            }
+
             var userCountsDict = await _context.Users
                 .Where(u => u.TenantId.HasValue && pagedTenantIds.Contains(u.TenantId.Value))
                 .GroupBy(u => u.TenantId!.Value)
@@ -212,10 +257,16 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 .Select(g => new { TenantId = g.Key, Count = g.Count() })
                 .ToDictionaryAsync(g => g.TenantId, g => g.Count);
 
-            var items = await query
-                .Skip((request.Page - 1) * request.Size)
-                .Take(request.Size)
+            // Load the paged items with their related Plan and License
+            var items = await _context.Tenants
+                .Include(t => t.Plan)
+                .Include(t => t.License)
+                .Where(t => pagedTenantIds.Contains(t.Id))
+                .AsNoTracking()
                 .ToListAsync();
+
+            // Order items based on the original query order
+            items = items.OrderBy(t => pagedTenantIds.IndexOf(t.Id)).ToList();
 
             var itemsWithCounts = items.Select(t => new TenantSummary
             {
@@ -254,6 +305,16 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
     {
         try
         {
+            // Try to get from cache (60 minutes for tenant config)
+            var cacheKey = $"tenant:{tenantId}:detail";
+            var cached = await _cache.GetAsync<TenantDetail>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached tenant detail for: {TenantId}", tenantId);
+                return Result<TenantDetail>.Success(cached, 200);
+            }
+
             var tenant = await _context.Tenants
                 .Include(t => t.Plan)
                 .Include(t => t.Plan.PlanModules)
@@ -286,6 +347,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 CreatedAt = tenant.Created.DateTime,
                 LastActivity = tenant.LastModified.DateTime
             };
+
+            // Cache for 60 minutes
+            await _cache.SetAsync(cacheKey, tenantDetails, TimeSpan.FromMinutes(60));
 
             return Result<TenantDetail>.Success(tenantDetails, 200);
         }
@@ -391,6 +455,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
 
             await _context.SaveChangesAsync();
 
+            // Invalidate tenant caches
+            await InvalidateTenantCacheAsync(tenantId);
+
             // Log the action
             await _auditService.LogActionAsync(
                 "UpdateTenant",
@@ -423,6 +490,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
 
             await _context.SaveChangesAsync();
 
+            // Invalidate tenant caches
+            await InvalidateTenantCacheAsync(tenantId);
+
             await _auditService.LogActionAsync(
                 "LockTenant",
                 "Tenant",
@@ -452,6 +522,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
             tenant.LastModifiedBy = "SuperAdmin";
 
             await _context.SaveChangesAsync();
+
+            // Invalidate tenant caches
+            await InvalidateTenantCacheAsync(tenantId);
 
             await _auditService.LogActionAsync(
                 "UnlockTenant",
@@ -574,6 +647,9 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
             _context.Tenants.Remove(tenant);
             await _context.SaveChangesAsync();
 
+            // Invalidate tenant caches
+            await InvalidateTenantCacheAsync(tenantId);
+
             await _auditService.LogActionAsync(
                 "PurgeTenantData",
                 "Tenant",
@@ -594,6 +670,15 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
     {
         try
         {
+            // Try to get from cache (30 minutes for tenant stats)
+            var cacheKey = CacheKeys.TenantStats(tenantId);
+            var cached = await _cache.GetAsync<TenantUsage>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached tenant usage for: {TenantId}", tenantId);
+                return Result<TenantUsage>.Success(cached, 200);
+            }
 
             var userCount = await _context.Users.CountAsync(u => u.TenantId == tenantId);
             var branchCount = await _context.Branches.CountAsync(b => b.TenantId == tenantId);
@@ -619,6 +704,10 @@ public class TenantService(ApplicationDbContext context, ILogger<TenantService> 
                 ApiCallsLast30d = 0,
                 LastActivity = DateTime.UtcNow
             };
+
+            // Cache for 30 minutes
+            await _cache.SetAsync(cacheKey, usage, TimeSpan.FromMinutes(30));
+
             return Result<TenantUsage>.Success(usage, 200);
         }
         catch (Exception ex)

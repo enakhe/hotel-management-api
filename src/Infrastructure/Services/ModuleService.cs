@@ -10,12 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Infrastructure.Services;
 
-public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> logger, IMapper mapper, ISuperAdminAuditService auditService) : IModuleService
+public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> logger, IMapper mapper, ISuperAdminAuditService auditService, ICacheService cache) : IModuleService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<ModuleService> _logger = logger;
     private readonly IMapper _mapper = mapper;
     private readonly ISuperAdminAuditService _auditService = auditService;
+    private readonly ICacheService _cache = cache;
 
     public async Task<Result<ModuleResponseDto>> CreateModuleAsync(CreateModuleRequest request)
     {
@@ -68,6 +69,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
 
             await _context.SaveChangesAsync();
 
+            // Invalidate all modules list caches
+            await InvalidateAllModulesListCacheAsync();
+
             await _auditService.LogActionAsync(
                 "CreateModule",
                 "Module",
@@ -112,10 +116,52 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
         }
     }
 
+    /// <summary>
+    /// Invalidates all module-related caches
+    /// </summary>
+    private async Task InvalidateAllModulesListCacheAsync()
+    {
+        // Invalidate modules list caches
+        await _cache.RemoveByPatternAsync("modules:list:*");
+        await _cache.RemoveAsync(CacheKeys.AllModules());
+        await _cache.RemoveAsync(CacheKeys.ModuleUsage());
+        _logger.LogDebug("Invalidated all modules list caches");
+    }
+
+    /// <summary>
+    /// Invalidates cache for a specific module
+    /// </summary>
+    private async Task InvalidateModuleCacheAsync(Guid moduleId)
+    {
+        await _cache.RemoveAsync(CacheKeys.Module(moduleId));
+        await InvalidateAllModulesListCacheAsync();
+        // Also invalidate plan caches since modules are part of plans
+        await _cache.RemoveByPatternAsync("plans:*");
+        _logger.LogDebug("Invalidated cache for module: {ModuleId}", moduleId);
+    }
+
     public async Task<Result<PaginatedResult<ModuleResponseDto>>> GetModulesAsync(ModuleListRequest request)
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.ModulesList(
+                request.Page,
+                request.Size,
+                request.Category,
+                request.IsActive,
+                request.IsCore,
+                request.Query,
+                request.SortBy,
+                request.SortDescending);
+
+            var cached = await _cache.GetAsync<PaginatedResult<ModuleResponseDto>>(cacheKey);
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached modules list for key: {CacheKey}", cacheKey);
+                return Result<PaginatedResult<ModuleResponseDto>>.Success(cached, 200);
+            }
+
             var query = _context.Modules
                 .Include(m => m.Features)
                 .Include(m => m.Pricing)
@@ -207,6 +253,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                 Size = request.Size
             };
 
+            // Cache for 24 hours (static data)
+            await _cache.SetAsync(cacheKey, paginatedResult, TimeSpan.FromHours(24));
+
             return Result<PaginatedResult<ModuleResponseDto>>.Success(paginatedResult, 200);
         }
         catch (Exception ex)
@@ -220,6 +269,16 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.Module(moduleId);
+            var cached = await _cache.GetAsync<ModuleResponseDto>(cacheKey);
+
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached module for ID: {ModuleId}", moduleId);
+                return Result<ModuleResponseDto>.Success(cached, 200);
+            }
+
             var module = await _context.Modules
                 .Include(m => m.Features)
                 .Include(m => m.Pricing)
@@ -255,6 +314,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                 featuresWithConfig.Add(featureDto);
             }
             moduleDto = moduleDto with { Features = featuresWithConfig.ToArray() };
+
+            // Cache for 24 hours (static data)
+            await _cache.SetAsync(cacheKey, moduleDto, TimeSpan.FromHours(24));
 
             return Result<ModuleResponseDto>.Success(moduleDto, 200);
         }
@@ -358,6 +420,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidateModuleCacheAsync(moduleId);
+
             await _auditService.LogActionAsync(
                 "UpdateModule",
                 "Module",
@@ -442,6 +507,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
             _context.Modules.Remove(module);
 
             await _context.SaveChangesAsync();
+
+            // Invalidate caches
+            await InvalidateModuleCacheAsync(moduleId);
 
             await _auditService.LogActionAsync(
                 "DeleteModule",
@@ -545,6 +613,16 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
     {
         try
         {
+            // Try to get from cache (30 minutes for analytics data)
+            var cacheKey = CacheKeys.ModuleUsage();
+            var cached = await _cache.GetAsync<ModuleUsageDto[]>(cacheKey);
+
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached module usage analytics");
+                return Result<ModuleUsageDto[]>.Success(cached, 200);
+            }
+
             var modules = await _context.Modules
                 .AsNoTracking()
                 .ToListAsync();
@@ -575,6 +653,9 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
                     LastUpdated = DateTime.UtcNow
                 });
             }
+
+            // Cache for 30 minutes (analytics data)
+            await _cache.SetAsync(cacheKey, moduleUsageList.ToArray(), TimeSpan.FromMinutes(30));
 
             return Result<ModuleUsageDto[]>.Success(moduleUsageList.ToArray(), 200);
         }
@@ -609,6 +690,11 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches for both module and plan
+            await InvalidateModuleCacheAsync(moduleId);
+            await _cache.RemoveAsync(CacheKeys.Plan(planId));
+            await _cache.RemoveByPatternAsync("plans:list:*");
+
             await _auditService.LogActionAsync(
                 "AssignModuleToPlan",
                 "Module",
@@ -640,6 +726,11 @@ public class ModuleService(ApplicationDbContext context, ILogger<ModuleService> 
             _context.PlanModules.Remove(planModule);
 
             await _context.SaveChangesAsync();
+
+            // Invalidate caches for both module and plan
+            await InvalidateModuleCacheAsync(moduleId);
+            await _cache.RemoveAsync(CacheKeys.Plan(planId));
+            await _cache.RemoveByPatternAsync("plans:list:*");
 
             await _auditService.LogActionAsync(
                 "RemoveModuleFromPlan",

@@ -232,8 +232,6 @@ public class TenantAdminService(
             var adminRoleId = adminRole.Id;
 
             var query = _userManager.Users
-                .Include(u => u.Tenant)
-                .Include(u => u.Branch)
                 .Where(u => _context.UserRoles.Any(ur => ur.UserId == u.Id && ur.RoleId == adminRoleId));
 
             if (tenantId.HasValue)
@@ -247,16 +245,60 @@ public class TenantAdminService(
 
             var totalCount = await query.CountAsync();
 
-            var users = await query
+            // Get user IDs first
+            var userIds = await query
                 .OrderByDescending(u => u.CreatedAt)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(u => u.Id)
                 .ToListAsync();
+
+            // Return early if no users found
+            if (!userIds.Any())
+            {
+                return Result<PaginatedResult<TenantAdminDto>>.Success(
+                    new PaginatedResult<TenantAdminDto>
+                    {
+                        Items = new List<TenantAdminDto>(),
+                        TotalCount = 0,
+                        Page = page,
+                        Size = pageSize
+                    }, 200);
+            }
+
+            // Load users with their related entities separately
+            var users = await _userManager.Users
+                .Where(u => userIds.Contains(u.Id))
+                .OrderByDescending(u => u.CreatedAt)
+                .ToListAsync();
+
+            // Load tenants for users that have TenantId
+            var tenantIds = users.Where(u => u.TenantId.HasValue).Select(u => u.TenantId!.Value).Distinct().ToList();
+            var tenants = tenantIds.Any()
+                ? await _context.Tenants.Where(t => tenantIds.Contains(t.Id)).ToDictionaryAsync(t => t.Id)
+                : new Dictionary<Guid, Tenant>();
+
+            // Load branches for users that have BranchId
+            var branchIds = users.Where(u => u.BranchId.HasValue).Select(u => u.BranchId!.Value).Distinct().ToList();
+            var branches = branchIds.Any()
+                ? await _context.Branches.Where(b => branchIds.Contains(b.Id)).ToDictionaryAsync(b => b.Id)
+                : new Dictionary<Guid, Branch>();
 
             var tenantAdminDtos = new List<TenantAdminDto>();
             foreach (var user in users)
             {
                 var roles = await _userManager.GetRolesAsync(user);
+
+                // Get tenant info from dictionary if user has a tenant
+                Tenant? tenant = null;
+                if (user.TenantId.HasValue)
+                    tenants.TryGetValue(user.TenantId.Value, out tenant);
+
+                // Get branch info from dictionary if user has a branch
+                Branch? branch = null;
+                if (user.BranchId.HasValue)
+                    branches.TryGetValue(user.BranchId.Value, out branch);
+
                 tenantAdminDtos.Add(new TenantAdminDto
                 {
                     Id = user.Id,
@@ -268,10 +310,10 @@ public class TenantAdminService(
                     PhoneNumber = user.PhoneNumber,
                     IsActive = user.IsActive,
                     TenantId = user.TenantId,
-                    TenantName = user.Tenant?.Name,
-                    TenantIdentifier = user.Tenant?.Identifier,
+                    TenantName = tenant?.Name,
+                    TenantIdentifier = tenant?.Identifier,
                     BranchId = user.BranchId,
-                    BranchName = user.Branch?.Name,
+                    BranchName = branch?.Name,
                     Roles = roles.ToList(),
                     CreatedAt = user.CreatedAt,
                     LastUpdatedAt = user.LastUpdatedAt

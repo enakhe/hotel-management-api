@@ -7,14 +7,30 @@ using Microsoft.AspNetCore.Http;
 
 namespace HotelManagement.Infrastructure.Services;
 
-public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepository branchRepository, IUserRepository userRepository, IValidator<CreateBranchDto> _branchValidator, IMapper mapper) : IBranchService
+public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepository branchRepository, IUserRepository userRepository, IValidator<CreateBranchDto> _branchValidator, IMapper mapper, ICacheService cache, ITenantContext tenantContext) : IBranchService
 {
     private readonly IHttpContextAccessor _httpContextAccessor = httpContextAccessor;
     private readonly IBranchRepository _branchRepository = branchRepository;
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IValidator<CreateBranchDto> _branchValidator = _branchValidator;
     private readonly IMapper _mapper = mapper;
+    private readonly ICacheService _cache = cache;
+    private readonly ITenantContext _tenantContext = tenantContext;
     private const string BranchClaimType = "branchId";
+
+    /// <summary>
+    /// Invalidates cache for a specific branch and tenant branches list
+    /// </summary>
+    private async Task InvalidateBranchCacheAsync(Guid branchId)
+    {
+        await _cache.RemoveAsync(CacheKeys.Branch(branchId));
+        
+        // Invalidate tenant branches cache if tenant context is resolved
+        if (_tenantContext.IsResolved && _tenantContext.TenantId.HasValue)
+        {
+            await _cache.RemoveAsync(CacheKeys.TenantBranches(_tenantContext.TenantId.Value));
+        }
+    }
 
     public Guid CurrentBranchId
     {
@@ -45,6 +61,9 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
 
         await _branchRepository.AddAsync(branch);
 
+        // Invalidate branch caches
+        await InvalidateBranchCacheAsync(branch.Id);
+
         return branch.Id;
     }
 
@@ -59,6 +78,9 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
         _mapper.Map(dto, branch);
 
         await _branchRepository.UpdateAsync(branch);
+
+        // Invalidate branch caches
+        await InvalidateBranchCacheAsync(id);
     }
 
     public async Task DeleteBranchAsync(Guid id)
@@ -66,19 +88,59 @@ public class BranchService(IHttpContextAccessor httpContextAccessor, IBranchRepo
         var branch = await _branchRepository.GetByIdAsync(id) ?? throw new Application.Common.Exceptions.NotFoundException("Branch not found");
 
         await _branchRepository.DeleteAsync(branch);
+
+        // Invalidate branch caches
+        await InvalidateBranchCacheAsync(id);
     }
 
     public async Task<BranchDto> GetBranchByIdAsync(Guid id)
     {
-        var branch = await _branchRepository.GetByIdAsync(id);
+        // Try to get from cache (30 minutes)
+        var cacheKey = CacheKeys.Branch(id);
+        var cached = await _cache.GetAsync<BranchDto>(cacheKey);
+        
+        if (cached != null)
+        {
+            return cached;
+        }
 
-        return branch == null ? throw new Application.Common.Exceptions.NotFoundException("Branch not found") : _mapper.Map<BranchDto>(branch);
+        var branch = await _branchRepository.GetByIdAsync(id);
+        if (branch == null) throw new Application.Common.Exceptions.NotFoundException("Branch not found");
+
+        var dto = _mapper.Map<BranchDto>(branch);
+
+        // Cache for 30 minutes
+        await _cache.SetAsync(cacheKey, dto, TimeSpan.FromMinutes(30));
+
+        return dto;
     }
 
     public async Task<IEnumerable<BranchDto>> GetAllBranchesAsync()
     {
+        // Try to get from cache (30 minutes)
+        string cacheKey;
+        if (_tenantContext.IsResolved && _tenantContext.TenantId.HasValue)
+        {
+            cacheKey = CacheKeys.TenantBranches(_tenantContext.TenantId.Value);
+        }
+        else
+        {
+            cacheKey = "branches:all";
+        }
+        
+        var cached = await _cache.GetAsync<List<BranchDto>>(cacheKey);
+        if (cached != null)
+        {
+            return cached;
+        }
+
         var branches = await _branchRepository.GetAllAsync();
-        return _mapper.Map<List<BranchDto>>(branches);
+        var result = _mapper.Map<List<BranchDto>>(branches);
+
+        // Cache for 30 minutes
+        await _cache.SetAsync(cacheKey, result, TimeSpan.FromMinutes(30));
+
+        return result;
     }
 
     public async Task<IEnumerable<UserDto>> GetUsersByBranchIdAsync(Guid branchId)

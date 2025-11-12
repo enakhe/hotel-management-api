@@ -218,5 +218,34 @@ public static class CacheKeys
     
     public static string RoomAvailability(Guid roomId, DateTime startDate, DateTime endDate) => 
         $"room:{roomId}:availability:{startDate:yyyyMMdd}_{endDate:yyyyMMdd}";
+    
+    // Plan list keys with pagination and filters
+    public static string PlansList(int page, int pageSize, bool? isActive, string? billingCycle, string? query, string sortBy, bool sortDesc) =>
+        $"plans:list:p{page}_s{pageSize}_a{isActive}_bc{billingCycle}_q{query}_sb{sortBy}_sd{sortDesc}";
+    
+    // Plan usage analytics
+    public static string PlanUsage() => "plans:usage";
+    
+    // Module list keys with pagination and filters
+    public static string ModulesList(int page, int pageSize, string? category, bool? isActive, bool? isCore, string? query, string sortBy, bool sortDesc) =>
+        $"modules:list:p{page}_s{pageSize}_c{category}_a{isActive}_ic{isCore}_q{query}_sb{sortBy}_sd{sortDesc}";
+    
+    // Module usage analytics
+    public static string ModuleUsage() => "modules:usage";
+    
+    // License list keys
+    public static string LicensesList(int page, int pageSize, string? status, Guid? tenantId) =>
+        $"licenses:list:p{page}_s{pageSize}_s{status}_t{tenantId}";
+    
+    public static string License(Guid licenseId) => $"license:{licenseId}";
+    public static string LicenseByKey(string licenseKey) => $"license:key:{licenseKey}";
+    public static string LicenseValidation(Guid tenantId) => $"license:validation:t{tenantId}";
+    public static string LicenseAnalytics() => "licenses:analytics";
+    
+    // Analytics and system health
+    public static string SystemHealth() => "system:health";
+    public static string SuperAdminAnalytics() => "superadmin:analytics";
+    public static string UsageReport(DateTime startDate, DateTime endDate) =>
+        $"usage:report:{startDate:yyyyMMdd}_{endDate:yyyyMMdd}";
 }
 

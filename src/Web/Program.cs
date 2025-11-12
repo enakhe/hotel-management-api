@@ -163,13 +163,15 @@ app.UseSwaggerUi(settings =>
 });
 
 app.UseRouting();
-app.UseMiddleware<TenantResolutionMiddleware>();
-app.UseMiddleware<TenantRateLimitingMiddleware>();
-app.UseMiddleware<SuperAdminMiddleware>();
-app.UseMiddleware<IdempotencyMiddleware>();
-app.UseMiddleware<ExceptionHandlingMiddleware>();
+// Authentication must come first to populate context.User from JWT
 app.UseAuthentication();
 app.UseAuthorization();
+// Now middleware can access authenticated user claims
+app.UseMiddleware<TenantResolutionMiddleware>();
+app.UseMiddleware<SuperAdminMiddleware>();
+app.UseMiddleware<TenantRateLimitingMiddleware>();
+app.UseMiddleware<IdempotencyMiddleware>();
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseHangfireDashboard("/hangfire", new DashboardOptions
 {
     Authorization = new[] { new HangfireAuthorizationFilter() }
@@ -184,6 +186,8 @@ app.MapControllers();
 
 // SignalR hubs
 app.MapHub<HotelManagement.Web.Hubs.NotificationHub>("/hubs/notifications");
+
+BillingJobsSetup.ConfigureBillingJobs();
 
 // Health check endpoints
 app.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions

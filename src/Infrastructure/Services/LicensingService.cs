@@ -16,25 +16,42 @@ public class LicensingService : ILicensingService, ILicenseKeyService
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<LicensingService> _logger;
+    private readonly ICacheService _cache;
 
-    public LicensingService(ApplicationDbContext context, ILogger<LicensingService> logger)
+    public LicensingService(ApplicationDbContext context, ILogger<LicensingService> logger, ICacheService cache)
     {
         _context = context;
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<bool> IsLicenseValidAsync(Guid tenantId)
     {
         try
         {
+            // Try to get from cache (15 minutes for validation data)
+            var cacheKey = CacheKeys.LicenseValidation(tenantId);
+            var cached = await _cache.GetAsync<bool?>(cacheKey);
+            
+            if (cached.HasValue)
+            {
+                _logger.LogDebug("Returning cached license validation for tenant: {TenantId}", tenantId);
+                return cached.Value;
+            }
+
             var tenant = await _context.Tenants
                 .AsNoTracking()
                 .Include(t => t.License)
                 .FirstOrDefaultAsync(t => t.Id == tenantId);
 
-            return tenant != null
+            var isValid = tenant != null
                 && tenant.IsActive
                 && (tenant.License!.ExpirationDate >= DateTime.UtcNow);
+
+            // Cache for 15 minutes
+            await _cache.SetAsync(cacheKey, isValid, TimeSpan.FromMinutes(15));
+
+            return isValid;
         }
         catch (Exception ex)
         {
@@ -47,6 +64,16 @@ public class LicensingService : ILicensingService, ILicenseKeyService
     {
         try
         {
+            // Try to get from cache (15 minutes for feature validation)
+            var cacheKey = $"tenant:{tenantId}:feature:{featureName}:allowed";
+            var cached = await _cache.GetAsync<bool?>(cacheKey);
+            
+            if (cached.HasValue)
+            {
+                _logger.LogDebug("Returning cached feature validation for tenant: {TenantId}, feature: {Feature}", tenantId, featureName);
+                return cached.Value;
+            }
+
             if (!await IsLicenseValidAsync(tenantId))
                 return false;
 
@@ -65,6 +92,9 @@ public class LicensingService : ILicensingService, ILicenseKeyService
             // Check if the feature is available in any of the plan's modules
             var hasFeature = tenant.License.Plan.PlanModules
                 .Any(pm => pm.Module!.Features.Any(f => f.Name == featureName && f.IsEnabled));
+
+            // Cache for 15 minutes
+            await _cache.SetAsync(cacheKey, hasFeature, TimeSpan.FromMinutes(15));
 
             return hasFeature;
         }

@@ -129,6 +129,9 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
 
         builder.HasKey(x => x.Id);
 
+        // Ignore inherited TenantId property - a Tenant doesn't belong to another tenant
+        builder.Ignore(x => x.TenantId);
+
         builder.Property(x => x.Name)
             .IsRequired()
             .HasMaxLength(100);
@@ -173,6 +176,13 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.Property(x => x.Region)
             .HasMaxLength(50);
 
+        // Foreign Keys
+        builder.Property(x => x.PlanId)
+            .IsRequired();
+
+        builder.Property(x => x.LicenseId)
+            .IsRequired();
+
         // Audit properties (inherited from BaseTenantAuditableEntity)
         builder.Property(x => x.Created)
             .IsRequired();
@@ -198,11 +208,13 @@ public class TenantConfiguration : IEntityTypeConfiguration<Tenant>
         builder.HasOne(x => x.Plan)
             .WithMany(x => x.Tenants)
             .HasForeignKey(x => x.PlanId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasOne(x => x.License)
             .WithMany()
             .HasForeignKey(x => x.LicenseId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(x => x.Branches)

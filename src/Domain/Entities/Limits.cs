@@ -26,6 +26,17 @@ public class Limits : BaseEntity
     public int MaxReports { get; set; } = -1;
     public int MaxIntegrations { get; set; } = -1;
 
+    // Communication Limits
+    /// <summary>
+    /// Maximum number of emails that can be sent per month
+    /// </summary>
+    public int MaxEmailsPerMonth { get; set; } = -1; // -1 = unlimited
+
+    /// <summary>
+    /// Maximum number of SMS messages that can be sent per month
+    /// </summary>
+    public int MaxSmsPerMonth { get; set; } = -1; // -1 = unlimited
+
     // Custom Limits (JSON)
     public string? CustomLimits { get; set; } // JSON object for extensibility
 

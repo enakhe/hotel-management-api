@@ -8,11 +8,29 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HotelManagement.Infrastructure.Services;
 
-public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper) : IUserService
+public class UserService(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IMapper mapper, ICacheService cache, ITenantContext tenantContext) : IUserService
 {
     private readonly UserManager<ApplicationUser> _userManager = userManager;
     private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
     private readonly IMapper _mapper = mapper;
+    private readonly ICacheService _cache = cache;
+    private readonly ITenantContext _tenantContext = tenantContext;
+
+    /// <summary>
+    /// Invalidates cache for a specific user and tenant users list
+    /// </summary>
+    private async Task InvalidateUserCacheAsync(Guid userId)
+    {
+        await _cache.RemoveAsync(CacheKeys.User(userId));
+        await _cache.RemoveAsync(CacheKeys.UserRoles(userId));
+        await _cache.RemoveAsync(CacheKeys.UserPermissions(userId));
+        
+        // Invalidate tenant users cache if tenant context is resolved
+        if (_tenantContext.IsResolved && _tenantContext.TenantId.HasValue)
+        {
+            await _cache.RemoveByPatternAsync($"tenant:{_tenantContext.TenantId.Value}:users:*");
+        }
+    }
 
     public async Task<Guid> CreateUserAsync(CreateUserDto dto)
     {
@@ -46,6 +64,9 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
             if (roles.Count != 0)
                 await _userManager.AddToRolesAsync(user, roles);
         }
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(user.Id);
 
         return user.Id;
     }
@@ -81,6 +102,9 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
             await _userManager.AddToRolesAsync(user, newRoles);
         }
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(dto.Id);
     }
 
     public async Task DeactivateUserAsync(Guid userId)
@@ -92,6 +116,9 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         user.LastUpdatedAt = DateTime.UtcNow;
 
         await _userManager.UpdateAsync(user);
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(userId);
     }
 
     public async Task ActivateUserAsync(Guid userId)
@@ -103,6 +130,9 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         user.LastUpdatedAt = DateTime.UtcNow;
 
         await _userManager.UpdateAsync(user);
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(userId);
     }
 
     public async Task DeleteUserAsync(Guid userId)
@@ -111,10 +141,22 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
             ?? throw new Exception("User not found");
 
         await _userManager.DeleteAsync(user);
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(userId);
     }
 
     public async Task<UserDto> GetUserByIdAsync(Guid userId)
     {
+        // Try to get from cache (15 minutes)
+        var cacheKey = CacheKeys.User(userId);
+        var cached = await _cache.GetAsync<UserDto>(cacheKey);
+        
+        if (cached != null)
+        {
+            return cached;
+        }
+
         var user = await _userManager.FindByIdAsync(userId.ToString())
             ?? throw new Exception("User not found");
 
@@ -124,11 +166,31 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
         dto.Roles = [.. roles];
         dto.BranchName = user.Branch?.Name;
 
+        // Cache for 15 minutes
+        await _cache.SetAsync(cacheKey, dto, TimeSpan.FromMinutes(15));
+
         return dto;
     }
 
     public async Task<IEnumerable<UserDto>> GetAllUsersAsync()
     {
+        // Try to get from cache (15 minutes)
+        string cacheKey;
+        if (_tenantContext.IsResolved && _tenantContext.TenantId.HasValue)
+        {
+            cacheKey = CacheKeys.TenantUsers(_tenantContext.TenantId.Value, 1, 1000); // Simple cache for all users
+        }
+        else
+        {
+            cacheKey = "users:all";
+        }
+        
+        var cached = await _cache.GetAsync<List<UserDto>>(cacheKey);
+        if (cached != null)
+        {
+            return cached;
+        }
+
         var users = _userManager.Users.ToList();
 
         var result = new List<UserDto>();
@@ -141,6 +203,9 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
 
             result.Add(dto);
         }
+
+        // Cache for 15 minutes
+        await _cache.SetAsync(cacheKey, result, TimeSpan.FromMinutes(15));
 
         return result;
     }
@@ -158,13 +223,31 @@ public class UserService(UserManager<ApplicationUser> userManager, RoleManager<A
             .ToListAsync();
 
         await _userManager.AddToRolesAsync(user, newRoles);
+
+        // Invalidate user caches
+        await InvalidateUserCacheAsync(userId);
     }
 
     public async Task<List<string>> GetUserRolesAsync(Guid userId)
     {
-        var user = await _userManager.FindByIdAsync(userId.ToString());
+        // Try to get from cache (15 minutes)
+        var cacheKey = CacheKeys.UserRoles(userId);
+        var cached = await _cache.GetAsync<List<string>>(cacheKey);
+        
+        if (cached != null)
+        {
+            return cached;
+        }
 
-        return user == null ? throw new Exception("User not found") : [.. await _userManager.GetRolesAsync(user)];
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null) throw new Exception("User not found");
+
+        var roles = (await _userManager.GetRolesAsync(user)).ToList();
+
+        // Cache for 15 minutes
+        await _cache.SetAsync(cacheKey, roles, TimeSpan.FromMinutes(15));
+
+        return roles;
     }
 
     public async Task ResetPasswordAsync(Guid userId, string newPassword)

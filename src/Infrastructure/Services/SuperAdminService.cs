@@ -25,7 +25,8 @@ public class SuperAdminService(
     IModuleService moduleService,
     ILicenseService licenseService,
     ILicenseKeyService licenseKeyService,
-    ILimitsService limitsService) : ISuperAdminService
+    ILimitsService limitsService,
+    ICacheService cache) : ISuperAdminService
 {
     private readonly ApplicationDbContext _context = context;
     private readonly ILogger<SuperAdminService> _logger = logger;
@@ -39,6 +40,7 @@ public class SuperAdminService(
     private readonly ILicenseService _licenseService = licenseService;
     private readonly ILicenseKeyService _licenseKeyService = licenseKeyService;
     private readonly ILimitsService _limitsService = limitsService;
+    private readonly ICacheService _cache = cache;
 
     // Domain-specific services
     public ITenantService Tenants => _tenantService;
@@ -214,6 +216,16 @@ public class SuperAdminService(
     {
         try
         {
+            // Try to get from cache (15 minutes for analytics)
+            var cacheKey = CacheKeys.SuperAdminAnalytics();
+            var cached = await _cache.GetAsync<SuperAdminAnalyticsDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached super admin analytics");
+                return Result<SuperAdminAnalyticsDto>.Success(cached, 200);
+            }
+
             // Get tenant analytics directly from database
             var totalTenants = await _context.Tenants.CountAsync();
             var activeTenants = await _context.Tenants.CountAsync(t => t.IsActive);
@@ -246,6 +258,9 @@ public class SuperAdminService(
                 GeneratedAt = DateTime.UtcNow
             };
 
+            // Cache for 15 minutes
+            await _cache.SetAsync(cacheKey, analytics, TimeSpan.FromMinutes(15));
+
             return Result<SuperAdminAnalyticsDto>.Success(analytics, 200);
         }
         catch (Exception ex)
@@ -259,6 +274,16 @@ public class SuperAdminService(
     {
         try
         {
+            // Try to get from cache (5 minutes for system health)
+            var cacheKey = CacheKeys.SystemHealth();
+            var cached = await _cache.GetAsync<SystemHealthDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached system health");
+                return Result<SystemHealthDto>.Success(cached, 200);
+            }
+
             var totalTenants = await _context.Tenants.CountAsync();
             var activeTenants = await _context.Tenants.CountAsync(t => t.IsActive);
             var totalPlans = await _context.Plans.CountAsync();
@@ -282,6 +307,9 @@ public class SuperAdminService(
                 LastUpdated = DateTime.UtcNow
             };
 
+            // Cache for 5 minutes (health data should be relatively fresh)
+            await _cache.SetAsync(cacheKey, health, TimeSpan.FromMinutes(5));
+
             return Result<SystemHealthDto>.Success(health, 200);
         }
         catch (Exception ex)
@@ -295,6 +323,16 @@ public class SuperAdminService(
     {
         try
         {
+            // Try to get from cache (30 minutes for usage reports)
+            var cacheKey = CacheKeys.UsageReport(startDate, endDate);
+            var cached = await _cache.GetAsync<UsageReportDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached usage report for {StartDate} to {EndDate}", startDate, endDate);
+                return Result<UsageReportDto>.Success(cached, 200);
+            }
+
             var tenantCount = await _context.Tenants
                 .Where(t => t.Created >= startDate && t.Created <= endDate)
                 .CountAsync();
@@ -322,6 +360,9 @@ public class SuperAdminService(
                 RequestsByTenant = new Dictionary<string, int>(),
                 GeneratedAt = DateTime.UtcNow
             };
+
+            // Cache for 30 minutes
+            await _cache.SetAsync(cacheKey, report, TimeSpan.FromMinutes(30));
 
             return Result<UsageReportDto>.Success(report, 200);
         }

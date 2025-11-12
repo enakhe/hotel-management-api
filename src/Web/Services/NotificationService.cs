@@ -1,4 +1,5 @@
 using HotelManagement.Application.Common.Interfaces;
+using HotelManagement.Domain.Entities;
 using HotelManagement.Web.Hubs;
 using Microsoft.AspNetCore.SignalR;
 

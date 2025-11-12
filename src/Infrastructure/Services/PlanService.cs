@@ -9,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace HotelManagement.Infrastructure.Services;
 
-public class PlanService(ApplicationDbContext context, ILogger<PlanService> logger, IMapper mapper, ISuperAdminAuditService auditService, IAuthService authService) : IPlanService
+public class PlanService(ApplicationDbContext context, ILogger<PlanService> logger, IMapper mapper, ISuperAdminAuditService auditService, IAuthService authService, ICacheService cache) : IPlanService
 {
 
     private readonly ApplicationDbContext _context = context;
@@ -17,6 +17,7 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
     private readonly IMapper _mapper = mapper;
     private readonly ISuperAdminAuditService _auditService = auditService;
     private readonly IAuthService _authService = authService;
+    private readonly ICacheService _cache = cache;
 
     public async Task<Result<PlanResponseDto>> CreatePlanAsync(CreatePlanRequest request)
     {
@@ -73,6 +74,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate all plans list caches
+            await InvalidateAllPlansListCacheAsync();
+
             await _auditService.LogActionAsync(
                 "CreatePlan",
                 "Plan",
@@ -104,10 +108,49 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
         }
     }
 
+    /// <summary>
+    /// Invalidates all plan-related caches
+    /// </summary>
+    private async Task InvalidateAllPlansListCacheAsync()
+    {
+        // Invalidate plans list caches (we can't delete all paginated variants, so use RemoveByPatternAsync)
+        await _cache.RemoveByPatternAsync("plans:list:*");
+        await _cache.RemoveAsync(CacheKeys.AllPlans());
+        await _cache.RemoveAsync(CacheKeys.PlanUsage());
+        _logger.LogDebug("Invalidated all plans list caches");
+    }
+
+    /// <summary>
+    /// Invalidates cache for a specific plan
+    /// </summary>
+    private async Task InvalidatePlanCacheAsync(Guid planId)
+    {
+        await _cache.RemoveAsync(CacheKeys.Plan(planId));
+        await InvalidateAllPlansListCacheAsync();
+        _logger.LogDebug("Invalidated cache for plan: {PlanId}", planId);
+    }
+
     public async Task<Result<PaginatedResult<PlanResponseDto>>> GetPlansAsync(PlanListRequest request)
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.PlansList(
+                request.Page,
+                request.Size,
+                request.IsActive,
+                request.BillingCycle,
+                request.Query,
+                request.SortBy,
+                request.SortDescending);
+
+            var cached = await _cache.GetAsync<PaginatedResult<PlanResponseDto>>(cacheKey);
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached plans list for key: {CacheKey}", cacheKey);
+                return Result<PaginatedResult<PlanResponseDto>>.Success(cached, 200);
+            }
+
             var query = _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
@@ -174,6 +217,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 Size = request.Size
             };
 
+            // Cache for 24 hours (static data)
+            await _cache.SetAsync(cacheKey, paginatedResult, TimeSpan.FromHours(24));
+
             return Result<PaginatedResult<PlanResponseDto>>.Success(paginatedResult, 200);
         }
         catch (Exception ex)
@@ -187,6 +233,16 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.Plan(planId);
+            var cached = await _cache.GetAsync<PlanResponseDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached plan for ID: {PlanId}", planId);
+                return Result<PlanResponseDto>.Success(cached, 200);
+            }
+
             var plan = await _context.Plans
                 .Include(p => p.PlanModules)
                     .ThenInclude(pm => pm.Module)
@@ -202,6 +258,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                 return Result<PlanResponseDto>.Failure("Plan not found", 404);
 
             var planDto = _mapper.Map<PlanResponseDto>(plan);
+
+            // Cache for 24 hours (static data)
+            await _cache.SetAsync(cacheKey, planDto, TimeSpan.FromHours(24));
 
             return Result<PlanResponseDto>.Success(planDto, 200);
         }
@@ -322,6 +381,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
+
             await _auditService.LogActionAsync(
                 "UpdatePlan",
                 "Plan",
@@ -380,6 +442,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
+
             await _auditService.LogActionAsync(
                 "DeletePlan",
                 "Plan",
@@ -415,6 +480,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             plan.UpdatedBy = "SuperAdmin";
 
             await _context.SaveChangesAsync();
+
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
 
             await _auditService.LogActionAsync(
                 "AssignLimits",
@@ -466,6 +534,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
+
             await _auditService.LogActionAsync(
                 "UpdateLimits",
                 "Plan",
@@ -498,6 +569,16 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
     {
         try
         {
+            // Try to get from cache (15 minutes for analytics data)
+            var cacheKey = CacheKeys.PlanUsage();
+            var cached = await _cache.GetAsync<PlanUsageDto[]>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached plan usage analytics");
+                return Result<PlanUsageDto[]>.Success(cached, 200);
+            }
+
             var plans = await _context.Plans
                 .Include(p => p.Tenants)
                 .Include(pm => pm.PlanModules)
@@ -524,6 +605,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
                     LastUpdated = DateTime.UtcNow
                 };
             }).ToArray();
+
+            // Cache for 15 minutes (analytics data changes more frequently)
+            await _cache.SetAsync(cacheKey, planUsage, TimeSpan.FromMinutes(15));
 
             return Result<PlanUsageDto[]>.Success(planUsage, 200);
         }
@@ -656,6 +740,12 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches for all updated plans
+            foreach (var update in updates)
+            {
+                await InvalidatePlanCacheAsync(update.Id);
+            }
+
             await _auditService.LogActionAsync(
                 "BulkUpdatePlans",
                 "Plan",
@@ -717,6 +807,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
+
             await _auditService.LogActionAsync(
                 "AssignModuleToPlan",
                 "Plan",
@@ -761,6 +854,9 @@ public class PlanService(ApplicationDbContext context, ILogger<PlanService> logg
             plan.UpdatedBy = "SuperAdmin";
 
             await _context.SaveChangesAsync();
+
+            // Invalidate caches
+            await InvalidatePlanCacheAsync(planId);
 
             await _auditService.LogActionAsync(
                 "RemoveModuleFromPlan",

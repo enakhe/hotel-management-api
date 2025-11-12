@@ -17,6 +17,7 @@
     <PackageReference Include="CsvHelper" />
     <PackageReference Include="DocumentFormat.OpenXml" />
     <PackageReference Include="EPPlus" />
+    <PackageReference Include="FirebaseAdmin" />
     <PackageReference Include="Hangfire" />
     <PackageReference Include="MailKit" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
@@ -31,6 +32,7 @@
     <PackageReference Include="Polly" />
     <PackageReference Include="Polly.Extensions.Http" />
     <PackageReference Include="QuestPDF" />
+    <PackageReference Include="Twilio" />
   </ItemGroup>
 
   <ItemGroup>

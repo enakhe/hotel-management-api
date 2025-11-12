@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(AdministratorMappingProfile).Assembly);
         services.AddAutoMapper(typeof(SuperAdministratorMappingProfile).Assembly);
         services.AddAutoMapper(typeof(AuthMappingProfile).Assembly);
+        services.AddAutoMapper(typeof(BillingMappingProfile).Assembly);
 
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 

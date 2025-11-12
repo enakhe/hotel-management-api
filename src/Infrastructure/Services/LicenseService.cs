@@ -15,11 +15,13 @@ public class LicenseService : ILicenseService
 {
     private readonly ApplicationDbContext _context;
     private readonly ILogger<LicenseService> _logger;
+    private readonly ICacheService _cache;
 
-    public LicenseService(ApplicationDbContext context, ILogger<LicenseService> logger)
+    public LicenseService(ApplicationDbContext context, ILogger<LicenseService> logger, ICacheService cache)
     {
         _context = context;
         _logger = logger;
+        _cache = cache;
     }
 
     // CRUD Operations
@@ -73,6 +75,9 @@ public class LicenseService : ILicenseService
 
             _context.Licenses.Add(license);
             await _context.SaveChangesAsync();
+
+            // Invalidate license caches
+            await InvalidateAllLicensesListCacheAsync();
 
             // Collect all plan features from modules
             var planFeatures = new List<ModuleFeatureResponseDto>();
@@ -178,10 +183,48 @@ public class LicenseService : ILicenseService
         }
     }
 
+    /// <summary>
+    /// Invalidates all license-related caches
+    /// </summary>
+    private async Task InvalidateAllLicensesListCacheAsync()
+    {
+        await _cache.RemoveByPatternAsync("licenses:list:*");
+        await _cache.RemoveAsync(CacheKeys.LicenseAnalytics());
+        _logger.LogDebug("Invalidated all licenses list caches");
+    }
+
+    /// <summary>
+    /// Invalidates cache for a specific license
+    /// </summary>
+    private async Task InvalidateLicenseCacheAsync(Guid licenseId, string? licenseKey = null)
+    {
+        await _cache.RemoveAsync(CacheKeys.License(licenseId));
+        if (!string.IsNullOrEmpty(licenseKey))
+        {
+            await _cache.RemoveAsync(CacheKeys.LicenseByKey(licenseKey));
+        }
+        await InvalidateAllLicensesListCacheAsync();
+        _logger.LogDebug("Invalidated cache for license: {LicenseId}", licenseId);
+    }
+
     public async Task<Result<PaginatedResult<LicenseResponseDto>>> GetLicensesAsync(LicenseListRequest request)
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.LicensesList(
+                request.Page,
+                request.Size,
+                request.Status?.ToString(),
+                request.PlanId);
+
+            var cached = await _cache.GetAsync<PaginatedResult<LicenseResponseDto>>(cacheKey);
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached licenses list");
+                return Result<PaginatedResult<LicenseResponseDto>>.Success(cached, 200);
+            }
+
             var query = _context.Licenses
                 .Include(l => l.Plan)
                 .AsQueryable();
@@ -255,6 +298,9 @@ public class LicenseService : ILicenseService
                 Size = request.Size,
             };
 
+            // Cache for 60 minutes
+            await _cache.SetAsync(cacheKey, paginatedResult, TimeSpan.FromMinutes(60));
+
             return Result<PaginatedResult<LicenseResponseDto>>.Success(paginatedResult, 200);
         }
         catch (Exception ex)
@@ -268,6 +314,16 @@ public class LicenseService : ILicenseService
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.License(licenseId);
+            var cached = await _cache.GetAsync<LicenseResponseDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached license for ID: {LicenseId}", licenseId);
+                return Result<LicenseResponseDto>.Success(cached, 200);
+            }
+
             var license = await _context.Licenses
                 .Include(l => l.Plan)
                 .FirstOrDefaultAsync(l => l.Id == licenseId);
@@ -296,6 +352,9 @@ public class LicenseService : ILicenseService
                 LastModifiedBy = license.LastModifiedBy
             };
 
+            // Cache for 60 minutes
+            await _cache.SetAsync(cacheKey, response, TimeSpan.FromMinutes(60));
+
             return Result<LicenseResponseDto>.Success(response, 200);
         }
         catch (Exception ex)
@@ -309,6 +368,16 @@ public class LicenseService : ILicenseService
     {
         try
         {
+            // Try to get from cache
+            var cacheKey = CacheKeys.LicenseByKey(licenseKey);
+            var cached = await _cache.GetAsync<LicenseResponseDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached license for key: {LicenseKey}", licenseKey);
+                return Result<LicenseResponseDto>.Success(cached, 200);
+            }
+
             var license = await _context.Licenses
                 .Include(l => l.Plan)
                 .FirstOrDefaultAsync(l => l.LicenseKey == licenseKey);
@@ -336,6 +405,9 @@ public class LicenseService : ILicenseService
                 LastModified = license.LastValidated ?? license.IssuedDate,
                 LastModifiedBy = license.LastModifiedBy
             };
+
+            // Cache for 60 minutes
+            await _cache.SetAsync(cacheKey, response, TimeSpan.FromMinutes(60));
 
             return Result<LicenseResponseDto>.Success(response, 200);
         }
@@ -384,6 +456,9 @@ public class LicenseService : ILicenseService
 
             await _context.SaveChangesAsync();
 
+            // Invalidate caches
+            await InvalidateLicenseCacheAsync(licenseId, license.LicenseKey);
+
             var response = new LicenseResponseDto
             {
                 Id = license.Id,
@@ -430,8 +505,13 @@ public class LicenseService : ILicenseService
             if (tenantUsingLicense)
                 return Result<bool>.Failure("Cannot delete license that is currently in use by a tenant", 400);
 
+            var licenseKey = license.LicenseKey;
+            
             _context.Licenses.Remove(license);
             await _context.SaveChangesAsync();
+
+            // Invalidate caches
+            await InvalidateLicenseCacheAsync(licenseId, licenseKey);
 
             return Result<bool>.Success(true, 200);
         }
@@ -855,6 +935,16 @@ public class LicenseService : ILicenseService
     {
         try
         {
+            // Try to get from cache (30 minutes for analytics)
+            var cacheKey = CacheKeys.LicenseAnalytics();
+            var cached = await _cache.GetAsync<LicenseAnalyticsDto>(cacheKey);
+            
+            if (cached != null)
+            {
+                _logger.LogDebug("Returning cached license analytics");
+                return Result<LicenseAnalyticsDto>.Success(cached, 200);
+            }
+
             var licenses = await _context.Licenses
                 .Include(l => l.Plan)
                 .ToListAsync();
@@ -920,6 +1010,9 @@ public class LicenseService : ILicenseService
                 MonthlyIssuedLicenses = monthlyIssuedLicenses,
                 RevenueByLicenseType = Array.Empty<RevenueByLicenseTypeDto>() // Would need pricing data
             };
+
+            // Cache for 30 minutes
+            await _cache.SetAsync(cacheKey, response, TimeSpan.FromMinutes(30));
 
             return Result<LicenseAnalyticsDto>.Success(response, 200);
         }

@@ -204,6 +204,535 @@
         ]
       }
     },
+    "/api/v1/billing/subscription": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Get current subscription for tenant",
+        "operationId": "Billing_GetSubscription",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/invoices": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Get invoices for current tenant",
+        "operationId": "Billing_GetInvoices",
+        "parameters": [
+          {
+            "name": "TenantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SubscriptionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceStatus"
+                }
+              ]
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceType"
+                }
+              ]
+            },
+            "x-position": 4
+          },
+          {
+            "name": "IssueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "IssueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "DueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "DueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "IsOverdue",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 11
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 13
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 14
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/invoices/{id}": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Get specific invoice",
+        "operationId": "Billing_GetInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/invoices/{id}/download": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Download invoice PDF",
+        "operationId": "Billing_DownloadInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/billing/payments": {
+      "get": {
+        "tags": [
+          "Billing"
+        ],
+        "summary": "Get payment history",
+        "operationId": "Billing_GetPaymentHistory",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscription/plans": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get available plans",
+        "operationId": "SubscriptionManagement_GetAvailablePlans",
+        "parameters": [
+          {
+            "name": "Query",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "IsActive",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "BillingCycle",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "PriceMin",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "PriceMax",
+            "in": "query",
+            "schema": {
+              "type": "number",
+              "format": "decimal",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 7
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 9
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfPlanResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscription/plans/{planId}/quote": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get price quote for a plan",
+        "operationId": "SubscriptionManagement_GetPriceQuote",
+        "parameters": [
+          {
+            "name": "planId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PriceQuoteDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscription/upgrade": {
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Request plan upgrade (generates quote with proration)",
+        "operationId": "SubscriptionManagement_RequestUpgrade",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradePlanRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProrationDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscription/cancel": {
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Cancel subscription",
+        "operationId": "SubscriptionManagement_CancelSubscription",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSubscriptionRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/sync/sync": {
       "post": {
         "tags": [
@@ -513,6 +1042,890 @@
             ]
           }
         ]
+      }
+    },
+    "/cp/api/v1/billing/dashboard/stats": {
+      "get": {
+        "tags": [
+          "BillingDashboard"
+        ],
+        "summary": "Get billing dashboard statistics",
+        "operationId": "BillingDashboard_GetDashboardStats",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BillingDashboardStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/billing/dashboard/revenue": {
+      "get": {
+        "tags": [
+          "BillingDashboard"
+        ],
+        "summary": "Get revenue over time",
+        "operationId": "BillingDashboard_GetRevenueData",
+        "parameters": [
+          {
+            "name": "months",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 12
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RevenueDataPoint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/billing/dashboard/subscription-trends": {
+      "get": {
+        "tags": [
+          "BillingDashboard"
+        ],
+        "summary": "Get subscription trends",
+        "operationId": "BillingDashboard_GetSubscriptionTrends",
+        "parameters": [
+          {
+            "name": "months",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 12
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionTrendDataPoint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/billing/dashboard/plan-distribution": {
+      "get": {
+        "tags": [
+          "BillingDashboard"
+        ],
+        "summary": "Get plan distribution",
+        "operationId": "BillingDashboard_GetPlanDistribution",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlanDistributionDataPoint"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get all invoices",
+        "operationId": "InvoiceManagement_GetInvoices",
+        "parameters": [
+          {
+            "name": "TenantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "SubscriptionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceStatus"
+                }
+              ]
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceType"
+                }
+              ]
+            },
+            "x-position": 4
+          },
+          {
+            "name": "IssueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "IssueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "DueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "DueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "IsOverdue",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 11
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 13
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 14
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get invoice by ID",
+        "operationId": "InvoiceManagement_GetInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/number/{invoiceNumber}": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get invoice by invoice number",
+        "operationId": "InvoiceManagement_GetInvoiceByNumber",
+        "parameters": [
+          {
+            "name": "invoiceNumber",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/tenant/{tenantId}": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get invoices for a specific tenant",
+        "operationId": "InvoiceManagement_GetInvoicesByTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "TenantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 2
+          },
+          {
+            "name": "SubscriptionId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceStatus"
+                }
+              ]
+            },
+            "x-position": 4
+          },
+          {
+            "name": "Type",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceType"
+                }
+              ]
+            },
+            "x-position": 5
+          },
+          {
+            "name": "IssueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "IssueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 7
+          },
+          {
+            "name": "DueDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 8
+          },
+          {
+            "name": "DueDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 9
+          },
+          {
+            "name": "IsOverdue",
+            "in": "query",
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "x-position": 10
+          },
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 11
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 12
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 13
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 14
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 15
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfInvoiceResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/generate/{subscriptionId}": {
+      "post": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Generate invoice for a subscription",
+        "operationId": "InvoiceManagement_GenerateInvoice",
+        "parameters": [
+          {
+            "name": "subscriptionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/InvoiceType"
+                }
+              ]
+            },
+            "x-position": 2
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InvoiceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}/send": {
+      "post": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Send invoice via email",
+        "operationId": "InvoiceManagement_SendInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}/mark-paid": {
+      "post": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Mark invoice as paid",
+        "operationId": "InvoiceManagement_MarkInvoiceAsPaid",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarkInvoiceAsPaidRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}/record-payment": {
+      "post": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Record manual payment for an invoice",
+        "operationId": "InvoiceManagement_RecordManualPayment",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordManualPaymentRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/overdue": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get overdue invoices",
+        "operationId": "InvoiceManagement_GetOverdueInvoices",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/InvoiceResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/upcoming": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Get upcoming invoices (to be generated soon)",
+        "operationId": "InvoiceManagement_GetUpcomingInvoices",
+        "parameters": [
+          {
+            "name": "daysAhead",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}/cancel": {
+      "post": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Cancel/void an invoice",
+        "operationId": "InvoiceManagement_CancelInvoice",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelInvoiceRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/invoices/{id}/pdf": {
+      "get": {
+        "tags": [
+          "InvoiceManagement"
+        ],
+        "summary": "Generate invoice PDF",
+        "operationId": "InvoiceManagement_GenerateInvoicePdf",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": ""
+          }
+        }
       }
     },
     "/cp/licenses": {
@@ -4411,6 +5824,497 @@
         ]
       }
     },
+    "/cp/api/v1/subscriptions": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get all subscriptions",
+        "operationId": "SubscriptionManagement_GetSubscriptions",
+        "parameters": [
+          {
+            "name": "TenantId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 1
+          },
+          {
+            "name": "Status",
+            "in": "query",
+            "schema": {
+              "nullable": true,
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/SubscriptionStatus"
+                }
+              ]
+            },
+            "x-position": 2
+          },
+          {
+            "name": "PlanId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid",
+              "nullable": true
+            },
+            "x-position": 3
+          },
+          {
+            "name": "StartDateFrom",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 4
+          },
+          {
+            "name": "StartDateTo",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 5
+          },
+          {
+            "name": "SearchTerm",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "nullable": true
+            },
+            "x-position": 6
+          },
+          {
+            "name": "Page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 7
+          },
+          {
+            "name": "PageSize",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 8
+          },
+          {
+            "name": "SortBy",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 9
+          },
+          {
+            "name": "SortDescending",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            },
+            "x-position": 10
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedResultOfSubscriptionResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Create a new subscription",
+        "operationId": "SubscriptionManagement_CreateSubscription",
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/{id}": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get subscription by ID",
+        "operationId": "SubscriptionManagement_GetSubscription",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Update a subscription",
+        "operationId": "SubscriptionManagement_UpdateSubscription",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/tenant/{tenantId}": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get subscription by tenant ID",
+        "operationId": "SubscriptionManagement_GetSubscriptionByTenant",
+        "parameters": [
+          {
+            "name": "tenantId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/{id}/cancel": {
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Cancel a subscription",
+        "operationId": "SubscriptionManagement_CancelSubscription2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelSubscriptionRequest2"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/{id}/suspend": {
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Suspend a subscription",
+        "operationId": "SubscriptionManagement_SuspendSubscription",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "requestBody": {
+          "x-name": "request",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuspendSubscriptionRequest"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 2
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/{id}/reactivate": {
+      "post": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Reactivate a subscription",
+        "operationId": "SubscriptionManagement_ReactivateSubscription",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/active": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get all active subscriptions",
+        "operationId": "SubscriptionManagement_GetActiveSubscriptions",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cp/api/v1/subscriptions/due-for-renewal": {
+      "get": {
+        "tags": [
+          "SubscriptionManagement"
+        ],
+        "summary": "Get subscriptions due for renewal",
+        "operationId": "SubscriptionManagement_GetSubscriptionsDueForRenewal",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date-time",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cp/login": {
       "post": {
         "tags": [
@@ -7335,6 +9239,1211 @@
           }
         }
       },
+      "SubscriptionResponseDto": {
+        "type": "object",
+        "description": "Subscription response DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subscriptionNumber": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantName": {
+            "type": "string"
+          },
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "trialEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/SubscriptionStatus"
+          },
+          "statusDisplay": {
+            "type": "string"
+          },
+          "billingCycle": {
+            "$ref": "#/components/schemas/BillingCycle"
+          },
+          "billingCycleDisplay": {
+            "type": "string"
+          },
+          "monthlyPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "customDiscount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "nextBillingDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastBillingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "autoRenew": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionModuleDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "SubscriptionStatus": {
+        "type": "integer",
+        "description": "Status of a subscription",
+        "x-enumNames": [
+          "PendingPayment",
+          "Trial",
+          "Active",
+          "PastDue",
+          "Suspended",
+          "Cancelled",
+          "Expired"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "BillingCycle": {
+        "type": "integer",
+        "description": "Represents the billing cycle for subscription plans",
+        "x-enumNames": [
+          "Monthly",
+          "Yearly",
+          "Lifetime"
+        ],
+        "enum": [
+          0,
+          1,
+          2
+        ]
+      },
+      "SubscriptionModuleDto": {
+        "type": "object",
+        "description": "Module included in subscription",
+        "additionalProperties": false,
+        "properties": {
+          "moduleId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "moduleName": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "isOptional": {
+            "type": "boolean"
+          },
+          "addedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedResultOfInvoiceResponseDto": {
+        "type": "object",
+        "description": "Paginated result wrapper",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceResponseDto"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          }
+        }
+      },
+      "InvoiceResponseDto": {
+        "type": "object",
+        "description": "Invoice response DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantName": {
+            "type": "string"
+          },
+          "subscriptionId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "subscriptionNumber": {
+            "type": "string"
+          },
+          "issueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paidDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "status": {
+            "$ref": "#/components/schemas/InvoiceStatus"
+          },
+          "statusDisplay": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/InvoiceType"
+          },
+          "typeDisplay": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "discountAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountPaid": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountDue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "periodStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "periodEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paymentTermsDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentInstructions": {
+            "type": "string",
+            "nullable": true
+          },
+          "sentAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "viewedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "isOverdue": {
+            "type": "boolean"
+          },
+          "daysOverdue": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lineItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InvoiceLineItemDto"
+            }
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentResponseDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InvoiceStatus": {
+        "type": "integer",
+        "description": "Status of an invoice",
+        "x-enumNames": [
+          "Draft",
+          "Pending",
+          "Sent",
+          "Viewed",
+          "PartiallyPaid",
+          "Paid",
+          "Overdue",
+          "Cancelled",
+          "Refunded"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ]
+      },
+      "InvoiceType": {
+        "type": "integer",
+        "description": "Type of invoice",
+        "x-enumNames": [
+          "Initial",
+          "Recurring",
+          "Upgrade",
+          "Downgrade",
+          "Overage",
+          "OneTime",
+          "Credit"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "InvoiceLineItemDto": {
+        "type": "object",
+        "description": "Invoice line item DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "lineNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "description": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/LineItemType"
+          },
+          "typeDisplay": {
+            "type": "string"
+          },
+          "moduleId": {
+            "type": "string",
+            "format": "guid",
+            "nullable": true
+          },
+          "moduleName": {
+            "type": "string",
+            "nullable": true
+          },
+          "quantity": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "unitPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "isTaxable": {
+            "type": "boolean"
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "servicePeriodStart": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "servicePeriodEnd": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "LineItemType": {
+        "type": "integer",
+        "description": "Type of invoice line item",
+        "x-enumNames": [
+          "Subscription",
+          "Module",
+          "SetupFee",
+          "EmailOverage",
+          "SmsOverage",
+          "StorageOverage",
+          "Discount",
+          "Tax",
+          "Credit",
+          "Refund"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "PaymentResponseDto": {
+        "type": "object",
+        "description": "Payment response DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "paymentReference": {
+            "type": "string"
+          },
+          "invoiceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "tenantName": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "methodDisplay": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/PaymentStatus"
+          },
+          "statusDisplay": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processedAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "settledAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "gatewayTransactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "gateway": {
+            "$ref": "#/components/schemas/PaymentGateway"
+          },
+          "gatewayDisplay": {
+            "type": "string"
+          },
+          "last4Digits": {
+            "type": "string",
+            "nullable": true
+          },
+          "cardBrand": {
+            "type": "string",
+            "nullable": true
+          },
+          "failureReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "isReconciled": {
+            "type": "boolean"
+          },
+          "reconciledAt": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "PaymentMethod": {
+        "type": "integer",
+        "description": "Payment method used",
+        "x-enumNames": [
+          "BankTransfer",
+          "CreditCard",
+          "DebitCard",
+          "MobileMoney",
+          "Paystack",
+          "Flutterwave",
+          "Paypal",
+          "Stripe",
+          "Cash",
+          "Check"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "PaymentStatus": {
+        "type": "integer",
+        "description": "Status of a payment",
+        "x-enumNames": [
+          "Initiated",
+          "Pending",
+          "Processing",
+          "Authorized",
+          "Captured",
+          "Completed",
+          "Failed",
+          "Declined",
+          "Cancelled",
+          "Refunded",
+          "PartiallyRefunded"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "PaymentGateway": {
+        "type": "integer",
+        "description": "Payment gateway provider",
+        "x-enumNames": [
+          "Paystack",
+          "Flutterwave",
+          "Stripe",
+          "Paypal",
+          "Manual"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ]
+      },
+      "PaginatedResultOfPlanResponseDto": {
+        "type": "object",
+        "description": "Paginated result wrapper",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanResponseDto"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PlanResponseDto": {
+        "type": "object",
+        "description": "Plan response DTO for API responses",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "billingCycle": {
+            "$ref": "#/components/schemas/BillingCycle"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isPopular": {
+            "type": "boolean"
+          },
+          "modules": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/ModuleResponseDto"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PlanFeatureResponseDto"
+            }
+          },
+          "limits": {
+            "$ref": "#/components/schemas/LimitsResponseDto"
+          }
+        }
+      },
+      "ModuleResponseDto": {
+        "type": "object",
+        "description": "Response DTO for module data",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "category": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "isCore": {
+            "type": "boolean"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "features": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModuleFeatureResponseDto"
+            }
+          },
+          "pricing": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/ModulePricingResponseDto"
+              }
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string",
+            "nullable": true
+          },
+          "updatedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "ModuleFeatureResponseDto": {
+        "type": "object",
+        "description": "Response DTO for module features",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "isEnabled": {
+            "type": "boolean"
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {}
+          }
+        }
+      },
+      "ModulePricingResponseDto": {
+        "type": "object",
+        "description": "Response DTO for module pricing",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "type": {
+            "$ref": "#/components/schemas/PricingType"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "currency": {
+            "type": "string",
+            "nullable": true
+          },
+          "billingCycle": {
+            "nullable": true,
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/BillingCycle"
+              }
+            ]
+          },
+          "minQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "maxQuantity": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          }
+        }
+      },
+      "PricingType": {
+        "type": "integer",
+        "description": "Types of pricing models for modules",
+        "x-enumNames": [
+          "Included",
+          "Addon",
+          "PerUser",
+          "PerUsage"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "PlanFeatureResponseDto": {
+        "type": "object",
+        "description": "Plan feature response DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "included": {
+            "type": "boolean"
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "unit": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "LimitsResponseDto": {
+        "type": "object",
+        "description": "Limits response DTO",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "guid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "maxUsers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBranches": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxRooms": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReservations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxStorageGB": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "apiRateLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "concurrentSessions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxGuests": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxBookings": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxReports": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxIntegrations": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "customLimits": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "isDefault": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdBy": {
+            "type": "string"
+          },
+          "lastModifiedBy": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PriceQuoteDto": {
+        "type": "object",
+        "description": "Price quote for a plan subscription",
+        "additionalProperties": false,
+        "properties": {
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "monthlyPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "setupFee": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "taxRate": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "taxAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalFirstMonth": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "totalRecurring": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "modules": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModulePriceDto"
+            }
+          },
+          "validUntil": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ModulePriceDto": {
+        "type": "object",
+        "description": "Module price detail",
+        "additionalProperties": false,
+        "properties": {
+          "moduleId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "moduleName": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "isRequired": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ProrationDto": {
+        "type": "object",
+        "description": "Proration calculation for plan changes",
+        "additionalProperties": false,
+        "properties": {
+          "currentPlanId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "currentPlanName": {
+            "type": "string"
+          },
+          "currentPlanPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "newPlanId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "newPlanName": {
+            "type": "string"
+          },
+          "newPlanPrice": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "daysRemaining": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unusedAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "newPlanProrata": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "amountDue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "creditAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "isUpgrade": {
+            "type": "boolean"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "UpgradePlanRequest": {
+        "type": "object",
+        "description": "Request to upgrade plan",
+        "additionalProperties": false,
+        "properties": {
+          "newPlanId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "changeDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "CancelSubscriptionRequest": {
+        "type": "object",
+        "description": "Request to cancel subscription",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
       "PaginatedResultOfSuperAdminAuditLog": {
         "type": "object",
         "description": "Paginated result wrapper",
@@ -7420,6 +10529,206 @@
           "timestamp": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "BillingDashboardStats": {
+        "type": "object",
+        "description": "Billing dashboard statistics",
+        "additionalProperties": false,
+        "properties": {
+          "activeSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "trialSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cancelledSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "suspendedSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthlyRecurringRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "annualRecurringRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "outstandingInvoices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "outstandingAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "overdueInvoices": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "overdueAmount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "monthlyRevenue": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "paymentSuccessRate": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "currency": {
+            "type": "string"
+          }
+        }
+      },
+      "RevenueDataPoint": {
+        "type": "object",
+        "description": "Revenue data point for charts",
+        "additionalProperties": false,
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubscriptionTrendDataPoint": {
+        "type": "object",
+        "description": "Subscription trend data point",
+        "additionalProperties": false,
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "newSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "activeSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cancelledSubscriptions": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "PlanDistributionDataPoint": {
+        "type": "object",
+        "description": "Plan distribution data point",
+        "additionalProperties": false,
+        "properties": {
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "planName": {
+            "type": "string"
+          },
+          "subscriptionCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalRevenue": {
+            "type": "number",
+            "format": "decimal"
+          }
+        }
+      },
+      "MarkInvoiceAsPaidRequest": {
+        "type": "object",
+        "description": "Request to mark invoice as paid",
+        "additionalProperties": false,
+        "properties": {
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RecordManualPaymentRequest": {
+        "type": "object",
+        "description": "Request to record a manual payment",
+        "additionalProperties": false,
+        "properties": {
+          "invoiceId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "amount": {
+            "type": "number",
+            "format": "decimal"
+          },
+          "method": {
+            "$ref": "#/components/schemas/PaymentMethod"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "transactionReference": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CancelInvoiceRequest": {
+        "type": "object",
+        "description": "Request to cancel invoice",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
           }
         }
       },
@@ -7986,36 +11295,6 @@
             "nullable": true
           }
         }
-      },
-      "PricingType": {
-        "type": "integer",
-        "description": "Types of pricing models for modules",
-        "x-enumNames": [
-          "Included",
-          "Addon",
-          "PerUser",
-          "PerUsage"
-        ],
-        "enum": [
-          0,
-          1,
-          2,
-          3
-        ]
-      },
-      "BillingCycle": {
-        "type": "integer",
-        "description": "Represents the billing cycle for subscription plans",
-        "x-enumNames": [
-          "Monthly",
-          "Yearly",
-          "Lifetime"
-        ],
-        "enum": [
-          0,
-          1,
-          2
-        ]
       },
       "UpdateModuleCommand": {
         "type": "object",
@@ -8979,6 +12258,133 @@
           }
         }
       },
+      "PaginatedResultOfSubscriptionResponseDto": {
+        "type": "object",
+        "description": "Paginated result wrapper",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubscriptionResponseDto"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasNext": {
+            "type": "boolean"
+          },
+          "hasPrevious": {
+            "type": "boolean"
+          }
+        }
+      },
+      "CreateSubscriptionRequest": {
+        "type": "object",
+        "description": "Request to create a new subscription",
+        "additionalProperties": false,
+        "properties": {
+          "tenantId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "planId": {
+            "type": "string",
+            "format": "guid"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trialEndDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "billingCycle": {
+            "$ref": "#/components/schemas/BillingCycle"
+          },
+          "customDiscount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "autoRenew": {
+            "type": "boolean"
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateSubscriptionRequest": {
+        "type": "object",
+        "description": "Request to update a subscription",
+        "additionalProperties": false,
+        "properties": {
+          "nextBillingDate": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "autoRenew": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "customDiscount": {
+            "type": "number",
+            "format": "decimal",
+            "nullable": true
+          },
+          "discountReason": {
+            "type": "string",
+            "nullable": true
+          },
+          "notes": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CancelSubscriptionRequest2": {
+        "type": "object",
+        "description": "Request to cancel subscription",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
+      "SuspendSubscriptionRequest": {
+        "type": "object",
+        "description": "Request to suspend subscription",
+        "additionalProperties": false,
+        "properties": {
+          "reason": {
+            "type": "string"
+          }
+        }
+      },
       "LoginCommand": {
         "type": "object",
         "additionalProperties": false,
@@ -9008,35 +12414,6 @@
           "refreshToken": {
             "type": "string",
             "minLength": 1
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        },
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
           }
         }
       },

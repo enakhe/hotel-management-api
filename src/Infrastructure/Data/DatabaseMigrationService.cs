@@ -1,3 +1,5 @@
+using HotelManagement.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,11 +19,11 @@ public static class DatabaseMigrationService
     {
         using var scope = services.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContext>>();
-        
+
         try
         {
             var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-            
+
             logger.LogInformation("Checking database migration status...");
 
             // Check if there are pending migrations
@@ -30,7 +32,7 @@ public static class DatabaseMigrationService
 
             if (pendingCount > 0)
             {
-                logger.LogWarning("Found {Count} pending migration(s): {Migrations}", 
+                logger.LogWarning("Found {Count} pending migration(s): {Migrations}",
                     pendingCount, string.Join(", ", pendingMigrations));
 
                 if (environment.IsDevelopment())
@@ -72,14 +74,15 @@ public static class DatabaseMigrationService
             {
                 logger.LogInformation("Seeding database with initial data...");
                 var seedLogger = scope.ServiceProvider.GetRequiredService<ILogger<ApplicationDbContextSeed>>();
-                var seeder = new ApplicationDbContextSeed(context, seedLogger);
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+                var seeder = new ApplicationDbContextSeed(context, seedLogger, userManager);
                 await seeder.SeedAsync();
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "❌ An error occurred while migrating the database");
-            
+
             if (environment.IsDevelopment())
             {
                 // In development, we want to see the error
@@ -143,10 +146,10 @@ public static class DatabaseMigrationService
         {
             logger.LogWarning("⚠️ Dropping database...");
             await context.Database.EnsureDeletedAsync();
-            
+
             logger.LogInformation("Creating database...");
             await context.Database.MigrateAsync();
-            
+
             logger.LogInformation("✓ Database reset complete");
         }
         catch (Exception ex)

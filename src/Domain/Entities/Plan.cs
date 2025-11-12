@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using HotelManagement.Domain.Enums;
 
 namespace HotelManagement.Domain.Entities;
 
@@ -28,6 +29,26 @@ public class Plan
     /// Billing cycle for this plan
     /// </summary>
     public BillingCycle BillingCycle { get; set; }
+
+    /// <summary>
+    /// Base price for this plan (can be auto-calculated from modules or manually set)
+    /// </summary>
+    public decimal BasePrice { get; set; }
+
+    /// <summary>
+    /// How the price is determined
+    /// </summary>
+    public PlanPricingStrategy PricingStrategy { get; set; } = PlanPricingStrategy.ModuleSum;
+
+    /// <summary>
+    /// Setup/onboarding fee (one-time charge)
+    /// </summary>
+    public decimal? SetupFee { get; set; }
+
+    /// <summary>
+    /// Discount percentage (0-100) applied to plan price
+    /// </summary>
+    public decimal? DiscountPercentage { get; set; }
 
     /// <summary>
     /// Whether this plan is currently active and available for subscription
@@ -77,4 +98,8 @@ public class Plan
     // Many-to-many relationship with Modules through PlanModule junction table
     [JsonIgnore]
     public virtual ICollection<PlanModule> PlanModules { get; set; } = [];
+
+    // Relationship with Subscriptions
+    [JsonIgnore]
+    public virtual ICollection<Subscription> Subscriptions { get; set; } = [];
 }
